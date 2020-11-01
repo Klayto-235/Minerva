@@ -1,10 +1,7 @@
 #pragma once
 
-#include <memory>
-
-#include <spdlog/spdlog.h>
-
 #include "core.h"
+#include "spdlog/spdlog.h"
 
 namespace Minerva {
 

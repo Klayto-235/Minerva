@@ -19,6 +19,7 @@
     <ClInclude Include="src\Minerva\entry_point.h">
       <Filter>Minerva</Filter>
     </ClInclude>
+    <ClInclude Include="src\mnpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Minerva\Application.cpp">
@@ -27,5 +28,6 @@
     <ClCompile Include="src\Minerva\Log.cpp">
       <Filter>Minerva</Filter>
     </ClCompile>
+    <ClCompile Include="src\mnpch.cpp" />
   </ItemGroup>
 </Project>
