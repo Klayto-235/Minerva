@@ -1,7 +1,6 @@
 #include "Application.h"
 
-namespace Minerva
-{
+namespace Minerva {
 
 	Application::Application()
 	{

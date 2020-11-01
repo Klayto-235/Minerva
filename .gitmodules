@@ -1,0 +1,3 @@
+[submodule "Minerva/vendor/spdlog"]
+	path = Minerva/vendor/spdlog
+	url = https://github.com/gabime/spdlog

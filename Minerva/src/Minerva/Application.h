@@ -2,8 +2,7 @@
 
 #include "core.h"
 
-namespace Minerva
-{
+namespace Minerva {
 
 	class MINERVA_API Application
 	{
