@@ -9,3 +9,5 @@
 #else
 	#error Platform not supported by Minerva.
 #endif
+
+#define BIT(x) (1 << x)

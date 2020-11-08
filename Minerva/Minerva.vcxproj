@@ -140,6 +140,10 @@
   <ItemGroup>
     <ClInclude Include="src\Minerva.h" />
     <ClInclude Include="src\Minerva\Application.h" />
+    <ClInclude Include="src\Minerva\Events\Event.h" />
+    <ClInclude Include="src\Minerva\Events\KeyEvent.h" />
+    <ClInclude Include="src\Minerva\Events\MouseEvent.h" />
+    <ClInclude Include="src\Minerva\Events\WindowEvent.h" />
     <ClInclude Include="src\Minerva\Log.h" />
     <ClInclude Include="src\Minerva\core.h" />
     <ClInclude Include="src\Minerva\entry_point.h" />

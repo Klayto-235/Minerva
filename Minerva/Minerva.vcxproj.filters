@@ -20,6 +20,10 @@
       <Filter>Minerva</Filter>
     </ClInclude>
     <ClInclude Include="src\mnpch.h" />
+    <ClInclude Include="src\Minerva\Events\WindowEvent.h" />
+    <ClInclude Include="src\Minerva\Events\Event.h" />
+    <ClInclude Include="src\Minerva\Events\KeyEvent.h" />
+    <ClInclude Include="src\Minerva\Events\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Minerva\Application.cpp">
