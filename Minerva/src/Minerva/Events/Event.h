@@ -1,8 +1,7 @@
 #pragma once
 
+#include "mnpch.h" // Is this fine?
 #include "Minerva/core.h"
-
-#include <string>
 
 namespace Minerva {
 

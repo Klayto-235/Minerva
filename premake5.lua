@@ -10,6 +10,12 @@ workspace "Minerva"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Minerva/vendor/GLFW/include"
+IncludeDir["spdlog"] = "Minerva/vendor/spdlog/include",
+
+include "Minerva/vendor/premake_GLFW.lua"
+
 project "Minerva"
 	location "Minerva"
 	kind "SharedLib"
@@ -30,7 +36,14 @@ project "Minerva"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.GLFW}"
+	}
+	
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -77,7 +90,7 @@ project "Sandbox"
 
 	includedirs
 	{
-		"Minerva/vendor/spdlog/include",
+		"%{IncludeDir.spdlog}",
 		"Minerva/src"
 	}
 

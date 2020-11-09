@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Minerva {
 
 	class MINERVA_API KeyEvent : public Event
