@@ -15,7 +15,7 @@ public:
 
 };
 
-Minerva::Application* Minerva::CreateApplication()
+Minerva::Application* Minerva::createApplication()
 {
 	return new Sandbox();
 }

@@ -17,12 +17,16 @@ namespace Minerva {
 
 	void Application::run()
 	{
+		EventBuffer ebuf;
+		ebuf.post<WindowResizeEvent>(33, 22);
+		ebuf.post<WindowCloseEvent>();
+		MN_TRACE(ebuf);
 		WindowResizeEvent e(1280, 720);
-		if (e.IsInCategory(EventCategoryWindow))
+		if (e.isInCategory(EventCategoryWindow))
 		{
 			MN_TRACE(e);
 		}
-		if (e.IsInCategory(EventCategoryInput))
+		if (e.isInCategory(EventCategoryInput))
 		{
 			MN_TRACE(e);
 		}

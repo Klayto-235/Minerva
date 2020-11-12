@@ -10,15 +10,17 @@ namespace Minerva {
 		WindowResizeEvent(unsigned int width, unsigned int height)
 			: m_width(width), m_height(height) {}
 
-		inline unsigned int GetWidth() const { return m_width; }
-		inline unsigned int GetHeight() const { return m_height; }
+		unsigned int getWidth() const { return m_width; }
+		unsigned int getHeight() const { return m_height; }
 
-		std::string ToString() const override
+#if defined MN_DEBUG || defined MN_RELEASE
+		std::string toString() const override
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent: " << m_width << " x " << m_height;
 			return ss.str();
 		};
+#endif
 
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryWindow)

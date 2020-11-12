@@ -7,7 +7,7 @@ namespace Minerva {
 	class MINERVA_API KeyEvent : public Event
 	{
 	public:
-		inline int GetKeyCode() const { return m_keyCode; }
+		int getKeyCode() const { return m_keyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKey | EventCategoryInput)
 	protected:
@@ -23,14 +23,16 @@ namespace Minerva {
 		KeyPressEvent(int keyCode, int repeatCount)
 			: KeyEvent(keyCode), m_repeatCount(repeatCount) {}
 
-		inline int GetRepeatCount() const { return m_repeatCount; }
+		int getRepeatCount() const { return m_repeatCount; }
 
-		std::string ToString() const override
+#if defined MN_DEBUG || defined MN_RELEASE
+		std::string toString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyPressEvent: " << m_keyCode << " (" << m_repeatCount << " repeats)";
 			return ss.str();
 		}
+#endif
 
 		EVENT_CLASS_TYPE(KeyPress)
 	private:
@@ -43,12 +45,14 @@ namespace Minerva {
 		KeyReleaseEvent(int keyCode)
 			: KeyEvent(keyCode) {}
 
-		std::string ToString() const override
+#if defined MN_DEBUG || defined MN_RELEASE
+		std::string toString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyReleaseEvent: " << m_keyCode;
 			return ss.str();
 		}
+#endif
 
 		EVENT_CLASS_TYPE(KeyPress)
 	};

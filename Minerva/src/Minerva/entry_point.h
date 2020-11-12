@@ -4,10 +4,10 @@
 
 int main(int argc, char** argv)
 {
-	Minerva::Log::Init();
+	Minerva::Log::init();
 	MN_CORE_INFO("Log initialised!");
 
-	auto app = Minerva::CreateApplication();
+	auto app = Minerva::createApplication();
 	app->run();
 	delete app;
 }

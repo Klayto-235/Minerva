@@ -14,6 +14,6 @@ namespace Minerva {
 	};
 
 	// To be defined in CLIENT
-	Application* CreateApplication();
+	Application* createApplication();
 
 }

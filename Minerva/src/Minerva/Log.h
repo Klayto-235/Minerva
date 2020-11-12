@@ -9,10 +9,10 @@ namespace Minerva {
 	class MINERVA_API Log
 	{
 	public:
-		static void Init();
+		static void init();
 
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
-		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_clientLogger; }
+		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
+		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_clientLogger; }
 	private:
 		static std::shared_ptr<spdlog::logger> s_coreLogger;
 		static std::shared_ptr<spdlog::logger> s_clientLogger;
