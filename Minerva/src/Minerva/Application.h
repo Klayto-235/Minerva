@@ -1,8 +1,10 @@
 #pragma once
 
 #include "core.h"
+#include "Window.h"
 
-namespace Minerva {
+namespace Minerva
+{
 
 	class MINERVA_API Application
 	{
@@ -11,6 +13,8 @@ namespace Minerva {
 		virtual ~Application();
 
 		void run();
+	private:
+		std::unique_ptr<Window> m_window;
 	};
 
 	// To be defined in CLIENT

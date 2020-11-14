@@ -1,13 +1,19 @@
 #include "mnpch.h"
 #include "Application.h"
 #include "Log.h"
-#include "Events/WindowEvent.h"
+#include "Events/event.h"
 
-namespace Minerva {
+#include <GLFW/glfw3.h>
+
+
+namespace Minerva
+{
 
 	Application::Application()
 	{
-
+		Window::init();
+		MN_CORE_INFO("Window system initialised.");
+		m_window = std::unique_ptr<Window>(Window::create());
 	}
 
 	Application::~Application()
@@ -17,22 +23,14 @@ namespace Minerva {
 
 	void Application::run()
 	{
-		EventBuffer ebuf;
-		ebuf.post<WindowResizeEvent>(33, 22);
-		ebuf.post<WindowCloseEvent>();
-		MN_TRACE(ebuf);
-		WindowResizeEvent e(1280, 720);
-		if (e.isInCategory(EventCategoryWindow))
+		while (true)
 		{
-			MN_TRACE(e);
+			Window::pollEvents();
+			MN_CORE_TRACE(m_window->getEventBuffer());
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_window->onUpdate();
 		}
-		if (e.isInCategory(EventCategoryInput))
-		{
-			MN_TRACE(e);
-		}
-		MN_TRACE(WindowCloseEvent());
-
-		while (true);
 	}
 
 }

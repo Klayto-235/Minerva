@@ -2,7 +2,8 @@
 
 #include "Event.h"
 
-namespace Minerva {
+namespace Minerva
+{
 
 	class MINERVA_API WindowResizeEvent : public Event
 	{

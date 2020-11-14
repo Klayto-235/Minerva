@@ -5,7 +5,8 @@
 
 #include <type_traits>
 
-namespace Minerva {
+namespace Minerva
+{
 
 	enum class EventType
 	{
@@ -58,7 +59,8 @@ namespace Minerva {
 	public:
 		class Iterator;
 
-		EventBuffer() {
+		EventBuffer()
+		{
 			m_buffer.reserve(8);
 		}
 
@@ -69,9 +71,9 @@ namespace Minerva {
 			// emplace_back unnecessary? since there is a temporary anyway...
 			m_buffer.emplace_back(std::make_unique<const T>(std::forward<Args>(args)...));
 		}
+		void clear() { m_buffer.clear(); }
 		Iterator begin() const { return Iterator(m_buffer.begin()); }
 		Iterator end() const { return Iterator(m_buffer.end()); }
-		void clear() { m_buffer.clear(); }
 
 		class Iterator
 		{

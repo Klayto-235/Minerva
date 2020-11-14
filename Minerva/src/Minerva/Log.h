@@ -4,15 +4,16 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
-namespace Minerva {
+namespace Minerva
+{
 
 	class MINERVA_API Log
 	{
 	public:
 		static void init();
 
-		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
-		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_clientLogger; }
+		static spdlog::logger& getCoreLogger() { return *s_coreLogger; }
+		static spdlog::logger& getClientLogger() { return *s_clientLogger; }
 	private:
 		static std::shared_ptr<spdlog::logger> s_coreLogger;
 		static std::shared_ptr<spdlog::logger> s_clientLogger;
@@ -21,15 +22,15 @@ namespace Minerva {
 }
 
 // Core log macros
-#define MN_CORE_TRACE(...)	::Minerva::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define MN_CORE_INFO(...)	::Minerva::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define MN_CORE_WARN(...)	::Minerva::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define MN_CORE_ERROR(...)	::Minerva::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define MN_CORE_FATAL(...)	::Minerva::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define MN_CORE_TRACE(...)	::Minerva::Log::getCoreLogger().trace(__VA_ARGS__)
+#define MN_CORE_INFO(...)	::Minerva::Log::getCoreLogger().info(__VA_ARGS__)
+#define MN_CORE_WARN(...)	::Minerva::Log::getCoreLogger().warn(__VA_ARGS__)
+#define MN_CORE_ERROR(...)	::Minerva::Log::getCoreLogger().error(__VA_ARGS__)
+#define MN_CORE_FATAL(...)	::Minerva::Log::getCoreLogger().fatal(__VA_ARGS__)
 
 // Client log macros
-#define MN_TRACE(...)		::Minerva::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define MN_INFO(...)		::Minerva::Log::GetClientLogger()->info(__VA_ARGS__)
-#define MN_WARN(...)		::Minerva::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define MN_ERROR(...)		::Minerva::Log::GetClientLogger()->error(__VA_ARGS__)
-#define MN_FATAL(...)		::Minerva::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define MN_TRACE(...)		::Minerva::Log::getClientLogger().trace(__VA_ARGS__)
+#define MN_INFO(...)		::Minerva::Log::getClientLogger().info(__VA_ARGS__)
+#define MN_WARN(...)		::Minerva::Log::getClientLogger().warn(__VA_ARGS__)
+#define MN_ERROR(...)		::Minerva::Log::getClientLogger().error(__VA_ARGS__)
+#define MN_FATAL(...)		::Minerva::Log::getClientLogger().fatal(__VA_ARGS__)

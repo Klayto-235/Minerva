@@ -5,7 +5,7 @@ class Sandbox : public Minerva::Application
 public:
 	Sandbox()
 	{
-
+		MN_TRACE("bla");
 	}
 
 	~Sandbox()
