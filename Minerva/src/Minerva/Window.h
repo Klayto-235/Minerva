@@ -33,9 +33,9 @@ namespace Minerva
 		virtual const EventBuffer& getEventBuffer() const = 0;
 
 		// Defined in platform-specific files.
-		static inline void init();
-		static inline Window* create(const WindowProperties& properties = WindowProperties());
-		static inline void pollEvents();
+		static void init();
+		static Window* create(const WindowProperties& properties = WindowProperties());
+		static void pollEvents();
 	};
 
 }

@@ -21,23 +21,24 @@ namespace Minerva
 	class MINERVA_API KeyPressEvent : public KeyEvent
 	{
 	public:
-		KeyPressEvent(int keyCode, int repeatCount)
-			: KeyEvent(keyCode), m_repeatCount(repeatCount) {}
+		KeyPressEvent(int keyCode, bool repeat)
+			: KeyEvent(keyCode), m_repeat(repeat) {}
 
-		int getRepeatCount() const { return m_repeatCount; }
+		int isRepeat() const { return m_repeat; }
 
 #if defined MN_DEBUG || defined MN_RELEASE
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressEvent: " << m_keyCode << " (" << m_repeatCount << " repeats)";
+			ss << "KeyPressEvent: " << m_keyCode;
+			if (m_repeat) ss << " (repeat)";
 			return ss.str();
 		}
 #endif
 
 		EVENT_CLASS_TYPE(KeyPress)
 	private:
-		int m_repeatCount;
+		bool m_repeat;
 	};
 
 	class MINERVA_API KeyReleaseEvent : public KeyEvent

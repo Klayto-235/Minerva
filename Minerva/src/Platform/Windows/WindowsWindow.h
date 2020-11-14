@@ -23,11 +23,17 @@ namespace Minerva
 		virtual bool isVSync() const override;
 		virtual const EventBuffer& getEventBuffer() const override;
 	private:
-		std::string m_title;
-		unsigned int m_width;
-		unsigned int m_height;
-		bool m_VSync;
-		EventBuffer m_eventBuffer;
 		GLFWwindow* m_window;
+
+		struct WindowData
+		{
+			std::string title;
+			unsigned int width;
+			unsigned int height;
+			bool VSync;
+			EventBuffer eventBuffer;
+		};
+
+		WindowData m_data;
 	};
 }
