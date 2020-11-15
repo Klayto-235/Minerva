@@ -12,9 +12,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Minerva/vendor/GLFW/include"
+IncludeDir["glad"] = "Minerva/vendor/glad/include"
 IncludeDir["spdlog"] = "Minerva/vendor/spdlog/include",
 
 include "Minerva/vendor/premake_GLFW.lua"
+include "Minerva/vendor/premake_glad.lua"
 
 project "Minerva"
 	location "Minerva"
@@ -37,12 +39,14 @@ project "Minerva"
 	{
 		"%{prj.name}/src",
 		"%{IncludeDir.spdlog}",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.glad}"
 	}
 	
 	links
 	{
 		"GLFW",
+		"glad",
 		"opengl32.lib"
 	}
 

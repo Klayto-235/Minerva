@@ -4,6 +4,8 @@
 #include "Minerva/Events/KeyEvent.h"
 #include "Minerva/Events/MouseEvent.h"
 
+#include <glad/glad.h>
+
 
 namespace Minerva
 {
@@ -11,13 +13,17 @@ namespace Minerva
 	WindowsWindow::WindowsWindow(const WindowProperties& properties)
 		: m_data{ properties.title, properties.width, properties.height }
 	{
-		MN_CORE_INFO("Creating window {0} ({1} x {2}).", m_data.title, m_data.width, m_data.height);
+		MN_CORE_INFO("Creating window \"{0}\" ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
 		m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		MN_CORE_ASSERT(m_window, "WindowsWindow::WindowsWindow: could not create window {0}.", m_data.title);
 
-		glfwSetWindowUserPointer(m_window, &m_data);
 		glfwMakeContextCurrent(m_window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		MN_CORE_ASSERT(status, "WindowsWindow::WindowsWindow: could not initialise glad.");
+		MN_CORE_INFO("Loaded OpenGL {0}.{1}.", GLVersion.major, GLVersion.minor);
+
+		glfwSetWindowUserPointer(m_window, &m_data);
 		setVSync(true);
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)

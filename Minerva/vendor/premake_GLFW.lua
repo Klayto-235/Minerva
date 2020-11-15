@@ -43,8 +43,8 @@ project "GLFW"
 		runtime "Debug"
 		symbols "On"
 		optimize "Off"
-
-	filter "configurations:Release"
+		
+	filter "configurations:Release or Dist"
 		runtime "Release"
 		symbols "Off"
 		optimize "Full"
