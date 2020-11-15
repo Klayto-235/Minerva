@@ -1,7 +1,6 @@
 #include "mnpch.h"
 #include "Application.h"
 #include "Log.h"
-#include "Events/event.h"
 
 #include <GLFW/glfw3.h>
 
@@ -23,14 +22,44 @@ namespace Minerva
 
 	void Application::run()
 	{
-		while (true)
+		while (m_running)
 		{
-			Window::pollEvents();
-			MN_CORE_TRACE(m_window->getEventBuffer());
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
-			m_window->onUpdate();
+
+			Window::pollEvents();
+			for (auto& event : m_window->getEventBuffer())
+			{
+				if (event->getEventCategoryFlags() & EventCategory::EventCategoryWindow)
+				{
+					switch (event->getEventType())
+					{
+					case EventType::WindowClose:
+						m_running = false;
+						continue;
+					}
+				}
+				
+				for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
+				{
+					if ((*it)->onEvent(*event)) break;
+				}
+			}
+
+			for (Layer* layer : m_layerStack) layer->onUpdate();
+
+			m_window->onUpdate(); // clears events
 		}
+	}
+
+	void Application::pushLayer(Layer* layer)
+	{
+		m_layerStack.pushLayer(layer);
+	}
+
+	void Application::pushOverlay(Layer* overlay)
+	{
+		m_layerStack.pushOverlay(overlay);
 	}
 
 }

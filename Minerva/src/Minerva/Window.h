@@ -1,9 +1,9 @@
 #pragma once
 
-#include "mnpch.h"
-
 #include "core.h"
-#include "Events/Event.h"
+#include "Events/EventBuffer.h"
+
+#include <string>
 
 
 namespace Minerva

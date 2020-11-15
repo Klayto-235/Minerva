@@ -26,7 +26,7 @@ namespace Minerva
 
 		int isRepeat() const { return m_repeat; }
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
@@ -47,7 +47,7 @@ namespace Minerva
 		KeyReleaseEvent(int keyCode)
 			: KeyEvent(keyCode) {}
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;

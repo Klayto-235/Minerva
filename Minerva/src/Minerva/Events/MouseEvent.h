@@ -24,7 +24,7 @@ namespace Minerva
 		MouseButtonPressEvent(int button)
 			: MouseButtonEvent(button) {}
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
@@ -42,7 +42,7 @@ namespace Minerva
 		MouseButtonReleaseEvent(int button)
 			: MouseButtonEvent(button) {}
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
@@ -63,7 +63,7 @@ namespace Minerva
 		float getX() const { return m_x; }
 		float getY() const { return m_y; }
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
@@ -87,7 +87,7 @@ namespace Minerva
 		float getXOffset() const { return m_xOffset; }
 		float getYOffset() const { return m_yOffset; }
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;

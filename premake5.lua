@@ -48,7 +48,6 @@ project "Minerva"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -63,16 +62,31 @@ project "Minerva"
 		}
 		
 	filter "configurations:Debug"
-		defines "MN_DEBUG"
+		defines 
+		{
+			"MN_DEBUG",
+			"MN_ENABLE_ASSERTS",
+			"MN_ENABLE_DEBUG_CODE"
+		}
+		runtime "Debug"
 		symbols "On"
+		optimize "Off"
 	
 	filter "configurations:Release"
-		defines "MN_RELEASE"
-		symbols "On"
+		defines
+		{
+			"MN_RELEASE",
+			"MN_ENABLE_DEBUG_CODE"
+		}
+		runtime "Release"
+		symbols "Off"
+		optimize "Full"
 
 	filter "configurations:Dist"
 		defines "MN_DIST"
-		symbols "On"
+		runtime "Release"
+		symbols "Off"
+		optimize "Full"
 
 project "Sandbox"
 	location "Sandbox"
@@ -101,7 +115,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -110,13 +123,28 @@ project "Sandbox"
 		}
 		
 	filter "configurations:Debug"
-		defines "MN_DEBUG"
+		defines 
+		{
+			"MN_DEBUG",
+			"MN_ENABLE_ASSERTS",
+			"MN_ENABLE_DEBUG_CODE"
+		}
+		runtime "Debug"
 		symbols "On"
+		optimize "Off"
 	
 	filter "configurations:Release"
-		defines "MN_RELEASE"
-		symbols "On"
+		defines
+		{
+			"MN_RELEASE",
+			"MN_ENABLE_DEBUG_CODE"
+		}
+		runtime "Release"
+		symbols "Off"
+		optimize "Full"
 
 	filter "configurations:Dist"
 		defines "MN_DIST"
-		symbols "On"
+		runtime "Release"
+		symbols "Off"
+		optimize "Full"

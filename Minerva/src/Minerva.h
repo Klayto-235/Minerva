@@ -3,6 +3,7 @@
 // For Minerva apps.
 
 #include "Minerva/Application.h"
+#include "Minerva/Layer.h"
 #include "Minerva/Log.h"
 
 // Needs Application.h and Log.h

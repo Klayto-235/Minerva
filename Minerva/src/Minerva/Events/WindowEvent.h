@@ -14,7 +14,7 @@ namespace Minerva
 		unsigned int getWidth() const { return m_width; }
 		unsigned int getHeight() const { return m_height; }
 
-#if defined MN_DEBUG || defined MN_RELEASE
+#if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;

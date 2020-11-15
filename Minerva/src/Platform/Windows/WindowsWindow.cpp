@@ -1,5 +1,4 @@
 #include "mnpch.h"
-
 #include "WindowsWindow.h"
 #include "Minerva/Events/WindowEvent.h"
 #include "Minerva/Events/KeyEvent.h"
@@ -15,7 +14,7 @@ namespace Minerva
 		MN_CORE_INFO("Creating window {0} ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
 		m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-		MN_CORE_ASSERT(m_window, "Could not create window {0}.", m_data.title);
+		MN_CORE_ASSERT(m_window, "WindowsWindow::WindowsWindow: could not create window {0}.", m_data.title);
 
 		glfwSetWindowUserPointer(m_window, &m_data);
 		glfwMakeContextCurrent(m_window);
@@ -130,7 +129,7 @@ namespace Minerva
 			MN_CORE_ERROR("GLFW Error ({0}): {1}.", error, description);
 		});
 		int success = glfwInit();
-		MN_CORE_ASSERT(success, "Could not intialise GLFW.");
+		MN_CORE_ASSERT(success, "Window::init: could not intialise GLFW.");
 	}
 
 	Window* Window::create(const WindowProperties& properties)
