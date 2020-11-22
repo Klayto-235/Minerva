@@ -8,16 +8,20 @@
 namespace Minerva
 {
 
+	Application* Application::s_instance = nullptr;
+
 	Application::Application()
 	{
+		MN_CORE_ASSERT(!s_instance, "application already exists.")
 		Window::init();
 		MN_CORE_INFO("Window system initialised.");
 		m_window = std::unique_ptr<Window>(Window::create());
+		s_instance = this;
 	}
 
 	Application::~Application()
 	{
-
+		s_instance = nullptr;
 	}
 
 	void Application::run()

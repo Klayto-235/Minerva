@@ -27,6 +27,7 @@ public:
 	Sandbox()
 	{
 		pushLayer(new ExampleLayer());
+		pushOverlay(new Minerva::ImGuiLayer());
 	}
 
 	~Sandbox()

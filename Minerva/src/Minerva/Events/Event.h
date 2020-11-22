@@ -29,14 +29,14 @@ namespace Minerva
 
 #if defined MN_ENABLE_DEBUG_CODE
 #define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::##type; }\
-								virtual EventType getEventType() const override { return getStaticType(); }\
-								virtual const char* getName() const override { return #type "Event"; }
+								EventType getEventType() const override { return getStaticType(); }\
+								const char* getName() const override { return #type "Event"; }
 #else
 #define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::##type; }\
-								virtual EventType getEventType() const override { return getStaticType(); }
+								EventType getEventType() const override { return getStaticType(); }
 #endif
 
-#define EVENT_CLASS_CATEGORY(category) virtual int getEventCategoryFlags() const override { return category; }
+#define EVENT_CLASS_CATEGORY(category) int getEventCategoryFlags() const override { return category; }
 
 	class MINERVA_API Event
 	{

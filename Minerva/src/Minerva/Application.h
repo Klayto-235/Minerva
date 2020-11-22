@@ -17,11 +17,16 @@ namespace Minerva
 
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
-	private:
 
+		const Window& getWindow() const { return *m_window; }
+
+		static const Application& get() { return *s_instance; }
+	private:
 		std::unique_ptr<Window> m_window;
 		bool m_running;
 		LayerStack m_layerStack;
+
+		static Application* s_instance;
 	};
 
 	// To be defined in CLIENT

@@ -16,13 +16,13 @@ namespace Minerva
 		WindowsWindow(const WindowsWindow& other) = delete;
 		WindowsWindow& operator=(const WindowsWindow& other) = delete;
 
-		virtual void onUpdate() override;
+		void onUpdate() override;
 
-		virtual unsigned int getWidth() const override;
-		virtual unsigned int getHeight() const override;
-		virtual void setVSync(bool enabled) override;
-		virtual bool isVSync() const override;
-		virtual const EventBuffer& getEventBuffer() const override;
+		unsigned int getWidth() const override;
+		unsigned int getHeight() const override;
+		void setVSync(bool enabled) override;
+		bool isVSync() const override;
+		const EventBuffer& getEventBuffer() const override;
 	private:
 		GLFWwindow* m_window;
 
