@@ -2,7 +2,6 @@
 
 #include "Minerva/Layer.h"
 
-
 namespace Minerva
 {
 

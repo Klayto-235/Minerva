@@ -1,11 +1,17 @@
 #include "mnpch.h"
 #include "ImGuiLayer.h"
 #include "Minerva/Application.h"
+#include "Minerva/Events/WindowEvent.h"
+#include "Minerva/Events/KeyEvent.h"
+#include "Minerva/Events/MouseEvent.h"
 
 #include "imgui.h"
 #include "Platform/OpenGL/imgui_impl_opengl3.h"
 
-#include <GLFW/glfw3.h> // TEMPORARY
+// TEMPORARY
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 
 namespace Minerva
@@ -86,6 +92,56 @@ namespace Minerva
 
 	bool ImGuiLayer::onEvent(const Event& event)
 	{
+		ImGuiIO& io = ImGui::GetIO();
+
+		switch (event.getEventType())
+		{
+		case EventType::KeyChar:
+		{
+			int keyCode = static_cast<const KeyCharEvent&>(event).getKeyCode();
+			if (keyCode > 0 && keyCode < 0x10000)
+				io.AddInputCharacter(static_cast<unsigned short>(keyCode));
+			break;
+		}
+		case EventType::KeyPress:
+			io.KeysDown[static_cast<const KeyPressEvent&>(event).getKeyCode()] = true;
+			io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+			io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+			io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+			io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+			break;
+
+		case EventType::KeyRelease:
+			io.KeysDown[static_cast<const KeyReleaseEvent&>(event).getKeyCode()] = false;
+			break;
+
+		case EventType::MouseButtonPress:
+			io.MouseDown[static_cast<const MouseButtonPressEvent&>(event).getMouseButton()] = true;
+			break;
+
+		case EventType::MouseButtonRelease:
+			io.MouseDown[static_cast<const MouseButtonReleaseEvent&>(event).getMouseButton()] = false;
+			break;
+
+		case EventType::MouseMove:
+			io.MousePos = ImVec2(static_cast<const MouseMoveEvent&>(event).getX(),
+				static_cast<const MouseMoveEvent&>(event).getY());
+			break;
+
+		case EventType::MouseScroll:
+			io.MouseWheelH += static_cast<const MouseScrollEvent&>(event).getXOffset();
+			io.MouseWheel += static_cast<const MouseScrollEvent&>(event).getYOffset();
+			break;
+
+		case EventType::WindowResize:
+			io.DisplaySize = ImVec2(static_cast<const WindowResizeEvent&>(event).getWidth(),
+				static_cast<const WindowResizeEvent&>(event).getHeight());
+			io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+			glViewport(0, 0, static_cast<const WindowResizeEvent&>(event).getWidth(),
+				static_cast<const WindowResizeEvent&>(event).getHeight());
+			break;
+		}
+
 		return false;
 	}
 

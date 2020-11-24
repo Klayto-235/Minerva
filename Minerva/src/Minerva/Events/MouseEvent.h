@@ -51,7 +51,7 @@ namespace Minerva
 		}
 #endif
 
-		EVENT_CLASS_TYPE(MouseButtonPress)
+		EVENT_CLASS_TYPE(MouseButtonRelease)
 	};
 
 	class MINERVA_API MouseMoveEvent : public Event

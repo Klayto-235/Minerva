@@ -56,7 +56,25 @@ namespace Minerva
 		}
 #endif
 
-		EVENT_CLASS_TYPE(KeyPress)
+		EVENT_CLASS_TYPE(KeyRelease)
+	};
+
+	class MINERVA_API KeyCharEvent : public KeyEvent
+	{
+	public:
+		KeyCharEvent(int keyCode)
+			: KeyEvent(keyCode) {}
+
+#if defined MN_ENABLE_DEBUG_CODE
+		std::string toString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyCharEvent: " << m_keyCode;
+			return ss.str();
+		}
+#endif
+
+		EVENT_CLASS_TYPE(KeyChar)
 	};
 
 }

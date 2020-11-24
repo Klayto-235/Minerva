@@ -59,6 +59,12 @@ namespace Minerva
 			}
 		});
 
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int character)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			data.eventBuffer.post<KeyCharEvent>(static_cast<int>(character));
+		});
+
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);

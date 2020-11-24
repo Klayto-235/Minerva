@@ -12,7 +12,7 @@ namespace Minerva
 	{
 		None = 0,
 		WindowResize, WindowClose, WindowFocus, WindowMove,
-		KeyPress, KeyRelease,
+		KeyPress, KeyRelease, KeyChar,
 		MouseButtonPress, MouseButtonRelease, MouseScroll, MouseMove
 	};
 
