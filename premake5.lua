@@ -18,14 +18,17 @@ workspace "Minerva"
 	includeDir["glad"] = "Minerva/vendor/glad/include"
 	includeDir["imgui"] = "Minerva/vendor/imgui"
 
-	include "Minerva/vendor/premake_GLFW.lua"
-	include "Minerva/vendor/premake_glad.lua"
-	include "Minerva/vendor/premake_imgui.lua"
+	group "Dependencies"
+		include "Minerva/vendor/premake_GLFW.lua"
+		include "Minerva/vendor/premake_glad.lua"
+		include "Minerva/vendor/premake_imgui.lua"
+	group ""
 
 	project "Minerva"
 		location "Minerva"
 		kind "SharedLib"
 		language "C++"
+		staticruntime "on"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -39,7 +42,7 @@ workspace "Minerva"
 			"%{prj.name}/src/**.cpp"
 		}
 
-		includeDirs
+		includedirs
 		{
 			"%{prj.name}/src",
 			"%{includeDir.spdlog}",
@@ -68,7 +71,7 @@ workspace "Minerva"
 
 			postbuildcommands
 			{
-				("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+				("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
 			}
 		
 		filter "configurations:Debug"
@@ -102,6 +105,7 @@ workspace "Minerva"
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
+		staticruntime "on"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -112,7 +116,7 @@ workspace "Minerva"
 			"%{prj.name}/src/**.cpp"
 		}
 
-		includeDirs
+		includedirs
 		{
 			"%{includeDir.spdlog}",
 			"Minerva/src"

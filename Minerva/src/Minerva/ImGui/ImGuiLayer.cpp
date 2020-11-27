@@ -74,7 +74,8 @@ namespace Minerva
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		const Application& app = Application::get();
-		io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
+		io.DisplaySize = ImVec2(static_cast<float>(app.getWindow().getWidth()),
+			static_cast<float>(app.getWindow().getHeight()));
 
 		float time = static_cast<float>(glfwGetTime());
 		io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
@@ -134,8 +135,8 @@ namespace Minerva
 			break;
 
 		case EventType::WindowResize:
-			io.DisplaySize = ImVec2(static_cast<const WindowResizeEvent&>(event).getWidth(),
-				static_cast<const WindowResizeEvent&>(event).getHeight());
+			io.DisplaySize = ImVec2(static_cast<float>(static_cast<const WindowResizeEvent&>(event).getWidth()),
+				static_cast<float>(static_cast<const WindowResizeEvent&>(event).getHeight()));
 			io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 			glViewport(0, 0, static_cast<const WindowResizeEvent&>(event).getWidth(),
 				static_cast<const WindowResizeEvent&>(event).getHeight());
