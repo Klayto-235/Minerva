@@ -23,6 +23,7 @@ namespace Minerva
 		void setVSync(bool enabled) override;
 		bool isVSync() const override;
 		const EventBuffer& getEventBuffer() const override;
+		void* getNativeWindow() override { return static_cast<void*>(m_window); }
 
 		bool isKeyPressed(Key key) const override;
 		bool isMouseButtonPressed(MouseButton button) const override;

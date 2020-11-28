@@ -12,11 +12,15 @@ namespace Minerva
 
 	Application::Application()
 	{
-		MN_CORE_ASSERT(!s_instance, "application already exists.")
+		MN_CORE_ASSERT(!s_instance, "application already exists.");
+		s_instance = this;
+
 		Window::init();
 		MN_CORE_INFO("Window system initialised.");
 		m_window = std::unique_ptr<Window>(Window::create());
-		s_instance = this;
+
+		m_ImGuiLayer = new ImGuiLayer();
+		m_layerStack.pushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -50,7 +54,13 @@ namespace Minerva
 				}
 			}
 
-			for (Layer* layer : m_layerStack) layer->onUpdate();
+			for (Layer* layer : m_layerStack)
+				layer->onUpdate();
+
+			m_ImGuiLayer->begin();
+			for (Layer* layer : m_layerStack)
+				layer->onImGuiRender();
+			m_ImGuiLayer->end();
 
 			m_window->onUpdate(); // clears events
 		}

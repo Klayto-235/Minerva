@@ -13,8 +13,10 @@ namespace Minerva
 
         void onAttach() override;
         void onDetach() override;
-        void onUpdate() override;
-        bool onEvent(const Event& event) override;
+        void onImGuiRender() override;
+
+        void begin();
+        void end();
     private:
         float m_time = 0.0f;
     };

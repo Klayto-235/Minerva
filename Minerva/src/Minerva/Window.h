@@ -33,6 +33,7 @@ namespace Minerva
 		virtual void setVSync(bool enabled) = 0;
 		virtual bool isVSync() const = 0;
 		virtual const EventBuffer& getEventBuffer() const = 0;
+		virtual void* getNativeWindow() = 0;
 
 		virtual bool isKeyPressed(Key key) const = 0;
 		virtual bool isMouseButtonPressed(MouseButton button) const = 0;

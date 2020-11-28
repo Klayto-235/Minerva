@@ -3,6 +3,7 @@
 #include "core.h"
 #include "Window.h"
 #include "LayerStack.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace Minerva
 {
@@ -18,13 +19,14 @@ namespace Minerva
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
 
-		const Window& getWindow() const { return *m_window; }
+		Window& getWindow() { return *m_window; }
 
-		static const Application& get() { return *s_instance; }
+		static Application& get() { return *s_instance; }
 	private:
 		std::unique_ptr<Window> m_window;
 		bool m_running;
 		LayerStack m_layerStack;
+		ImGuiLayer* m_ImGuiLayer;
 
 		static Application* s_instance;
 	};

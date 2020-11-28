@@ -22,6 +22,7 @@ namespace Minerva
 		virtual void onAttach() {}
 		virtual void onDetach() {}
 		virtual void onUpdate() {}
+		virtual void onImGuiRender() {}
 		virtual bool onEvent(const Event& event) { return false; }
 
 #if defined MN_ENABLE_DEBUG_CODE
