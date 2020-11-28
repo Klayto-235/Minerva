@@ -2,6 +2,7 @@
 
 #include "core.h"
 #include "Events/EventBuffer.h"
+#include "input_codes.h"
 
 #include <string>
 
@@ -33,8 +34,8 @@ namespace Minerva
 		virtual bool isVSync() const = 0;
 		virtual const EventBuffer& getEventBuffer() const = 0;
 
-		virtual bool isKeyPressed(int keyCode) const = 0;
-		virtual bool isMouseButtonPressed(int button) const = 0;
+		virtual bool isKeyPressed(Key key) const = 0;
+		virtual bool isMouseButtonPressed(MouseButton button) const = 0;
 		virtual std::pair<float,float> getMousePosition() const = 0;
 		virtual float getMouseX() const = 0;
 		virtual float getMouseY() const = 0;

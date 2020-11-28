@@ -46,15 +46,15 @@ namespace Minerva
 			switch (action)
 			{
 			case GLFW_PRESS:
-				data.eventBuffer.post<KeyPressEvent>(key, false);
+				data.eventBuffer.post<KeyPressEvent>(static_cast<Key>(key), false);
 				break;
 
 			case GLFW_RELEASE:
-				data.eventBuffer.post<KeyReleaseEvent>(key);
+				data.eventBuffer.post<KeyReleaseEvent>(static_cast<Key>(key));
 				break;
 
 			case GLFW_REPEAT:
-				data.eventBuffer.post<KeyPressEvent>(key, true);
+				data.eventBuffer.post<KeyPressEvent>(static_cast<Key>(key), true);
 				break;
 			}
 		});
@@ -62,7 +62,7 @@ namespace Minerva
 		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int character)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.post<KeyCharEvent>(static_cast<int>(character));
+			data.eventBuffer.post<TextCharEvent>(static_cast<int>(character));
 		});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -71,11 +71,11 @@ namespace Minerva
 			switch (action)
 			{
 			case GLFW_PRESS:
-				data.eventBuffer.post<MouseButtonPressEvent>(button);
+				data.eventBuffer.post<MouseButtonPressEvent>(static_cast<MouseButton>(button));
 				break;
 
 			case GLFW_RELEASE:
-				data.eventBuffer.post<MouseButtonReleaseEvent>(button);
+				data.eventBuffer.post<MouseButtonReleaseEvent>(static_cast<MouseButton>(button));
 				break;
 			}
 		});

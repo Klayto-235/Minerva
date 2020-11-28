@@ -3,6 +3,7 @@
 // For Minerva apps.
 
 #include "Minerva/Application.h"
+#include "Minerva/input_codes.h"
 #include "Minerva/Layer.h"
 #include "Minerva/Log.h"
 

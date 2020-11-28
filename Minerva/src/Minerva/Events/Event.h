@@ -12,7 +12,8 @@ namespace Minerva
 	{
 		None = 0,
 		WindowResize, WindowClose, WindowFocus, WindowMove,
-		KeyPress, KeyRelease, KeyChar,
+		KeyPress, KeyRelease,
+		TextChar,
 		MouseButtonPress, MouseButtonRelease, MouseScroll, MouseMove
 	};
 
@@ -20,11 +21,12 @@ namespace Minerva
 	enum EventCategory
 	{
 		None = 0,
-		EventCategoryWindow		 = BIT(0),
-		EventCategoryInput		 = BIT(1),
-		EventCategoryKey		 = BIT(2),
-		EventCategoryMouse		 = BIT(3),
-		EventCategoryMouseButton = BIT(4)
+		EventCategoryWindow			= BIT(0),
+		EventCategoryInput			= BIT(1),
+		EventCategoryKey			= BIT(2),
+		EventCategoryText			= BIT(3),
+		EventCategoryMouse			= BIT(4),
+		EventCategoryMouseButton	= BIT(5)
 	};
 
 #if defined MN_ENABLE_DEBUG_CODE

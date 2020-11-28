@@ -75,7 +75,9 @@ namespace Minerva
 		ImGuiIO& io = ImGui::GetIO();
 		const Application& app = Application::get();
 		io.DisplaySize = ImVec2(static_cast<float>(app.getWindow().getWidth()),
-			static_cast<float>(app.getWindow().getHeight()));
+			static_cast<float>(app.getWindow().getHeight())); // Probably not necessary?
+			// Unless we're worried about not getting WindowResize events.
+			// Would need to add it to the ctor if removed.
 
 		float time = static_cast<float>(glfwGetTime());
 		io.DeltaTime = m_time > 0.0f ? (time - m_time) : (1.0f / 60.0f);
@@ -97,15 +99,15 @@ namespace Minerva
 
 		switch (event.getEventType())
 		{
-		case EventType::KeyChar:
+		case EventType::TextChar:
 		{
-			int keyCode = static_cast<const KeyCharEvent&>(event).getKeyCode();
-			if (keyCode > 0 && keyCode < 0x10000)
-				io.AddInputCharacter(static_cast<unsigned short>(keyCode));
+			unsigned int codePoint = static_cast<const TextCharEvent&>(event).getCodePoint();
+			if (codePoint > 0 && codePoint < 0x10000) // Why are we doing this and casting to ushort?
+				io.AddInputCharacter(static_cast<unsigned short>(codePoint));
 			break;
 		}
 		case EventType::KeyPress:
-			io.KeysDown[static_cast<const KeyPressEvent&>(event).getKeyCode()] = true;
+			io.KeysDown[static_cast<int>(static_cast<const KeyPressEvent&>(event).getKey())] = true;
 			io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
 			io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
 			io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
@@ -113,15 +115,15 @@ namespace Minerva
 			break;
 
 		case EventType::KeyRelease:
-			io.KeysDown[static_cast<const KeyReleaseEvent&>(event).getKeyCode()] = false;
+			io.KeysDown[static_cast<int>(static_cast<const KeyReleaseEvent&>(event).getKey())] = false;
 			break;
 
 		case EventType::MouseButtonPress:
-			io.MouseDown[static_cast<const MouseButtonPressEvent&>(event).getMouseButton()] = true;
+			io.MouseDown[static_cast<int>(static_cast<const MouseButtonPressEvent&>(event).getMouseButton())] = true;
 			break;
 
 		case EventType::MouseButtonRelease:
-			io.MouseDown[static_cast<const MouseButtonReleaseEvent&>(event).getMouseButton()] = false;
+			io.MouseDown[static_cast<int>(static_cast<const MouseButtonReleaseEvent&>(event).getMouseButton())] = false;
 			break;
 
 		case EventType::MouseMove:

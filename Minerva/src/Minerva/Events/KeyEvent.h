@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+#include "Minerva/input_codes.h"
 
 namespace Minerva
 {
@@ -8,21 +9,21 @@ namespace Minerva
 	class MINERVA_API KeyEvent : public Event
 	{
 	public:
-		int getKeyCode() const { return m_keyCode; }
+		Key getKey() const { return m_key; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKey | EventCategoryInput)
 	protected:
-		KeyEvent(int keyCode)
-			: m_keyCode(keyCode) {}
+		KeyEvent(Key key)
+			: m_key(key) {}
 
-		int m_keyCode;
+		Key m_key;
 	};
 
 	class MINERVA_API KeyPressEvent : public KeyEvent
 	{
 	public:
-		KeyPressEvent(int keyCode, bool repeat)
-			: KeyEvent(keyCode), m_repeat(repeat) {}
+		KeyPressEvent(Key key, bool repeat)
+			: KeyEvent(key), m_repeat(repeat) {}
 
 		int isRepeat() const { return m_repeat; }
 
@@ -30,7 +31,7 @@ namespace Minerva
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressEvent: " << m_keyCode;
+			ss << "KeyPressEvent: " << static_cast<int>(m_key);
 			if (m_repeat) ss << " (repeat)";
 			return ss.str();
 		}
@@ -44,14 +45,14 @@ namespace Minerva
 	class MINERVA_API KeyReleaseEvent : public KeyEvent
 	{
 	public:
-		KeyReleaseEvent(int keyCode)
-			: KeyEvent(keyCode) {}
+		KeyReleaseEvent(Key key)
+			: KeyEvent(key) {}
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleaseEvent: " << m_keyCode;
+			ss << "KeyReleaseEvent: " << static_cast<int>(m_key);
 			return ss.str();
 		}
 #endif
@@ -59,22 +60,27 @@ namespace Minerva
 		EVENT_CLASS_TYPE(KeyRelease)
 	};
 
-	class MINERVA_API KeyCharEvent : public KeyEvent
+	class MINERVA_API TextCharEvent : public Event
 	{
 	public:
-		KeyCharEvent(int keyCode)
-			: KeyEvent(keyCode) {}
+		TextCharEvent(unsigned int codePoint)
+			: m_codePoint(codePoint) {}
+
+		unsigned int getCodePoint() const { return m_codePoint; }
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyCharEvent: " << m_keyCode;
+			ss << "TextCharEvent: " << m_codePoint;
 			return ss.str();
 		}
 #endif
 
-		EVENT_CLASS_TYPE(KeyChar)
+		EVENT_CLASS_TYPE(TextChar)
+		EVENT_CLASS_CATEGORY(EventCategoryText | EventCategoryInput)
+	private:
+		unsigned int m_codePoint;
 	};
 
 }

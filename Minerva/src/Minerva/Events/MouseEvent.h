@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+#include "Minerva/input_codes.h"
 
 namespace Minerva
 {
@@ -8,27 +9,27 @@ namespace Minerva
 	class MINERVA_API MouseButtonEvent : public Event
 	{
 	public:
-		int getMouseButton() const { return m_button; }
+		MouseButton getMouseButton() const { return m_button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouseButton | EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button)
+		MouseButtonEvent(MouseButton button)
 			: m_button(button) {}
 
-		int m_button;
+		MouseButton m_button;
 	};
 
 	class MINERVA_API MouseButtonPressEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressEvent(int button)
+		MouseButtonPressEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonPressEvent: " << m_button;
+			ss << "MouseButtonPressEvent: " << static_cast<int>(m_button);
 			return ss.str();
 		}
 #endif
@@ -39,14 +40,14 @@ namespace Minerva
 	class MINERVA_API MouseButtonReleaseEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleaseEvent(int button)
+		MouseButtonReleaseEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseButtonReleaseEvent: " << m_button;
+			ss << "MouseButtonReleaseEvent: " << static_cast<int>(m_button);
 			return ss.str();
 		}
 #endif

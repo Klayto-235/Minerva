@@ -24,8 +24,8 @@ namespace Minerva
 		bool isVSync() const override;
 		const EventBuffer& getEventBuffer() const override;
 
-		bool isKeyPressed(int keyCode) const override;
-		bool isMouseButtonPressed(int button) const override;
+		bool isKeyPressed(Key key) const override;
+		bool isMouseButtonPressed(MouseButton button) const override;
 		std::pair<float, float> getMousePosition() const override;
 		float getMouseX() const override;
 		float getMouseY() const override;
@@ -44,15 +44,15 @@ namespace Minerva
 		WindowData m_data;
 	};
 
-	inline bool WindowsWindow::isKeyPressed(int keyCode) const
+	inline bool WindowsWindow::isKeyPressed(Key key) const
 	{
-		auto state = glfwGetKey(m_window, keyCode);
+		auto state = glfwGetKey(m_window, static_cast<int>(key));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	inline bool WindowsWindow::isMouseButtonPressed(int button) const
+	inline bool WindowsWindow::isMouseButtonPressed(MouseButton button) const
 	{
-		auto state = glfwGetMouseButton(m_window, button);
+		auto state = glfwGetMouseButton(m_window, static_cast<int>(button));
 		return state == GLFW_PRESS;
 	}
 
