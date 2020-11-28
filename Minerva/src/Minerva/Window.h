@@ -15,7 +15,8 @@ namespace Minerva
 		unsigned int width;
 		unsigned int height;
 
-		WindowProperties(const std::string& title = "Minerva Engine", unsigned int width = 1280, unsigned int height = 720)
+		WindowProperties(const std::string& title = "Minerva Engine",
+			unsigned int width = 1280, unsigned int height = 720)
 			: title(title), width(width), height(height) {}
 	};
 
@@ -31,6 +32,12 @@ namespace Minerva
 		virtual void setVSync(bool enabled) = 0;
 		virtual bool isVSync() const = 0;
 		virtual const EventBuffer& getEventBuffer() const = 0;
+
+		virtual bool isKeyPressed(int keyCode) const = 0;
+		virtual bool isMouseButtonPressed(int button) const = 0;
+		virtual std::pair<float,float> getMousePosition() const = 0;
+		virtual float getMouseX() const = 0;
+		virtual float getMouseY() const = 0;
 
 		// Defined in platform-specific files.
 		static void init();

@@ -28,7 +28,7 @@ workspace "Minerva"
 		location "Minerva"
 		kind "SharedLib"
 		language "C++"
-		staticruntime "on"
+		staticruntime "off"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -105,7 +105,7 @@ workspace "Minerva"
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
-		staticruntime "on"
+		staticruntime "off"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

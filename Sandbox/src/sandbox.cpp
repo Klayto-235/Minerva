@@ -11,6 +11,8 @@ public:
 	void onUpdate() override
 	{
 		MN_INFO("ExampleLayer::Update");
+		auto [x, y] = Minerva::Application::get().getWindow().getMousePosition();
+		MN_TRACE("{0}, {1}", x, y);
 	}
 
 	bool onEvent(const Minerva::Event& event) override

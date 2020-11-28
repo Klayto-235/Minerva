@@ -23,6 +23,12 @@ namespace Minerva
 		void setVSync(bool enabled) override;
 		bool isVSync() const override;
 		const EventBuffer& getEventBuffer() const override;
+
+		bool isKeyPressed(int keyCode) const override;
+		bool isMouseButtonPressed(int button) const override;
+		std::pair<float, float> getMousePosition() const override;
+		float getMouseX() const override;
+		float getMouseY() const override;
 	private:
 		GLFWwindow* m_window;
 
@@ -37,4 +43,36 @@ namespace Minerva
 
 		WindowData m_data;
 	};
+
+	inline bool WindowsWindow::isKeyPressed(int keyCode) const
+	{
+		auto state = glfwGetKey(m_window, keyCode);
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
+
+	inline bool WindowsWindow::isMouseButtonPressed(int button) const
+	{
+		auto state = glfwGetMouseButton(m_window, button);
+		return state == GLFW_PRESS;
+	}
+
+	inline std::pair<float, float> WindowsWindow::getMousePosition() const
+	{
+		double x, y;
+		glfwGetCursorPos(m_window, &x, &y);
+		return { static_cast<float>(x), static_cast<float>(y) };
+	}
+
+	inline float WindowsWindow::getMouseX() const
+	{
+		auto [x, y] = getMousePosition();
+		return x;
+	}
+
+	inline float WindowsWindow::getMouseY() const
+	{
+		auto [x, y] = getMousePosition();
+		return y;
+	}
+
 }
