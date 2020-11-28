@@ -17,6 +17,7 @@ workspace "Minerva"
 	includeDir["GLFW"] = "Minerva/vendor/GLFW/include"
 	includeDir["glad"] = "Minerva/vendor/glad/include"
 	includeDir["imgui"] = "Minerva/vendor/imgui"
+	includeDir["glm"] = "Minerva/vendor/glm"
 
 	group "Dependencies"
 		include "Minerva/vendor/premake_GLFW.lua"
@@ -48,7 +49,8 @@ workspace "Minerva"
 			"%{includeDir.spdlog}",
 			"%{includeDir.GLFW}",
 			"%{includeDir.glad}",
-			"%{includeDir.imgui}"
+			"%{includeDir.imgui}",
+			"%{includeDir.glm}"
 		}
 	
 		links
@@ -119,6 +121,7 @@ workspace "Minerva"
 		includedirs
 		{
 			"%{includeDir.spdlog}",
+			"%{includeDir.glm}",
 			"Minerva/src"
 		}
 
