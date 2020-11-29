@@ -5,6 +5,10 @@
 #include "LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
 
+// TEMPORARY
+#include "Minerva/Renderer/Shader.h"
+
+
 namespace Minerva
 {
 
@@ -30,6 +34,12 @@ namespace Minerva
 		bool m_running;
 		LayerStack m_layerStack;
 		ImGuiLayer* m_ImGuiLayer;
+
+		// TEMPORARY
+		unsigned int m_vertexArray;
+		unsigned int m_vertexBuffer;
+		unsigned int m_indexBuffer;
+		std::unique_ptr<Shader> m_shader;
 
 		static Application* s_instance;
 	};

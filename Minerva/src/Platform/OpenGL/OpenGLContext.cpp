@@ -16,6 +16,11 @@ namespace Minerva
 		glfwMakeContextCurrent(m_windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		MN_CORE_ASSERT(status, "WindowsWindow::WindowsWindow: could not initialise glad.");
+
+		MN_CORE_INFO("OpenGL Info:");
+		MN_CORE_INFO("\tVendor: {0}", glGetString(GL_VENDOR));
+		MN_CORE_INFO("\tRenderer: {0}", glGetString(GL_RENDERER));
+		MN_CORE_INFO("\tVersion: {0}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::swapBuffers()
