@@ -11,12 +11,11 @@ namespace Minerva
 	Application* Application::s_instance = nullptr;
 
 	Application::Application()
+		: m_running(false)
 	{
 		MN_CORE_ASSERT(!s_instance, "application already exists.");
 		s_instance = this;
 
-		Window::init();
-		MN_CORE_INFO("Window system initialised.");
 		m_window = std::unique_ptr<Window>(Window::create());
 
 		m_ImGuiLayer = new ImGuiLayer();
@@ -30,6 +29,7 @@ namespace Minerva
 
 	void Application::run()
 	{
+		m_running = true;
 		while (m_running)
 		{
 			glClearColor(1, 0, 1, 1);

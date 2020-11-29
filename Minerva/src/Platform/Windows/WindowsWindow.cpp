@@ -3,8 +3,7 @@
 #include "Minerva/Events/WindowEvent.h"
 #include "Minerva/Events/KeyEvent.h"
 #include "Minerva/Events/MouseEvent.h"
-
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 
 namespace Minerva
@@ -18,10 +17,7 @@ namespace Minerva
 		m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		MN_CORE_ASSERT(m_window, "WindowsWindow::WindowsWindow: could not create window {0}.", m_data.title);
 
-		glfwMakeContextCurrent(m_window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		MN_CORE_ASSERT(status, "WindowsWindow::WindowsWindow: could not initialise glad.");
-		MN_CORE_INFO("Loaded OpenGL {0}.{1}.", GLVersion.major, GLVersion.minor);
+		m_context = std::make_unique<OpenGLContext>(m_window);
 
 		glfwSetWindowUserPointer(m_window, &m_data);
 		setVSync(true);
@@ -101,7 +97,7 @@ namespace Minerva
 
 	void WindowsWindow::onUpdate()
 	{
-		glfwSwapBuffers(m_window);
+		m_context->swapBuffers();
 		m_data.eventBuffer.clear();
 	}
 
@@ -133,6 +129,37 @@ namespace Minerva
 		return m_data.eventBuffer;
 	}
 
+	bool WindowsWindow::isKeyPressed(Key key) const
+	{
+		auto state = glfwGetKey(m_window, static_cast<int>(key));
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
+
+	bool WindowsWindow::isMouseButtonPressed(MouseButton button) const
+	{
+		auto state = glfwGetMouseButton(m_window, static_cast<int>(button));
+		return state == GLFW_PRESS;
+	}
+
+	std::pair<float, float> WindowsWindow::getMousePosition() const
+	{
+		double x, y;
+		glfwGetCursorPos(m_window, &x, &y);
+		return { static_cast<float>(x), static_cast<float>(y) };
+	}
+
+	float WindowsWindow::getMouseX() const
+	{
+		auto [x, y] = getMousePosition();
+		return x;
+	}
+
+	float WindowsWindow::getMouseY() const
+	{
+		auto [x, y] = getMousePosition();
+		return y;
+	}
+
 #ifdef MN_PLATFORM_WINDOWS
 	void Window::init()
 	{
@@ -152,6 +179,11 @@ namespace Minerva
 	void Window::pollEvents()
 	{
 		glfwPollEvents();
+	}
+
+	void Window::terminate()
+	{
+		glfwTerminate();
 	}
 #endif // MN_PLATFORM_WINDOWS
 

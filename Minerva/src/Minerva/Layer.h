@@ -12,12 +12,14 @@ namespace Minerva
 	class  Layer
 	{
 	public:
-		Layer(const std::string& name = "Layer")
+		explicit Layer(const std::string& name = "Layer")
 #if defined MN_ENABLE_DEBUG_CODE
 			: m_debugName(name) 
 #endif
 		{}
-		virtual ~Layer() {}
+		virtual ~Layer() = default;
+		Layer(const Layer& other) = delete;
+		Layer& operator=(const Layer& other) = delete;
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}

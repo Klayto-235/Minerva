@@ -11,8 +11,9 @@ namespace Minerva
 	class  Application
 	{
 	public:
-		Application();
 		virtual ~Application();
+		Application(const Application& other) = delete;
+		Application& operator=(const Application& other) = delete;
 
 		void run();
 
@@ -22,6 +23,8 @@ namespace Minerva
 		Window& getWindow() { return *m_window; }
 
 		static Application& get() { return *s_instance; }
+	protected:
+		Application();
 	private:
 		std::unique_ptr<Window> m_window;
 		bool m_running;

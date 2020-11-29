@@ -43,6 +43,8 @@ namespace Minerva
 	class  Event
 	{
 	public:
+		virtual ~Event() = default;
+
 		virtual EventType getEventType() const = 0;
 		virtual int getEventCategoryFlags() const = 0;
 #if defined MN_ENABLE_DEBUG_CODE

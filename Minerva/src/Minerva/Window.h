@@ -24,7 +24,10 @@ namespace Minerva
 	class  Window
 	{
 	public:
-		virtual ~Window() {}
+		Window() = default;
+		virtual ~Window() = default;
+		Window(const Window & other) = delete;
+		Window& operator=(const Window& other) = delete;
 
 		virtual void onUpdate() = 0;
 
@@ -43,6 +46,7 @@ namespace Minerva
 
 		// Defined in platform-specific files.
 		static void init();
+		static void terminate();
 		static Window* create(const WindowProperties& properties = WindowProperties());
 		static void pollEvents();
 	};

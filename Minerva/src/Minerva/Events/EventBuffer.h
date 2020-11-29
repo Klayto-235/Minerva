@@ -19,6 +19,8 @@ namespace Minerva
 		{
 			m_buffer.reserve(8);
 		}
+		EventBuffer(const EventBuffer& other) = delete;
+		EventBuffer& operator=(const EventBuffer& other) = delete;
 
 		template <class T = Event, class... Args>
 		void post(Args&&... args)

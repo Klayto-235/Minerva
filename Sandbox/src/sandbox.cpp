@@ -1,4 +1,5 @@
 #include <Minerva.h>
+#include <imgui.h>
 
 class ExampleLayer : public Minerva::Layer
 {
@@ -23,6 +24,13 @@ public:
 	{
 		MN_TRACE("{0}", event);
 		return true;
+	}
+
+	void onImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 };

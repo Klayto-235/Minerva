@@ -123,6 +123,7 @@ workspace "Minerva"
 		{
 			"%{includeDir.spdlog}",
 			"%{includeDir.glm}",
+			"%{includeDir.imgui}",
 			"Minerva/src"
 		}
 
