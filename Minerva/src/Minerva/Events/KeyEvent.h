@@ -6,7 +6,7 @@
 namespace Minerva
 {
 
-	class MINERVA_API KeyEvent : public Event
+	class  KeyEvent : public Event
 	{
 	public:
 		Key getKey() const { return m_key; }
@@ -19,7 +19,7 @@ namespace Minerva
 		Key m_key;
 	};
 
-	class MINERVA_API KeyPressEvent : public KeyEvent
+	class  KeyPressEvent : public KeyEvent
 	{
 	public:
 		KeyPressEvent(Key key, bool repeat)
@@ -42,7 +42,7 @@ namespace Minerva
 		bool m_repeat;
 	};
 
-	class MINERVA_API KeyReleaseEvent : public KeyEvent
+	class  KeyReleaseEvent : public KeyEvent
 	{
 	public:
 		KeyReleaseEvent(Key key)
@@ -60,7 +60,7 @@ namespace Minerva
 		EVENT_CLASS_TYPE(KeyRelease)
 	};
 
-	class MINERVA_API TextCharEvent : public Event
+	class  TextCharEvent : public Event
 	{
 	public:
 		TextCharEvent(unsigned int codePoint)

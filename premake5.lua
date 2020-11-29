@@ -27,9 +27,10 @@ workspace "Minerva"
 
 	project "Minerva"
 		location "Minerva"
-		kind "SharedLib"
+		kind "StatiCLib"
 		language "C++"
-		staticruntime "off"
+		cppdialect "C++17"
+		staticruntime "On"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -41,6 +42,11 @@ workspace "Minerva"
 		{
 			"%{prj.name}/src/**.h",
 			"%{prj.name}/src/**.cpp"
+		}
+		
+		defines
+		{
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 
 		includedirs
@@ -62,18 +68,12 @@ workspace "Minerva"
 		}
 
 		filter "system:windows"
-			cppdialect "C++17"
 			systemversion "latest"
 
 			defines
 			{
 				"MN_PLATFORM_WINDOWS",
-				"MN_BUILD_DLL"
-			}
-
-			postbuildcommands
-			{
-				("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
+				"GLFW_INCLUDE_NONE"
 			}
 		
 		filter "configurations:Debug"
@@ -107,7 +107,8 @@ workspace "Minerva"
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
-		staticruntime "off"
+		cppdialect "C++17"
+		staticruntime "On"
 	
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -131,7 +132,6 @@ workspace "Minerva"
 		}
 
 		filter "system:windows"
-			cppdialect "C++17"
 			systemversion "latest"
 
 			defines

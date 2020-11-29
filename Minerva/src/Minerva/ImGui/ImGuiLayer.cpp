@@ -6,7 +6,6 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 
@@ -81,8 +80,9 @@ namespace Minerva
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();
-		io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
-			// Is this necessary?
+		io.DisplaySize = ImVec2(static_cast<float>(app.getWindow().getWidth()),
+			static_cast<float>(app.getWindow().getHeight()));
+			// Is it necessary to set display size here?
 
 		// Rendering
 		ImGui::Render();

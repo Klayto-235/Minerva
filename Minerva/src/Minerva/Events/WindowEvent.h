@@ -5,7 +5,7 @@
 namespace Minerva
 {
 
-	class MINERVA_API WindowResizeEvent : public Event
+	class  WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(unsigned int width, unsigned int height)
@@ -29,7 +29,7 @@ namespace Minerva
 		unsigned int m_width, m_height;
 	};
 
-	class MINERVA_API WindowCloseEvent : public Event
+	class  WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() {}

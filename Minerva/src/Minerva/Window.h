@@ -21,7 +21,7 @@ namespace Minerva
 			: title(title), width(width), height(height) {}
 	};
 
-	class MINERVA_API Window
+	class  Window
 	{
 	public:
 		virtual ~Window() {}
