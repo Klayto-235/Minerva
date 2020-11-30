@@ -8,8 +8,8 @@ namespace Minerva
     class  ImGuiLayer : public Layer
     {
     public:
-        ImGuiLayer();
-        ~ImGuiLayer();
+        ImGuiLayer()
+            : Layer("ImGui Layer") {}
 
         void onAttach() override;
         void onDetach() override;

@@ -12,17 +12,6 @@
 namespace Minerva
 {
 
-	ImGuiLayer::ImGuiLayer()
-		: Layer("ImGui Layer")
-	{
-
-	}
-
-	ImGuiLayer::~ImGuiLayer()
-	{
-
-	}
-
 	void ImGuiLayer::onAttach()
 	{
 		// Setup Dear ImGui context

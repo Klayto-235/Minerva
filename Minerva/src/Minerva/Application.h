@@ -7,6 +7,7 @@
 
 // TEMPORARY
 #include "Minerva/Renderer/Shader.h"
+#include "Minerva/Renderer/Buffer.h"
 
 
 namespace Minerva
@@ -37,8 +38,8 @@ namespace Minerva
 
 		// TEMPORARY
 		unsigned int m_vertexArray;
-		unsigned int m_vertexBuffer;
-		unsigned int m_indexBuffer;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<IndexBuffer> m_indexBuffer;
 		std::unique_ptr<Shader> m_shader;
 
 		static Application* s_instance;
