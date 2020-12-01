@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 
@@ -15,7 +16,7 @@ namespace Minerva
 		void bind() const;
 		void unbind() const;
 	private:
-		unsigned int m_rendererID;
+		uint32_t m_rendererID;
 	};
 
 }

@@ -5,8 +5,7 @@ namespace Minerva
 
 	enum class RendererAPI
 	{
-		None = 0,
-		OpenGL
+		None = 0, OpenGL
 	};
 
 	class Renderer
