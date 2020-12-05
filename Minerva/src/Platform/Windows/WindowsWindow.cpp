@@ -91,7 +91,7 @@ namespace Minerva
 
 	WindowsWindow::~WindowsWindow()
 	{
-		MN_CORE_INFO("Destroying window {0}.", m_data.title);
+		MN_CORE_INFO("Destroying window \"{0}\".", m_data.title);
 		glfwDestroyWindow(m_window);
 	}
 

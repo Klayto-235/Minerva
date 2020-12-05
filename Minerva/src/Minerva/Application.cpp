@@ -1,9 +1,7 @@
 #include "mnpch.h"
 #include "Application.h"
 #include "Log.h"
-
-// TEMPORARY
-#include <glad/glad.h>
+#include "Renderer/Renderer.h"
 
 
 namespace Minerva
@@ -138,16 +136,18 @@ namespace Minerva
 		m_running = true;
 		while (m_running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RenderCommand::clear();
+
+			Renderer::beginScene();
 
 			m_blueShader->bind();
-			m_squareVA->bind();
-			glDrawElements(GL_TRIANGLES, m_squareVA->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::submit(m_squareVA);
 
 			m_shader->bind();
-			m_vertexArray->bind();
-			glDrawElements(GL_TRIANGLES, m_vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::submit(m_vertexArray);
+
+			Renderer::endScene();
 
 			Window::pollEvents();
 			for (auto& event : m_window->getEventBuffer())

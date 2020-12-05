@@ -5,8 +5,8 @@
 #include "LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
 
-#include "Minerva/Renderer/Shader.h"
-#include "Minerva/Renderer/Buffer.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Buffer.h"
 
 
 namespace Minerva

@@ -1,19 +1,20 @@
 #pragma once
 
+#include "RenderCommand.h"
+
+
 namespace Minerva
 {
-
-	enum class RendererAPI
-	{
-		None = 0, OpenGL
-	};
 
 	class Renderer
 	{
 	public:
-		static RendererAPI GetAPI() { return s_rendererAPI; }
-	private:
-		static RendererAPI s_rendererAPI;
+		static void beginScene();
+		static void endScene();
+
+		static void submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+		static RenderAPI::API getAPI() { return RenderAPI::getAPI(); }
 	};
 
 }
