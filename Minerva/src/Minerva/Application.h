@@ -7,6 +7,7 @@
 
 #include "Renderer/Shader.h"
 #include "Renderer/Buffer.h"
+#include "Renderer/Camera.h"
 
 
 namespace Minerva
@@ -30,6 +31,8 @@ namespace Minerva
 	protected:
 		Application();
 	private:
+		static Application* s_instance;
+
 		std::unique_ptr<Window> m_window;
 		bool m_running;
 		LayerStack m_layerStack;
@@ -41,7 +44,7 @@ namespace Minerva
 		std::shared_ptr<Shader> m_blueShader;
 		std::shared_ptr<VertexArray> m_squareVA;
 
-		static Application* s_instance;
+		OrthographicCamera m_camera;
 	};
 
 	// To be defined in CLIENT
