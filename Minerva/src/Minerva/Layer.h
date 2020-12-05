@@ -18,7 +18,7 @@ namespace Minerva
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}
-		virtual void onUpdate() {}
+		virtual void onUpdate(float timeStep) {}
 		virtual void onImGuiRender() {}
 		virtual bool onEvent(const Event& event) { return false; }
 

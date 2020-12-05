@@ -5,10 +5,6 @@
 #include "LayerStack.h"
 #include "ImGui/ImGuiLayer.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/Buffer.h"
-#include "Renderer/Camera.h"
-
 
 namespace Minerva
 {
@@ -38,13 +34,7 @@ namespace Minerva
 		LayerStack m_layerStack;
 		ImGuiLayer* m_ImGuiLayer;
 
-		std::shared_ptr<Shader> m_shader;
-		std::shared_ptr<VertexArray> m_vertexArray;
-
-		std::shared_ptr<Shader> m_blueShader;
-		std::shared_ptr<VertexArray> m_squareVA;
-
-		OrthographicCamera m_camera;
+		float m_lastFrameTime;
 	};
 
 	// To be defined in CLIENT
