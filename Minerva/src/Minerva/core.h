@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+
+
 #ifndef MN_PLATFORM_WINDOWS
 	#error Platform not supported by Minerva.
 #endif
@@ -13,3 +16,15 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+
+namespace Minerva
+{
+
+	template<class T>
+	using Scope = std::unique_ptr<T>;
+
+	template<class T>
+	using Ref = std::shared_ptr<T>;
+
+}

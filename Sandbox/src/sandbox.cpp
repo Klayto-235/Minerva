@@ -21,7 +21,7 @@ public:
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<Minerva::VertexBuffer> vertexBuffer;
+		Minerva::Ref<Minerva::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Minerva::VertexBuffer::create(vertices, sizeof(vertices) / sizeof(vertices[0])));
 		vertexBuffer->setLayout({
 			{ Minerva::ShaderDataType::Float3, "a_position" },
@@ -31,7 +31,7 @@ public:
 
 		uint32_t indices[3] = { 0, 1, 2 };
 
-		std::shared_ptr<Minerva::IndexBuffer> indexBuffer;
+		Minerva::Ref<Minerva::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Minerva::IndexBuffer::create(indices, sizeof(indices) / sizeof(indices[0])));
 		m_vertexArray->setIndexBuffer(indexBuffer);
 
@@ -44,7 +44,7 @@ public:
 			-0.5f,  0.5f, 0.0f
 		};
 
-		std::shared_ptr<Minerva::VertexBuffer> squareVB;
+		Minerva::Ref<Minerva::VertexBuffer> squareVB;
 		squareVB.reset(Minerva::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 		squareVB->setLayout({
 			{ Minerva::ShaderDataType::Float3, "a_position" }
@@ -52,7 +52,7 @@ public:
 		m_squareVA->addVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Minerva::IndexBuffer> squareIB;
+		Minerva::Ref<Minerva::IndexBuffer> squareIB;
 		squareIB.reset(Minerva::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(squareIndices[0])));
 		m_squareVA->setIndexBuffer(squareIB);
 
@@ -189,11 +189,11 @@ public:
 	}
 
 private:
-	std::shared_ptr<Minerva::Shader> m_shader;
-	std::shared_ptr<Minerva::VertexArray> m_vertexArray;
+	Minerva::Ref<Minerva::Shader> m_shader;
+	Minerva::Ref<Minerva::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Minerva::Shader> m_flatColorShader;
-	std::shared_ptr<Minerva::VertexArray> m_squareVA;
+	Minerva::Ref<Minerva::Shader> m_flatColorShader;
+	Minerva::Ref<Minerva::VertexArray> m_squareVA;
 
 	Minerva::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition = { 0.0f, 0.0f, 0.0f };

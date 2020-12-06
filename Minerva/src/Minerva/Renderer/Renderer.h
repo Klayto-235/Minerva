@@ -13,8 +13,8 @@ namespace Minerva
 		static void beginScene(const OrthographicCamera& camera);
 		static void endScene();
 
-		static void submit(const std::shared_ptr<Shader>& shader,
-			const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform);
+		static void submit(const Ref<Shader>& shader,
+			const Ref<VertexArray>& vertexArray, const glm::mat4& transform);
 
 		static RenderAPI::API getAPI() { return RenderAPI::getAPI(); }
 	private:

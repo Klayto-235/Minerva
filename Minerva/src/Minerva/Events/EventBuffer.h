@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <type_traits>
-#include <memory>
 #include <algorithm>
 
 namespace Minerva

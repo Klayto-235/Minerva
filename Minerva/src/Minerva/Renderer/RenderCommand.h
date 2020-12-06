@@ -18,7 +18,7 @@ namespace Minerva
 			s_renderAPI->clear();
 		}
 
-		static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+		static void drawIndexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_renderAPI->drawIndexed(vertexArray);
 		}
