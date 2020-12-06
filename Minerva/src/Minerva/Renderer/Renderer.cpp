@@ -1,6 +1,8 @@
 #include "mnpch.h"
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h" // TEMPORARY
+
 namespace Minerva
 {
 	Renderer::SceneData* Renderer::s_sceneData = new Renderer::SceneData;
@@ -14,10 +16,14 @@ namespace Minerva
 	{
 	}
 
-	void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::submit(const std::shared_ptr<Shader>& shader,
+		const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->bind();
-		shader->uploadUniformMat4("u_VP", s_sceneData->viewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->
+			uploadUniformMat4("u_VP", s_sceneData->viewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->
+			uploadUniformMat4("u_M", transform);
 
 		vertexArray->bind();
 		RenderCommand::drawIndexed(vertexArray);

@@ -1,6 +1,12 @@
 #include <Minerva.h>
 #include <imgui.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "Platform/OpenGL/OpenGLShader.h" // TEMPORARY
+
+
 class ExampleLayer : public Minerva::Layer
 {
 public:
@@ -32,10 +38,10 @@ public:
 		m_squareVA.reset(Minerva::VertexArray::create());
 
 		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 
 		std::shared_ptr<Minerva::VertexBuffer> squareVB;
@@ -57,6 +63,7 @@ public:
 			layout(location = 1) in vec4 a_color;
 
 			uniform mat4 u_VP;
+			uniform mat4 u_M;
 
 			out vec3 v_position;
 			out vec4 v_color;
@@ -65,7 +72,7 @@ public:
 			{
 				v_position = a_position;
 				v_color = a_color;
-				gl_Position = u_VP * vec4(a_position, 1.0);	
+				gl_Position = u_VP * u_M * vec4(a_position, 1.0);	
 			}
 		)";
 
@@ -83,38 +90,42 @@ public:
 			}
 		)";
 
-		m_shader.reset(new Minerva::Shader(vertexSrc, fragmentSrc));
+		m_shader.reset(Minerva::Shader::create(vertexSrc, fragmentSrc));
 
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
 
 			uniform mat4 u_VP;
+			uniform mat4 u_M;
 
 			out vec3 v_position;
 
 			void main()
 			{
 				v_position = a_position;
-				gl_Position = u_VP * vec4(a_position, 1.0);	
+				gl_Position = u_VP * u_M * vec4(a_position, 1.0);	
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
+
+			uniform vec3 u_color;
 
 			in vec3 v_position;
 
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_color, 1.0);
 			}
 		)";
 
-		m_blueShader.reset(new Minerva::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_flatColorShader.reset(
+			Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 	}
 
 	void onUpdate(float ts) override
@@ -144,8 +155,23 @@ public:
 
 		Minerva::Renderer::beginScene(m_camera);
 
-		Minerva::Renderer::submit(m_blueShader, m_squareVA);
-		Minerva::Renderer::submit(m_shader, m_vertexArray);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->bind();
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->
+			uploadUniformFloat3("u_color", m_squareColor);
+
+		for (int y = 0; y < 20; y++)
+		{
+			for (int x = 0; x < 20; x++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Minerva::Renderer::submit(m_flatColorShader, m_squareVA, transform);
+			}
+		}
+
+		Minerva::Renderer::submit(m_shader, m_vertexArray, glm::mat4(1.0f));
 
 		Minerva::Renderer::endScene();
 	}
@@ -157,13 +183,16 @@ public:
 
 	void onImGuiRender() override
 	{
-
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
+		ImGui::End();
 	}
+
 private:
 	std::shared_ptr<Minerva::Shader> m_shader;
 	std::shared_ptr<Minerva::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Minerva::Shader> m_blueShader;
+	std::shared_ptr<Minerva::Shader> m_flatColorShader;
 	std::shared_ptr<Minerva::VertexArray> m_squareVA;
 
 	Minerva::OrthographicCamera m_camera;
@@ -171,6 +200,8 @@ private:
 	float m_cameraMoveSpeed = 5.0f;
 	float m_cameraRotation = 0.0f;
 	float m_cameraRotationSpeed = 180.0f;
+
+	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public Minerva::Application
