@@ -15,6 +15,7 @@
 
 #include "Minerva/Renderer/Buffer.h"
 #include "Minerva/Renderer/Shader.h"
+#include "Minerva/Renderer/Texture.h"
 
 #include "Minerva/Renderer/Camera.h"
 

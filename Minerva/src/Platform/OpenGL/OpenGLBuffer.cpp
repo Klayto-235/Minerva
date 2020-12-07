@@ -1,7 +1,6 @@
 #include "mnpch.h"
 #include "OpenGLBuffer.h"
-
-#include <glad/glad.h>
+#include "OpenGL_core.h"
 
 
 namespace Minerva
@@ -11,24 +10,24 @@ namespace Minerva
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t count)
 	{
-		glCreateBuffers(1, &m_rendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW);
+		GLCALL(glCreateBuffers(1, &m_renderID));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW));
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &m_rendererID);
+		GLCALL(glDeleteBuffers(1, &m_renderID));
 	}
 
 	void OpenGLVertexBuffer::bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
 	}
 
 	void OpenGLVertexBuffer::unbind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
 #pragma endregion
@@ -38,24 +37,24 @@ namespace Minerva
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
 		: m_count(count)
 	{
-		glCreateBuffers(1, &m_rendererID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+		GLCALL(glCreateBuffers(1, &m_renderID));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID));
+		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(1, &m_rendererID);
+		GLCALL(glDeleteBuffers(1, &m_renderID));
 	}
 
 	void OpenGLIndexBuffer::bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
 	}
 
 	void OpenGLIndexBuffer::unbind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
 #pragma endregion
@@ -78,37 +77,37 @@ namespace Minerva
 		case ShaderDataType::Int4:		return GL_INT;
 		case ShaderDataType::Bool:		return GL_BOOL;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeToOpenGLType: unknown ShaderDataType.");
+			MN_CORE_ASSERT(false, "shaderDataTypeToOpenGLType: Unknown ShaderDataType.");
 			return 0;
 		}
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glCreateVertexArrays(1, &m_rendererID);
+		GLCALL(glCreateVertexArrays(1, &m_renderID));
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
-		glDeleteVertexArrays(1, &m_rendererID);
+		GLCALL(glDeleteVertexArrays(1, &m_renderID));
 	}
 
 	void OpenGLVertexArray::bind() const
 	{
-		glBindVertexArray(m_rendererID);
+		GLCALL(glBindVertexArray(m_renderID));
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
-		glBindVertexArray(0);
+		GLCALL(glBindVertexArray(0));
 	}
 
 	void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
 		MN_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(),
-			"OpenGLVertexArray::addVertexBuffer: vertex buffer layout has no elements.");
+			"OpenGLVertexArray::addVertexBuffer: Vertex buffer layout has no elements.");
 
-		glBindVertexArray(m_rendererID);
+		GLCALL(glBindVertexArray(m_renderID));
 		vertexBuffer->bind();
 
 		uint32_t index = 0;
@@ -116,13 +115,13 @@ namespace Minerva
 		uint32_t stride = layout.getStride();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
+			GLCALL(glEnableVertexAttribArray(index));
+			GLCALL(glVertexAttribPointer(index,
 				shaderDataTypeComponentCount(element.type),
 				shaderDataTypeToOpenGLType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				stride,
-				reinterpret_cast<const void*>((uint64_t)(element.offset)));
+				reinterpret_cast<const void*>((uint64_t)(element.offset))));
 			index++;
 		}
 
@@ -131,7 +130,7 @@ namespace Minerva
 
 	void OpenGLVertexArray::setIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
-		glBindVertexArray(m_rendererID);
+		GLCALL(glBindVertexArray(m_renderID));
 		indexBuffer->bind();
 
 		m_indexBuffer = indexBuffer;

@@ -18,6 +18,7 @@ workspace "Minerva"
 	includeDir["glad"] = "Minerva/vendor/glad/include"
 	includeDir["imgui"] = "Minerva/vendor/imgui"
 	includeDir["glm"] = "Minerva/vendor/glm"
+	includeDir["stb_image"] = "Minerva/vendor/stb_image"
 
 	group "Dependencies"
 		include "Minerva/vendor/premake_GLFW.lua"
@@ -41,7 +42,8 @@ workspace "Minerva"
 		files
 		{
 			"%{prj.name}/src/**.h",
-			"%{prj.name}/src/**.cpp"
+			"%{prj.name}/src/**.cpp",
+			"%{prj.name}/vendor/stb_image/**.cpp",
 		}
 		
 		defines
@@ -56,7 +58,8 @@ workspace "Minerva"
 			"%{includeDir.GLFW}",
 			"%{includeDir.glad}",
 			"%{includeDir.imgui}",
-			"%{includeDir.glm}"
+			"%{includeDir.glm}",
+			"%{includeDir.stb_image}"
 		}
 	
 		links
@@ -81,7 +84,8 @@ workspace "Minerva"
 			{
 				"MN_DEBUG",
 				"MN_ENABLE_ASSERTS",
-				"MN_ENABLE_DEBUG_CODE"
+				"MN_ENABLE_DEBUG_CODE",
+				"MN_ENABLE_OPENGL_ASSERTS"
 			}
 			runtime "Debug"
 			symbols "On"
@@ -145,7 +149,8 @@ workspace "Minerva"
 			{
 				"MN_DEBUG",
 				"MN_ENABLE_ASSERTS",
-				"MN_ENABLE_DEBUG_CODE"
+				"MN_ENABLE_DEBUG_CODE",
+				"MN_ENABLE_OPENGL_ASSERTS"
 			}
 			runtime "Debug"
 			symbols "On"

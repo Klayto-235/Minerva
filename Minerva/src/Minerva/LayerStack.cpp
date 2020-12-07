@@ -36,8 +36,7 @@ namespace Minerva
 			m_layers.erase(it);
 			--m_nLayers;
 		}
-		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popLayer ({0}): could not find Layer {1}.",
-			static_cast<void*>(this), static_cast<void*>(layer));
+		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popLayer: Could not find layer.");
 	}
 
 	void LayerStack::popOverlay(Layer* overlay)
@@ -48,8 +47,7 @@ namespace Minerva
 			overlay->onDetach();
 			m_layers.erase(it);
 		}
-		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popOverlay ({0}): could not find Layer {1}.",
-			static_cast<void*>(this), static_cast<void*>(overlay));
+		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popOverlay: Could not find overlay.");
 	}
 
 }

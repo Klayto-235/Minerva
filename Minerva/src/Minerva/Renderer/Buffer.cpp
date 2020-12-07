@@ -5,44 +5,44 @@
 
 namespace Minerva {
 
-	VertexBuffer* VertexBuffer::create(float* vertices, uint32_t count)
+	Ref<VertexBuffer> VertexBuffer::create(float* vertices, uint32_t count)
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return new OpenGLVertexBuffer(vertices, count);
+		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLVertexBuffer>(vertices, count);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "VertexBuffer::create: RendererAPI::None is currently not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "VertexBuffer::create: unknown RendererAPI.");
+			MN_CORE_ASSERT(false, "VertexBuffer::create: Unknown RendererAPI.");
 			return nullptr;
 		}
 	}
 
-	IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t count)
+	Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return new OpenGLIndexBuffer(indices, count);
+		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLIndexBuffer>(indices, count);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "IndexBuffer::create: RendererAPI::None is currently not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "IndexBuffer::create: unknown RendererAPI.");
+			MN_CORE_ASSERT(false, "IndexBuffer::create: Unknown RendererAPI.");
 			return nullptr;
 		}
 	}
 
-	VertexArray* VertexArray::create()
+	Ref<VertexArray> VertexArray::create()
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return new OpenGLVertexArray();
+		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "VertexArray::create: RendererAPI::None is currently not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "VertexArray::create: unknown RendererAPI.");
+			MN_CORE_ASSERT(false, "VertexArray::create: Unknown RendererAPI.");
 			return nullptr;
 		}
 	}

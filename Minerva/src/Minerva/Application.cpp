@@ -1,6 +1,5 @@
 #include "mnpch.h"
 #include "Application.h"
-#include "Log.h"
 
 #include <GLFW/glfw3.h> // TEMPORARY (timestep)
 
@@ -13,7 +12,7 @@ namespace Minerva
 	Application::Application()
 		: m_running(false)
 	{
-		MN_CORE_ASSERT(!s_instance, "application already exists.");
+		MN_CORE_ASSERT(!s_instance, "Application::Application: Application already exists.");
 		s_instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::create());

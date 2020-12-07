@@ -13,7 +13,7 @@ public:
 	ExampleLayer()
 		: Layer("Example"), m_camera(3.2f, 1.8f, 2.0f)
 	{
-		m_vertexArray.reset(Minerva::VertexArray::create());
+		m_vertexArray = Minerva::VertexArray::create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -22,7 +22,7 @@ public:
 		};
 
 		Minerva::Ref<Minerva::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Minerva::VertexBuffer::create(vertices, sizeof(vertices) / sizeof(vertices[0])));
+		vertexBuffer = Minerva::VertexBuffer::create(vertices, sizeof(vertices) / sizeof(vertices[0]));
 		vertexBuffer->setLayout({
 			{ Minerva::ShaderDataType::Float3, "a_position" },
 			{ Minerva::ShaderDataType::Float4, "a_color" }
@@ -32,28 +32,29 @@ public:
 		uint32_t indices[3] = { 0, 1, 2 };
 
 		Minerva::Ref<Minerva::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Minerva::IndexBuffer::create(indices, sizeof(indices) / sizeof(indices[0])));
+		indexBuffer = Minerva::IndexBuffer::create(indices, sizeof(indices) / sizeof(indices[0]));
 		m_vertexArray->setIndexBuffer(indexBuffer);
 
-		m_squareVA.reset(Minerva::VertexArray::create());
+		m_squareVA = Minerva::VertexArray::create();
 
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		Minerva::Ref<Minerva::VertexBuffer> squareVB;
-		squareVB.reset(Minerva::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		squareVB = Minerva::VertexBuffer::create(squareVertices, sizeof(squareVertices));
 		squareVB->setLayout({
-			{ Minerva::ShaderDataType::Float3, "a_position" }
+			{ Minerva::ShaderDataType::Float3, "a_position" },
+			{ Minerva::ShaderDataType::Float2, "a_texCoord" }
 			});
 		m_squareVA->addVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Minerva::Ref<Minerva::IndexBuffer> squareIB;
-		squareIB.reset(Minerva::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(squareIndices[0])));
+		squareIB = Minerva::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(squareIndices[0]));
 		m_squareVA->setIndexBuffer(squareIB);
 
 		std::string vertexSrc = R"(
@@ -90,7 +91,7 @@ public:
 			}
 		)";
 
-		m_shader.reset(Minerva::Shader::create(vertexSrc, fragmentSrc));
+		m_shader = Minerva::Shader::create(vertexSrc, fragmentSrc);
 
 		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
@@ -124,8 +125,49 @@ public:
 			}
 		)";
 
-		m_flatColorShader.reset(
-			Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		m_flatColorShader = 
+			Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+
+		std::string textureShaderVertexSrc = R"(
+			#version 450 core
+			
+			layout(location = 0) in vec3 a_position;
+			layout(location = 1) in vec2 a_texCoord;
+
+			uniform mat4 u_VP;
+			uniform mat4 u_M;
+
+			out vec2 v_texCoord;
+
+			void main()
+			{
+				v_texCoord = a_texCoord;
+				gl_Position = u_VP * u_M * vec4(a_position, 1.0);	
+			}
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 450 core
+			
+			layout(location = 0) out vec4 color;
+
+			uniform sampler2D u_texture;
+
+			in vec2 v_texCoord;
+
+			void main()
+			{
+				color = texture(u_texture, v_texCoord);
+			}
+		)";
+
+		m_textureShader =
+			Minerva::Shader::create(textureShaderVertexSrc, textureShaderFragmentSrc);
+
+		m_texture = Minerva::Texture2D::create("assets/textures/chess_board.png");
+
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_textureShader)->bind();
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_textureShader)->uploadUniformInt("u_texture", 0);
 	}
 
 	void onUpdate(float ts) override
@@ -171,7 +213,11 @@ public:
 			}
 		}
 
-		Minerva::Renderer::submit(m_shader, m_vertexArray, glm::mat4(1.0f));
+		m_texture->bind();
+		Minerva::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		// Triangle
+		//Minerva::Renderer::submit(m_shader, m_vertexArray, glm::mat4(1.0f));
 
 		Minerva::Renderer::endScene();
 	}
@@ -193,7 +239,10 @@ private:
 	Minerva::Ref<Minerva::VertexArray> m_vertexArray;
 
 	Minerva::Ref<Minerva::Shader> m_flatColorShader;
+	Minerva::Ref<Minerva::Shader> m_textureShader;
 	Minerva::Ref<Minerva::VertexArray> m_squareVA;
+
+	Minerva::Ref<Minerva::Texture2D> m_texture;
 
 	Minerva::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition = { 0.0f, 0.0f, 0.0f };

@@ -30,7 +30,7 @@ namespace Minerva
 		case ShaderDataType::Int4:		return 4 * 4;
 		case ShaderDataType::Bool:		return 1;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeSize: unknown data type.");
+			MN_CORE_ASSERT(false, "shaderDataTypeSize: Unknown data type.");
 			return 0;
 		}
 	}
@@ -51,7 +51,7 @@ namespace Minerva
 		case ShaderDataType::Int4:		return 4;
 		case ShaderDataType::Bool:		return 1;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeComponentCount: unknown data type.");
+			MN_CORE_ASSERT(false, "shaderDataTypeComponentCount: Unknown data type.");
 			return 0;
 		}
 	}
@@ -110,7 +110,7 @@ namespace Minerva
 		virtual const BufferLayout& getLayout() const = 0;
 		virtual void setLayout(const BufferLayout& layout) = 0;
 
-		static VertexBuffer* create(float* vertices, uint32_t count);
+		static Ref<VertexBuffer> create(float* vertices, uint32_t count);
 	};
 
 	class IndexBuffer
@@ -126,7 +126,7 @@ namespace Minerva
 
 		virtual uint32_t getCount() const = 0;
 
-		static IndexBuffer* create(uint32_t* indices, uint32_t count);
+		static Ref<IndexBuffer> create(uint32_t* indices, uint32_t count);
 	};
 
 	class VertexArray
@@ -146,7 +146,7 @@ namespace Minerva
 		virtual const std::vector<Ref<VertexBuffer>>& getVertexBuffers() const = 0;
 		virtual const Ref<IndexBuffer>& getIndexBuffer() const = 0;
 
-		static VertexArray* create();
+		static Ref<VertexArray> create();
 	};
 
 }

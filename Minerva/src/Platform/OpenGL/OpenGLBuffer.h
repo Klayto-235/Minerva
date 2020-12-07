@@ -18,7 +18,7 @@ namespace Minerva
 		virtual const BufferLayout& getLayout() const override { return m_layout; }
 		virtual void setLayout(const BufferLayout& layout) override { m_layout = layout; }
 	private:
-		uint32_t m_rendererID;
+		uint32_t m_renderID;
 		BufferLayout m_layout;
     };
 
@@ -33,7 +33,7 @@ namespace Minerva
 
 		uint32_t getCount() const override { return m_count; }
 	private:
-		uint32_t m_rendererID;
+		uint32_t m_renderID;
 		uint32_t m_count;
 	};
 
@@ -52,7 +52,7 @@ namespace Minerva
 		const std::vector<Ref<VertexBuffer>>& getVertexBuffers() const { return m_vertexBuffers; }
 		const Ref<IndexBuffer>& getIndexBuffer() const { return m_indexBuffer; }
 	private:
-		uint32_t m_rendererID;
+		uint32_t m_renderID;
 		std::vector<Ref<VertexBuffer>> m_vertexBuffers;
 		Ref<IndexBuffer> m_indexBuffer;
 	};
