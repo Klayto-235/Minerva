@@ -55,6 +55,7 @@ namespace Minerva
 		uint32_t m_renderID;
 		std::vector<Ref<VertexBuffer>> m_vertexBuffers;
 		Ref<IndexBuffer> m_indexBuffer;
+		uint32_t m_nAttributes = 0;
 	};
 
 }

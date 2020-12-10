@@ -110,19 +110,18 @@ namespace Minerva
 		GLCALL(glBindVertexArray(m_renderID));
 		vertexBuffer->bind();
 
-		uint32_t index = 0;
 		const auto& layout = vertexBuffer->getLayout();
 		uint32_t stride = layout.getStride();
 		for (const auto& element : layout)
 		{
-			GLCALL(glEnableVertexAttribArray(index));
-			GLCALL(glVertexAttribPointer(index,
+			GLCALL(glEnableVertexAttribArray(m_nAttributes));
+			GLCALL(glVertexAttribPointer(m_nAttributes,
 				shaderDataTypeComponentCount(element.type),
 				shaderDataTypeToOpenGLType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				stride,
 				reinterpret_cast<const void*>((uint64_t)(element.offset))));
-			index++;
+			m_nAttributes++;
 		}
 
 		m_vertexBuffers.push_back(vertexBuffer);
