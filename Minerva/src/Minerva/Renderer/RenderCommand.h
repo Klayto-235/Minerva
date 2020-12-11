@@ -9,6 +9,11 @@ namespace Minerva
 	class RenderCommand
 	{
 	public:
+		static void init()
+		{
+			s_renderAPI->init();
+		}
+
 		static void setClearColor(const glm::vec4& color)
 		{
 			s_renderAPI->setClearColor(color);

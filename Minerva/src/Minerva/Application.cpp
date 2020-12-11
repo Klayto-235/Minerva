@@ -1,5 +1,6 @@
 #include "mnpch.h"
 #include "Application.h"
+#include "Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h> // TEMPORARY (timestep)
 
@@ -16,6 +17,8 @@ namespace Minerva
 		s_instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::create());
+
+		Renderer::init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		m_layerStack.pushOverlay(m_ImGuiLayer);

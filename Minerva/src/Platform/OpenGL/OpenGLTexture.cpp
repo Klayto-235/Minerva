@@ -19,14 +19,26 @@ namespace Minerva
 		MN_CORE_ASSERT(data, "OpenGLTexture2D::OpenGLTexture2D: Could not load image \"{0}\".", path);
 		m_width = width;
 		m_height = height;
+		GLenum internalFormat = 0, dataFormat = 0;
+		if (channels == 4)
+		{
+			internalFormat = GL_RGBA8;
+			dataFormat = GL_RGBA;
+		}
+		else
+		{
+			internalFormat = GL_RGB8;
+			dataFormat = GL_RGB;
+		}
 
 		GLCALL(glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID));
 
 		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
-		GLCALL(glTextureStorage2D(m_renderID, 1, GL_RGB8, m_width, m_height));
-		GLCALL(glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, data));
+		GLCALL(glTextureStorage2D(m_renderID, 1, internalFormat, m_width, m_height));
+		GLCALL(glTextureSubImage2D(m_renderID, 0, 0, 0, m_width,
+			m_height, dataFormat, GL_UNSIGNED_BYTE, data));
 
 		stbi_image_free(data);
 	}

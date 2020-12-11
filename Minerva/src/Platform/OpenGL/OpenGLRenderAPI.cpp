@@ -5,6 +5,11 @@
 
 namespace Minerva
 {
+	void OpenGLRenderAPI::init()
+	{
+		GLCALL(glEnable(GL_BLEND));
+		GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	}
 
 	void OpenGLRenderAPI::setClearColor(const glm::vec4& color)
 	{

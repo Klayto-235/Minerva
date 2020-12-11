@@ -38,8 +38,8 @@ namespace Minerva
 		: m_count(count)
 	{
 		GLCALL(glCreateBuffers(1, &m_renderID));
-		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID));
-		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));
+		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -49,12 +49,12 @@ namespace Minerva
 
 	void OpenGLIndexBuffer::bind() const
 	{
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID));
 	}
 
 	void OpenGLIndexBuffer::unbind() const
 	{
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 	}
 
 #pragma endregion
