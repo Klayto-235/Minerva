@@ -19,6 +19,7 @@ namespace Minerva
 		virtual void unbind() const = 0;
 
 		static Ref<Shader> create(const std::string& vertexSource, const std::string& fragmentSource);
+		static Ref<Shader> create(const std::string& filePath);
 	};
 
 }

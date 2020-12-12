@@ -8,15 +8,15 @@
 namespace Minerva
 {
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& filePath)
 #if defined MN_ENABLE_DEBUG_CODE
-		: m_path(path)
+		: m_filePath(filePath)
 #endif
 	{
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		MN_CORE_ASSERT(data, "OpenGLTexture2D::OpenGLTexture2D: Could not load image \"{0}\".", path);
+		stbi_uc* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+		MN_CORE_ASSERT(data, "OpenGLTexture2D::OpenGLTexture2D: Could not load image \"{0}\".", filePath);
 		m_width = width;
 		m_height = height;
 		GLenum internalFormat = 0, dataFormat = 0;

@@ -21,4 +21,18 @@ namespace Minerva
 		}
 	}
 
+	Ref<Shader> Shader::create(const std::string& filePath)
+	{
+		switch (Renderer::getAPI())
+		{
+		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLShader>(filePath);
+		case RenderAPI::API::None:
+			MN_CORE_ASSERT(false, "OpenGLShader::create: RendererAPI::None is currently not supported.");
+			return nullptr;
+		default:
+			MN_CORE_ASSERT(false, "OpenGLShader::create: Unknown RendererAPI.");
+			return nullptr;
+		}
+	}
+
 }

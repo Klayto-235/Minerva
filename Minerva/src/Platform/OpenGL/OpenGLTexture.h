@@ -9,7 +9,7 @@ namespace Minerva
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(const std::string& filePath);
 		~OpenGLTexture2D();
 
 		uint32_t getWidth() const override { return m_width; }
@@ -18,7 +18,7 @@ namespace Minerva
 		void bind(uint32_t slot = 0) const override;
 	private:
 #if defined MN_ENABLE_DEBUG_CODE
-		std::string m_path;
+		std::string m_filePath;
 #endif
 		uint32_t m_width, m_height;
 		uint32_t m_renderID;

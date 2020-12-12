@@ -4,6 +4,12 @@
 
 #include <glm/glm.hpp>
 
+#include <unordered_map>
+#include <string>
+
+// TEMPORARAY
+typedef unsigned int GLenum;
+
 
 namespace Minerva
 {
@@ -11,6 +17,7 @@ namespace Minerva
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string& filePath);
 		OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource);
 		~OpenGLShader();
 
@@ -27,6 +34,10 @@ namespace Minerva
 		void uploadUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 	private:
+		std::string readFile(const std::string& filePath);
+		std::unordered_map<GLenum, std::string> parse(const std::string& source);
+		void compile(const std::unordered_map<GLenum, std::string>& shaderSources);
+
 		uint32_t m_renderID;
 	};
 
