@@ -8,6 +8,8 @@
 
 #include "Minerva/ImGui/ImGuiLayer.h"
 
+#include "Minerva/CameraController.h"
+
 ////////////////////////////////////////
 /////////////// Renderer ///////////////
 #include "Minerva/Renderer/Renderer.h"

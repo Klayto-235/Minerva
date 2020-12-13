@@ -11,7 +11,7 @@ class ExampleLayer : public Minerva::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_camera(3.2f, 1.8f, 2.0f)
+		: Layer("Example"), m_cameraController(1280.0f / 720.0f)
 	{
 		m_vertexArray = Minerva::VertexArray::create();
 
@@ -127,7 +127,7 @@ public:
 
 		m_flatColorShader = Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-		auto textureShader = m_shaderLibrary.load("assets/shaders/.");
+		auto textureShader = m_shaderLibrary.load("assets/shaders/texture.glsl");
 
 		m_texture = Minerva::Texture2D::create("assets/textures/chess_board.png");
 		m_textureAlpha = Minerva::Texture2D::create("assets/textures/alpha_test.png");
@@ -140,28 +140,12 @@ public:
 	{
 		const Minerva::Window& window = Minerva::Application::get().getWindow();
 
-		if (window.isKeyPressed(Minerva::Key::Left))
-			m_cameraPosition.x -= m_cameraMoveSpeed * ts;
-		else if (window.isKeyPressed(Minerva::Key::Right))
-			m_cameraPosition.x += m_cameraMoveSpeed * ts;
-
-		if (window.isKeyPressed(Minerva::Key::Up))
-			m_cameraPosition.y += m_cameraMoveSpeed * ts;
-		else if (window.isKeyPressed(Minerva::Key::Down))
-			m_cameraPosition.y -= m_cameraMoveSpeed * ts;
-
-		if (window.isKeyPressed(Minerva::Key::A))
-			m_cameraRotation += m_cameraRotationSpeed * ts;
-		if (window.isKeyPressed(Minerva::Key::D))
-			m_cameraRotation -= m_cameraRotationSpeed * ts;
-
-		m_camera.setPosition(m_cameraPosition);
-		m_camera.setRotation(m_cameraRotation);
+		m_cameraController.onUpdate(ts, window.getInputState());
 
 		Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Minerva::RenderCommand::clear();
 
-		Minerva::Renderer::beginScene(m_camera);
+		Minerva::Renderer::beginScene(m_cameraController.getCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -193,7 +177,7 @@ public:
 
 	bool onEvent(const Minerva::Event& event) override
 	{
-		return false;
+		return m_cameraController.onEvent(event);
 	}
 
 	void onImGuiRender() override
@@ -214,11 +198,7 @@ private:
 	Minerva::Ref<Minerva::Texture2D> m_texture;
 	Minerva::Ref<Minerva::Texture2D> m_textureAlpha;
 
-	Minerva::OrthographicCamera m_camera;
-	glm::vec3 m_cameraPosition = { 0.0f, 0.0f, 0.0f };
-	float m_cameraMoveSpeed = 5.0f;
-	float m_cameraRotation = 0.0f;
-	float m_cameraRotationSpeed = 180.0f;
+	Minerva::OrthographicCameraController m_cameraController;
 
 	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 };

@@ -24,6 +24,16 @@ namespace Minerva
 	class  Window
 	{
 	public:
+		class InputState
+		{
+		public:
+			virtual bool isKeyPressed(Key key) const = 0;
+			virtual bool isMouseButtonPressed(MouseButton button) const = 0;
+			virtual std::pair<float, float> getMousePosition() const = 0;
+			virtual float getMouseX() const = 0;
+			virtual float getMouseY() const = 0;
+		};
+
 		Window() = default;
 		virtual ~Window() = default;
 		Window(const Window & other) = delete;
@@ -35,14 +45,9 @@ namespace Minerva
 		virtual unsigned int getHeight() const = 0;
 		virtual void setVSync(bool enabled) = 0;
 		virtual bool isVSync() const = 0;
-		virtual const EventBuffer& getEventBuffer() const = 0;
 		virtual void* getNativeWindow() = 0;
-
-		virtual bool isKeyPressed(Key key) const = 0;
-		virtual bool isMouseButtonPressed(MouseButton button) const = 0;
-		virtual std::pair<float,float> getMousePosition() const = 0;
-		virtual float getMouseX() const = 0;
-		virtual float getMouseY() const = 0;
+		virtual const EventBuffer& getEventBuffer() const = 0;
+		virtual const InputState& getInputState() const = 0;
 
 		// Defined in platform-specific files.
 		static void init();

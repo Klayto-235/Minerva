@@ -32,11 +32,11 @@ namespace Minerva
 	void Application::run()
 	{
 		m_running = true;
-		m_lastFrameTime = glfwGetTime();
+		m_lastFrameTime = static_cast<float>(glfwGetTime());
 
 		while (m_running)
 		{
-			const float currentTime = glfwGetTime();
+			const float currentTime = static_cast<float>(glfwGetTime());
 			const float deltaTime = currentTime - m_lastFrameTime;
 			m_lastFrameTime = currentTime;
 

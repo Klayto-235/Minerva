@@ -9,8 +9,39 @@
 namespace Minerva
 {
 
+	bool WindowsWindow::WindowsInputState::isKeyPressed(Key key) const
+	{
+		auto state = glfwGetKey(m_window.m_window, static_cast<int>(key));
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
+
+	bool WindowsWindow::WindowsInputState::isMouseButtonPressed(MouseButton button) const
+	{
+		auto state = glfwGetMouseButton(m_window.m_window, static_cast<int>(button));
+		return state == GLFW_PRESS;
+	}
+
+	std::pair<float, float> WindowsWindow::WindowsInputState::getMousePosition() const
+	{
+		double x, y;
+		glfwGetCursorPos(m_window.m_window, &x, &y);
+		return { static_cast<float>(x), static_cast<float>(y) };
+	}
+
+	float WindowsWindow::WindowsInputState::getMouseX() const
+	{
+		auto [x, y] = getMousePosition();
+		return x;
+	}
+
+	float WindowsWindow::WindowsInputState::getMouseY() const
+	{
+		auto [x, y] = getMousePosition();
+		return y;
+	}
+
 	WindowsWindow::WindowsWindow(const WindowProperties& properties)
-		: m_data{ properties.title, properties.width, properties.height }
+		: m_data{ properties.title, properties.width, properties.height }, m_inputState(*this)
 	{
 		MN_CORE_INFO("Creating window \"{0}\" ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
@@ -104,63 +135,12 @@ namespace Minerva
 		m_data.eventBuffer.clear();
 	}
 
-	unsigned int WindowsWindow::getWidth() const
-	{
-		return m_data.width;
-	}
-
-	unsigned int WindowsWindow::getHeight() const
-	{
-		return m_data.height;
-	}
-
 	void WindowsWindow::setVSync(bool enabled)
 	{
 		if (enabled) glfwSwapInterval(1);
 		else glfwSwapInterval(0);
 
 		m_data.VSync = enabled;
-	}
-
-	bool WindowsWindow::isVSync() const
-	{
-		return m_data.VSync;
-	}
-
-	const EventBuffer& WindowsWindow::getEventBuffer() const
-	{
-		return m_data.eventBuffer;
-	}
-
-	bool WindowsWindow::isKeyPressed(Key key) const
-	{
-		auto state = glfwGetKey(m_window, static_cast<int>(key));
-		return state == GLFW_PRESS || state == GLFW_REPEAT;
-	}
-
-	bool WindowsWindow::isMouseButtonPressed(MouseButton button) const
-	{
-		auto state = glfwGetMouseButton(m_window, static_cast<int>(button));
-		return state == GLFW_PRESS;
-	}
-
-	std::pair<float, float> WindowsWindow::getMousePosition() const
-	{
-		double x, y;
-		glfwGetCursorPos(m_window, &x, &y);
-		return { static_cast<float>(x), static_cast<float>(y) };
-	}
-
-	float WindowsWindow::getMouseX() const
-	{
-		auto [x, y] = getMousePosition();
-		return x;
-	}
-
-	float WindowsWindow::getMouseY() const
-	{
-		auto [x, y] = getMousePosition();
-		return y;
 	}
 
 #ifdef MN_PLATFORM_WINDOWS

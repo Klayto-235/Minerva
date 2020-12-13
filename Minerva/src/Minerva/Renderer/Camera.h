@@ -9,10 +9,10 @@ namespace Minerva
 	class OrthographicCamera
 	{
 	public:
-		OrthographicCamera(float width, float height, float depth);
+		OrthographicCamera(float width, float height, float depth = 2.0f);
 		OrthographicCamera(float width, float height, float zNear, float zFar);
 
-		void setProjection(float width, float height, float depth);
+		void setProjection(float width, float height, float depth = 2.0f);
 		void setProjection(float width, float height, float zNear, float zFar);
 		
 		void setPosition(const glm::vec3& position) { m_position = position; calculateViewMatrix(); }
