@@ -15,7 +15,7 @@ namespace Minerva
 
 	static constexpr GLenum stringToShaderType(const std::string_view& strView)
 	{
-		using namespace std::literals;
+		using namespace std::literals::string_view_literals;
 		if (strView == "vertex"sv)									return GL_VERTEX_SHADER;
 		else if (strView == "fragment"sv || strView == "pixel"sv)	return GL_FRAGMENT_SHADER;
 		else
@@ -134,10 +134,10 @@ namespace Minerva
 				break;
 			}
 
-			size_t typeStringBegin = source.find_first_not_of(" \f\t\v\r", tokenBegin + tokenLength);
-			size_t typeStringEnd = source.find_first_of(" \f\t\v\r\n", typeStringBegin);
+			const size_t typeStringBegin = source.find_first_not_of(" \f\t\v\r", tokenBegin + tokenLength);
+			const size_t typeStringEnd = source.find_first_of(" \f\t\v\r\n", typeStringBegin);
 
-			size_t lineEnd = source.find('\n', tokenBegin + tokenLength);
+			const size_t lineEnd = source.find('\n', tokenBegin + tokenLength);
 			if (lineEnd == std::string::npos ||
 				source.find_first_not_of(" \f\t\v\r", typeStringEnd) != lineEnd)
 			{
@@ -145,7 +145,7 @@ namespace Minerva
 				break;
 			}
 
-			GLenum shaderType = stringToShaderType(
+			const GLenum shaderType = stringToShaderType(
 				std::string_view(source.data() + typeStringBegin, typeStringEnd - typeStringBegin));
 			if (shaderSources.find(shaderType) != shaderSources.end())
 			{ // Multiple shader objects of the same type can be linked, but we don't support that atm.

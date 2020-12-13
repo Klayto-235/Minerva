@@ -127,13 +127,13 @@ public:
 
 		m_flatColorShader = Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-		m_textureShader = Minerva::Shader::create("assets/shaders/texture.glsl");
+		auto textureShader = m_shaderLibrary.load("assets/shaders/.");
 
 		m_texture = Minerva::Texture2D::create("assets/textures/chess_board.png");
 		m_textureAlpha = Minerva::Texture2D::create("assets/textures/alpha_test.png");
 
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_textureShader)->bind();
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_textureShader)->uploadUniformInt("u_texture", 0);
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->bind();
+		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->uploadUniformInt("u_texture", 0);
 	}
 
 	void onUpdate(float ts) override
@@ -179,10 +179,11 @@ public:
 			}
 		}
 
+		auto textureShader = m_shaderLibrary.get("texture");
 		m_texture->bind();
-		Minerva::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Minerva::Renderer::submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_textureAlpha->bind();
-		Minerva::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Minerva::Renderer::submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		// Triangle
 		//Minerva::Renderer::submit(m_shader, m_vertexArray, glm::mat4(1.0f));
@@ -203,11 +204,11 @@ public:
 	}
 
 private:
+	Minerva::ShaderLibrary m_shaderLibrary;
 	Minerva::Ref<Minerva::Shader> m_shader;
 	Minerva::Ref<Minerva::VertexArray> m_vertexArray;
 
 	Minerva::Ref<Minerva::Shader> m_flatColorShader;
-	Minerva::Ref<Minerva::Shader> m_textureShader;
 	Minerva::Ref<Minerva::VertexArray> m_squareVA;
 
 	Minerva::Ref<Minerva::Texture2D> m_texture;

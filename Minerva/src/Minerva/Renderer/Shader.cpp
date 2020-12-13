@@ -35,4 +35,38 @@ namespace Minerva
 		}
 	}
 
+	void ShaderLibrary::add(Ref<Shader>& shader, const std::string& name)
+	{
+		MN_CORE_ASSERT(m_shaders.find(name) == m_shaders.end(), "ShaderLibrary::add: Shader already exists.");
+		m_shaders.emplace(name, shader);
+	}
+
+	Ref<Shader> ShaderLibrary::load(const std::string& filePath, const std::string& name)
+	{
+		auto shader = Shader::create(filePath);
+		add(Shader::create(filePath), name);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::load(const std::string& filePath)
+	{
+		size_t nameBegin = filePath.find_last_of("/\\");
+		if (nameBegin == std::string::npos) nameBegin = 0;
+		else ++nameBegin;
+		size_t nameEnd = filePath.rfind('.');
+		if (nameEnd == std::string::npos || nameEnd <= nameBegin) nameEnd = filePath.length();
+		MN_CORE_ASSERT(nameBegin != nameEnd, "ShaderLibrary::load: Invalid file path.");
+
+		auto shader = Shader::create(filePath);
+		add(shader, filePath.substr(nameBegin, nameEnd - nameBegin));
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::get(const std::string& name)
+	{
+		MN_CORE_ASSERT(m_shaders.find(name) != m_shaders.end(),
+			"ShaderLibrary::get: Could not find shader \"{0}\".", name);
+		return m_shaders.find(name)->second;
+	}
+
 }
