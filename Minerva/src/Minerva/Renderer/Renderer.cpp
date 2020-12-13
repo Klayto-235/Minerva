@@ -12,6 +12,11 @@ namespace Minerva
 		RenderCommand::init();
 	}
 
+	void Renderer::onWindowResize(uint32_t width, uint32_t height)
+	{
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::beginScene(const OrthographicCamera& camera)
 	{
 		s_sceneData->viewProjectionMatrix = camera.getViewProjectionMatrix();

@@ -30,7 +30,9 @@ namespace Minerva
 		static Application* s_instance;
 
 		std::unique_ptr<Window> m_window;
-		bool m_running;
+		bool m_running = false;
+		bool m_minimised = false;
+
 		LayerStack m_layerStack;
 		ImGuiLayer* m_ImGuiLayer;
 

@@ -1,6 +1,7 @@
 #include "mnpch.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
+#include "Minerva/Events/WindowEvent.h"
 
 #include <GLFW/glfw3.h> // TEMPORARY (timestep)
 
@@ -11,7 +12,6 @@ namespace Minerva
 	Application* Application::s_instance = nullptr;
 
 	Application::Application()
-		: m_running(false)
 	{
 		MN_CORE_ASSERT(!s_instance, "Application::Application: Application already exists.");
 		s_instance = this;
@@ -50,6 +50,11 @@ namespace Minerva
 					case EventType::WindowClose:
 						m_running = false;
 						continue;
+					case EventType::WindowResize:
+						const WindowResizeEvent& e = static_cast<const WindowResizeEvent&>(*event);
+						if (e.getWidth() == 0 || e.getHeight() == 0) m_minimised = true;
+						else m_minimised = false;
+						Renderer::onWindowResize(e.getWidth(), e.getHeight());
 					}
 				}
 				
@@ -59,8 +64,10 @@ namespace Minerva
 				}
 			}
 
-			for (Layer* layer : m_layerStack)
-				layer->onUpdate(deltaTime);
+			if (!m_minimised) {
+				for (Layer* layer : m_layerStack)
+					layer->onUpdate(deltaTime);
+			}
 
 			m_ImGuiLayer->begin();
 			for (Layer* layer : m_layerStack)
