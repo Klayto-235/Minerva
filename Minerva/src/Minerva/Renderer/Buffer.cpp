@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "Buffer.h"
-#include "Renderer.h"
+#include "Minerva/Renderer/Buffer.h"
+#include "Minerva/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Minerva {
@@ -9,7 +9,7 @@ namespace Minerva {
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLVertexBuffer>(vertices, count);
+		case RenderAPI::API::OpenGL: return createRef<OpenGLVertexBuffer>(vertices, count);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "VertexBuffer::create: RendererAPI::None is currently not supported.");
 			return nullptr;
@@ -23,7 +23,7 @@ namespace Minerva {
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLIndexBuffer>(indices, count);
+		case RenderAPI::API::OpenGL: return createRef<OpenGLIndexBuffer>(indices, count);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "IndexBuffer::create: RendererAPI::None is currently not supported.");
 			return nullptr;
@@ -37,7 +37,7 @@ namespace Minerva {
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLVertexArray>();
+		case RenderAPI::API::OpenGL: return createRef<OpenGLVertexArray>();
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "VertexArray::create: RendererAPI::None is currently not supported.");
 			return nullptr;

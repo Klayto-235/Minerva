@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Minerva/Window.h"
+#include "Minerva/core/Window.h"
 #include "Minerva/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
@@ -40,7 +40,7 @@ namespace Minerva
 		const InputState& getInputState() const override { return m_inputState; }
 	private:
 		GLFWwindow* m_window;
-		std::unique_ptr<GraphicsContext> m_context;
+		Scope<GraphicsContext> m_context;
 
 		struct WindowData
 		{

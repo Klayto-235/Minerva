@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "Shader.h"
-#include "Renderer.h"
+#include "Minerva/Renderer/Shader.h"
+#include "Minerva/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 
@@ -11,7 +11,7 @@ namespace Minerva
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLShader>(vertexSource, fragmentSource);
+		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(vertexSource, fragmentSource);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "OpenGLShader::create: RendererAPI::None is currently not supported.");
 			return nullptr;
@@ -25,7 +25,7 @@ namespace Minerva
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLShader>(filePath);
+		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(filePath);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "OpenGLShader::create: RendererAPI::None is currently not supported.");
 			return nullptr;

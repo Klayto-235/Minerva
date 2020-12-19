@@ -1,5 +1,5 @@
 #include "mnpch.h"
-#include "Minerva/CameraController.h"
+#include "Minerva/util/CameraController.h"
 #include "Minerva/Events/MouseEvent.h"
 #include "Minerva/Events/WindowEvent.h"
 
@@ -10,20 +10,33 @@ namespace Minerva
 	void OrthographicCameraController::onUpdate(float timeStep, const Window::InputState& inputState)
 	{
 		if (inputState.isKeyPressed(Minerva::Key::A))
-			m_cameraPosition.x -= m_cameraTranslationSpeed * timeStep;
+		{
+			m_cameraPosition.x -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+			m_cameraPosition.y -= sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+		}
 		else if (inputState.isKeyPressed(Minerva::Key::D))
-			m_cameraPosition.x += m_cameraTranslationSpeed * timeStep;
+		{
+			m_cameraPosition.x += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+			m_cameraPosition.y += sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+		}
 
 		if (inputState.isKeyPressed(Minerva::Key::W))
-			m_cameraPosition.y += m_cameraTranslationSpeed * timeStep;
+		{
+			m_cameraPosition.x += -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+			m_cameraPosition.y += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+		}
 		else if (inputState.isKeyPressed(Minerva::Key::S))
-			m_cameraPosition.y -= m_cameraTranslationSpeed * timeStep;
+		{
+			m_cameraPosition.x -= -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+			m_cameraPosition.y -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
+		}
 
 		if (m_rotation) {
-			if (inputState.isKeyPressed(Minerva::Key::Q))
-				m_cameraRotation += m_cameraRotationSpeed * timeStep;
-			if (inputState.isKeyPressed(Minerva::Key::E))
-				m_cameraRotation -= m_cameraRotationSpeed * timeStep;
+			if (inputState.isKeyPressed(Minerva::Key::Q)) m_cameraRotation += m_cameraRotationSpeed * timeStep;
+			if (inputState.isKeyPressed(Minerva::Key::E)) m_cameraRotation -= m_cameraRotationSpeed * timeStep;
+
+			if (m_cameraRotation > 180.0f) m_cameraRotation -= 360.0f;
+			else if (m_cameraRotation <= -180.0f) m_cameraRotation += 360.0f;
 
 			m_camera.setRotation(m_cameraRotation);
 		}

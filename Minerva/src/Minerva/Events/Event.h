@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Minerva/core.h"
+#include "Minerva/core/core.h"
 
 #include <string>
 #include <ostream>
@@ -30,11 +30,11 @@ namespace Minerva
 	};
 
 #if defined MN_ENABLE_DEBUG_CODE
-#define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::type; }\
 								EventType getEventType() const override { return getStaticType(); }\
 								const char* getName() const override { return #type "Event"; }
 #else
-#define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_TYPE(type) static constexpr EventType getStaticType() { return EventType::type; }\
 								EventType getEventType() const override { return getStaticType(); }
 #endif
 

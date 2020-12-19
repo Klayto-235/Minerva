@@ -1,5 +1,5 @@
 #include "mnpch.h"
-#include "WindowsWindow.h"
+#include "Platform/Windows/WindowsWindow.h"
 #include "Minerva/Events/WindowEvent.h"
 #include "Minerva/Events/KeyEvent.h"
 #include "Minerva/Events/MouseEvent.h"
@@ -51,7 +51,7 @@ namespace Minerva
 		m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		MN_CORE_ASSERT(m_window, "WindowsWindow::WindowsWindow: Could not create window \"{0}\".", m_data.title);
 
-		m_context = std::make_unique<OpenGLContext>(m_window);
+		m_context = createScope<OpenGLContext>(m_window);
 
 		glfwSetWindowUserPointer(m_window, &m_data);
 		setVSync(true);
@@ -61,13 +61,13 @@ namespace Minerva
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.width = width;
 			data.height = height;
-			data.eventBuffer.post<WindowResizeEvent>(width, height);
+			data.eventBuffer.add<WindowResizeEvent>(width, height);
 		});
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.post<WindowCloseEvent>();
+			data.eventBuffer.add<WindowCloseEvent>();
 		});
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -76,15 +76,15 @@ namespace Minerva
 			switch (action)
 			{
 			case GLFW_PRESS:
-				data.eventBuffer.post<KeyPressEvent>(static_cast<Key>(key), false);
+				data.eventBuffer.add<KeyPressEvent>(static_cast<Key>(key), false);
 				break;
 
 			case GLFW_RELEASE:
-				data.eventBuffer.post<KeyReleaseEvent>(static_cast<Key>(key));
+				data.eventBuffer.add<KeyReleaseEvent>(static_cast<Key>(key));
 				break;
 
 			case GLFW_REPEAT:
-				data.eventBuffer.post<KeyPressEvent>(static_cast<Key>(key), true);
+				data.eventBuffer.add<KeyPressEvent>(static_cast<Key>(key), true);
 				break;
 			}
 		});
@@ -92,7 +92,7 @@ namespace Minerva
 		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int character)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.post<TextCharEvent>(static_cast<int>(character));
+			data.eventBuffer.add<TextCharEvent>(static_cast<int>(character));
 		});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -101,11 +101,11 @@ namespace Minerva
 			switch (action)
 			{
 			case GLFW_PRESS:
-				data.eventBuffer.post<MouseButtonPressEvent>(static_cast<MouseButton>(button));
+				data.eventBuffer.add<MouseButtonPressEvent>(static_cast<MouseButton>(button));
 				break;
 
 			case GLFW_RELEASE:
-				data.eventBuffer.post<MouseButtonReleaseEvent>(static_cast<MouseButton>(button));
+				data.eventBuffer.add<MouseButtonReleaseEvent>(static_cast<MouseButton>(button));
 				break;
 			}
 		});
@@ -113,13 +113,13 @@ namespace Minerva
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.post<MouseScrollEvent>((float)xOffset, (float)yOffset);
+			data.eventBuffer.add<MouseScrollEvent>((float)xOffset, (float)yOffset);
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.post<MouseMoveEvent>((float)x, (float)y);
+			data.eventBuffer.add<MouseMoveEvent>((float)x, (float)y);
 		});
 	}
 

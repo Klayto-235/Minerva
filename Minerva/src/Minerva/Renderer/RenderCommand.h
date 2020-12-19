@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderAPI.h"
+#include "Minerva/Renderer/RenderAPI.h"
 
 
 namespace Minerva
@@ -33,7 +33,7 @@ namespace Minerva
 			s_renderAPI->drawIndexed(vertexArray);
 		}
 	private:
-		static RenderAPI* s_renderAPI;
+		static RenderAPI* s_renderAPI; // Raw
 	};
 
 }

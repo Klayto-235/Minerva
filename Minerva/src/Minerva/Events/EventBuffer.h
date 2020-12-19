@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "Minerva/Events/Event.h"
 
 #include <vector>
 #include <type_traits>
@@ -21,8 +21,8 @@ namespace Minerva
 		EventBuffer(const EventBuffer& other) = delete;
 		EventBuffer& operator=(const EventBuffer& other) = delete;
 
-		template <class T = Event, class... Args>
-		void post(Args&&... args)
+		template <typename T = Event, typename ...Args>
+		void add(Args&&... args)
 		{
 			static_assert(std::is_base_of<Event, T>::value, "Invalid template argument for EventBuffer::post.");
 			// emplace_back unnecessary since there is a temporary anyway...

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Minerva/core.h"
+#include "Minerva/core/core.h"
 
 #include <glad/glad.h>
 

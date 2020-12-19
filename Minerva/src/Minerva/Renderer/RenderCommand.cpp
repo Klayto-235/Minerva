@@ -1,5 +1,5 @@
 #include "mnpch.h"
-#include "RenderCommand.h"
+#include "Minerva/Renderer/RenderCommand.h"
 
 #include "Platform/OpenGL/OpenGLRenderAPI.h"
 

@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Minerva/Log.h"
+#include "Minerva/core/Log.h"
 
 #ifdef MN_PLATFORM_WINDOWS
 	#include <Windows.h>

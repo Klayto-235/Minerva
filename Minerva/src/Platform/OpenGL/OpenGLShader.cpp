@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "OpenGLShader.h"
-#include "OpenGL_core.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGL_core.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

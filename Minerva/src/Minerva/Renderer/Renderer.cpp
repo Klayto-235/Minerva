@@ -1,5 +1,5 @@
 #include "mnpch.h"
-#include "Renderer.h"
+#include "Minerva/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h" // TEMPORARY
 

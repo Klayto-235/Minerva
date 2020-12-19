@@ -2,7 +2,7 @@
 
 #include "Minerva/Renderer/Camera.h"
 #include "Minerva/Events/Event.h"
-#include "Minerva/Window.h"
+#include "Minerva/core/Window.h"
 
 #include <glm/glm.hpp>
 

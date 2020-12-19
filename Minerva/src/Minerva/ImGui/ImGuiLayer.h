@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Minerva/Layer.h"
+#include "Minerva/core/Layer.h"
 
 namespace Minerva
 {

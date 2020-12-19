@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core.h"
-#include "Window.h"
-#include "LayerStack.h"
-#include "ImGui/ImGuiLayer.h"
+#include "Minerva/core/core.h"
+#include "Minerva/core/Window.h"
+#include "Minerva/core/LayerStack.h"
+#include "Minerva/ImGui/ImGuiLayer.h"
 
 
 namespace Minerva

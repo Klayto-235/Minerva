@@ -1,14 +1,12 @@
 #pragma once
 
-#include "Minerva/Application.h"
-#include "Minerva/Layer.h"
-#include "Minerva/Log.h"
+////////////////////////////////////////
+/////////////// Core ///////////////////
+#include "Minerva/core/Application.h"
+#include "Minerva/core/Layer.h"
+#include "Minerva/core/Log.h"
 
-#include "Minerva/input_codes.h"
-
-#include "Minerva/ImGui/ImGuiLayer.h"
-
-#include "Minerva/CameraController.h"
+#include "Minerva/core/input_codes.h"
 
 ////////////////////////////////////////
 /////////////// Renderer ///////////////
@@ -22,5 +20,7 @@
 #include "Minerva/Renderer/Camera.h"
 
 ////////////////////////////////////////
-//////////// Entry point ///////////////
-#include "Minerva/entry_point.h"
+/////////////// Other //////////////////
+#include "Minerva/ImGui/ImGuiLayer.h"
+
+#include "Minerva/util/CameraController.h"

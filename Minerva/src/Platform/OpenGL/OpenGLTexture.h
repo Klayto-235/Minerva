@@ -1,5 +1,5 @@
 #pragma once
-#include "Minerva/core.h"
+
 #include "Minerva/Renderer/Texture.h"
 
 

@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "ImGuiLayer.h"
-#include "Minerva/Application.h"
+#include "Minerva/ImGui/ImGuiLayer.h"
+#include "Minerva/core/Application.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"

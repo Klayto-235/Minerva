@@ -1,8 +1,9 @@
 #pragma once
 
-#include "RenderCommand.h"
-#include "Shader.h"
-#include "Camera.h"
+#include "Minerva/core/core.h"
+#include "Minerva/Renderer/RenderCommand.h"
+#include "Minerva/Renderer/Shader.h"
+#include "Minerva/Renderer/Camera.h"
 
 namespace Minerva
 {
@@ -26,7 +27,7 @@ namespace Minerva
 			glm::mat4 viewProjectionMatrix;
 		};
 
-		static SceneData* s_sceneData;
+		static SceneData* s_sceneData; // Raw
 	};
 
 }

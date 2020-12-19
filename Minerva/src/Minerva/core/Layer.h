@@ -1,7 +1,8 @@
 #pragma once
 
-#include "core.h"
-#include "Events/Event.h"
+#include "Minerva/core/core.h"
+#include "Minerva/Events/Event.h"
+#include "Minerva/core/Window.h"
 
 #include <string>
 
@@ -18,7 +19,7 @@ namespace Minerva
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}
-		virtual void onUpdate(float timeStep) {}
+		virtual void onUpdate(const float timeStep, const Window::InputState& inputState) {}
 		virtual void onImGuiRender() {}
 		virtual bool onEvent(const Event& event) { return false; }
 

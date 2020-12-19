@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Buffer.h"
+#include "Minerva/core/core.h"
+#include "Minerva/Renderer/Buffer.h"
 
 #include <glm/glm.hpp>
 

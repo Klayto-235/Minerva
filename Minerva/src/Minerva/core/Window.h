@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core.h"
-#include "Events/EventBuffer.h"
-#include "input_codes.h"
+#include "Minerva/core/core.h"
+#include "Minerva/Events/EventBuffer.h"
+#include "Minerva/core/input_codes.h"
 
 #include <string>
 

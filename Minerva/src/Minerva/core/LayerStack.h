@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.h"
-#include "Layer.h"
+#include "Minerva/core/core.h"
+#include "Minerva/core/Layer.h"
 
 
 namespace Minerva

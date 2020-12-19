@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "Texture.h"
-#include "Renderer.h"
+#include "Minerva/Renderer/Texture.h"
+#include "Minerva/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
 
 
@@ -11,7 +11,7 @@ namespace Minerva
 	{
 		switch (Renderer::getAPI())
 		{
-		case RenderAPI::API::OpenGL: return std::make_shared<OpenGLTexture2D>(filePath);
+		case RenderAPI::API::OpenGL: return createRef<OpenGLTexture2D>(filePath);
 		case RenderAPI::API::None:
 			MN_CORE_ASSERT(false, "OpenGLTexture2D::create: RendererAPI::None is currently not supported.");
 			return nullptr;

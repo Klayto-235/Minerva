@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "Application.h"
-#include "Renderer/Renderer.h"
+#include "Minerva/core/Application.h"
+#include "Minerva/Renderer/Renderer.h"
 #include "Minerva/Events/WindowEvent.h"
 
 #include <GLFW/glfw3.h> // TEMPORARY (timestep)
@@ -66,7 +66,7 @@ namespace Minerva
 
 			if (!m_minimised) {
 				for (Layer* layer : m_layerStack)
-					layer->onUpdate(deltaTime);
+					layer->onUpdate(deltaTime, m_window->getInputState());
 			}
 
 			m_ImGuiLayer->begin();

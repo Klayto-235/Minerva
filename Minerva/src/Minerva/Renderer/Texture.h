@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Minerva/core/core.h"
+
 #include <cstdint>
 #include <string>
 

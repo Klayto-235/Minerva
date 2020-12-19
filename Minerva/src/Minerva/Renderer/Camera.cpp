@@ -1,5 +1,5 @@
 #include "mnpch.h"
-#include "Camera.h"
+#include "Minerva/Renderer/Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

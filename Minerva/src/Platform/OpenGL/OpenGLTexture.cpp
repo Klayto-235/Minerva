@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "OpenGLTexture.h"
-#include "OpenGL_core.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
+#include "Platform/OpenGL/OpenGL_core.h"
 
 #include "stb_image.h"
 

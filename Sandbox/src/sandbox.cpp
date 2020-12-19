@@ -1,17 +1,21 @@
+#include "Sandbox2D.h"
+
 #include <Minerva.h>
+#include <Minerva/core/entry_point.h>
+
 #include <imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Platform/OpenGL/OpenGLShader.h" // TEMPORARY
+#include <Platform/OpenGL/OpenGLShader.h> // TEMPORARY
 
 
 class ExampleLayer : public Minerva::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_cameraController(1280.0f / 720.0f)
+		: Layer("Example"), m_cameraController(1280.0f / 720.0f, true)
 	{
 		m_vertexArray = Minerva::VertexArray::create();
 
@@ -93,39 +97,7 @@ public:
 
 		m_shader = Minerva::Shader::create(vertexSrc, fragmentSrc);
 
-		std::string flatColorShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-
-			uniform mat4 u_VP;
-			uniform mat4 u_M;
-
-			out vec3 v_position;
-
-			void main()
-			{
-				v_position = a_position;
-				gl_Position = u_VP * u_M * vec4(a_position, 1.0);	
-			}
-		)";
-
-		std::string flatColorShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform vec3 u_color;
-
-			in vec3 v_position;
-
-			void main()
-			{
-				color = vec4(u_color, 1.0);
-			}
-		)";
-
-		m_flatColorShader = Minerva::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+		m_flatColorShader = Minerva::Shader::create("assets/shaders/flat_color.glsl");
 
 		auto textureShader = m_shaderLibrary.load("assets/shaders/texture.glsl");
 
@@ -136,12 +108,8 @@ public:
 		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->uploadUniformInt("u_texture", 0);
 	}
 
-	void onUpdate(float ts) override
+	void onUpdate(const float ts, const Minerva::Window::InputState& inputState) override
 	{
-		const Minerva::Window& window = Minerva::Application::get().getWindow();
-
-		m_cameraController.onUpdate(ts, window.getInputState());
-
 		Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Minerva::RenderCommand::clear();
 
@@ -208,7 +176,8 @@ class Sandbox : public Minerva::Application
 public:
 	Sandbox()
 	{
-		pushLayer(new ExampleLayer());
+		//pushLayer(new ExampleLayer());
+		pushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

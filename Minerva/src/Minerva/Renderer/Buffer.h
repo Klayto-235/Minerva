@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Minerva/core.h"
-#include "Minerva/Log.h"
+#include "Minerva/core/core.h"
+#include "Minerva/core/Log.h"
 
 #include <cstdint>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Event.h"
-#include "Minerva/input_codes.h"
+#include "Minerva/Events/Event.h"
+#include "Minerva/core/input_codes.h"
 
 namespace Minerva
 {

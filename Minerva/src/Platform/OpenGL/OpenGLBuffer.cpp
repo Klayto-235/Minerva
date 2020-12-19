@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "OpenGLBuffer.h"
-#include "OpenGL_core.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGL_core.h"
 
 
 namespace Minerva
