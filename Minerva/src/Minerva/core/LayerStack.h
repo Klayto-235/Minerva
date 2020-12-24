@@ -3,6 +3,8 @@
 #include "Minerva/core/core.h"
 #include "Minerva/core/Layer.h"
 
+#include <vector>
+
 
 namespace Minerva
 {
@@ -13,12 +15,15 @@ namespace Minerva
 		LayerStack() = default;
 		LayerStack(const LayerStack&) = delete;
 		LayerStack& operator=(const LayerStack&) = delete;
-		~LayerStack();
+		~LayerStack() { clear(); }
 
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
-		void popLayer(Layer* layer);
-		void popOverlay(Layer* overlay);
+		int removeLayer(Layer* layer);
+		int removeOverlay(Layer* overlay);
+		Layer* popLayer();
+		Layer* popOverlay();
+		void clear();
 
 		std::vector<Layer*>::iterator begin() { return m_layers.begin(); }
 		std::vector<Layer*>::iterator end() { return m_layers.end(); }

@@ -1,6 +1,6 @@
 #include "mnpch.h"
-#include "Minerva/ImGui/ImGuiLayer.h"
-#include "Minerva/core/Application.h"
+#include "Minerva/ImGui/ImGuiContext.h"
+#include "Minerva/core/Window.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -12,11 +12,11 @@
 namespace Minerva
 {
 
-	void ImGuiLayer::onAttach()
+	ImGuiContext::ImGuiContext(Window& window)
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
+		m_context = ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -37,46 +37,35 @@ namespace Minerva
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		Application& app = Application::get();
-		GLFWwindow* window = static_cast<GLFWwindow*>(app.getWindow().getNativeWindow());
+		GLFWwindow* windowHandle = static_cast<GLFWwindow*>(window.getNativeWindow());
 
 		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
+		ImGui_ImplGlfw_InitForOpenGL(windowHandle, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
-	void ImGuiLayer::onDetach()
+	ImGuiContext::~ImGuiContext()
 	{
+		ImGui::SetCurrentContext(m_context);
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::onImGuiRender()
+	void ImGuiContext::beginFrame()
 	{
-		static bool showDemoWindow = true;
-		ImGui::ShowDemoWindow(&showDemoWindow);
-	}
-
-	void ImGuiLayer::begin()
-	{
+		ImGui::SetCurrentContext(m_context);
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::end()
+	void ImGuiContext::endFrame()
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		Application& app = Application::get();
-		io.DisplaySize = ImVec2(static_cast<float>(app.getWindow().getWidth()),
-			static_cast<float>(app.getWindow().getHeight()));
-			// Is it necessary to set display size here?
-
-		// Rendering
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			GLFWwindow* backup_current_context = glfwGetCurrentContext();

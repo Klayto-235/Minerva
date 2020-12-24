@@ -8,51 +8,41 @@
 
 namespace Minerva
 {
+	class WindowsWindow;
+
+	class WindowsWindowInputState : public WindowInputState
+	{
+	public:
+		explicit WindowsWindowInputState(const WindowsWindow& window)
+			: m_window(window) {}
+
+		bool isKeyPressed(Key key) const override;
+		bool isMouseButtonPressed(MouseButton button) const override;
+		std::pair<float, float> getMousePosition() const override;
+		float getMouseX() const override;
+		float getMouseY() const override;
+	private:
+		const WindowsWindow& m_window;
+	};
+
 	class WindowsWindow : public Window
 	{
 	public:
-		class WindowsInputState : public InputState
-		{
-		public:
-			explicit WindowsInputState(const WindowsWindow& window)
-				: m_window(window) {}
-
-			bool isKeyPressed(Key key) const override;
-			bool isMouseButtonPressed(MouseButton button) const override;
-			std::pair<float, float> getMousePosition() const override;
-			float getMouseX() const override;
-			float getMouseY() const override;
-		private:
-			const WindowsWindow& m_window;
-		};
-
 		explicit WindowsWindow(const WindowProperties& properties);
 		~WindowsWindow();
 
-		void onUpdate() override;
+		void makeContextCurrent() const override { glfwMakeContextCurrent(m_windowHandle); }
+		void swapBuffers() override { m_context->swapBuffers(); }
 
-		unsigned int getWidth() const override { return m_data.width; }
-		unsigned int getHeight() const override { return m_data.height; }
 		void setVSync(bool enabled) override;
-		bool isVSync() const override { return m_data.VSync; }
-		void* getNativeWindow() override { return static_cast<void*>(m_window); }
-		const EventBuffer& getEventBuffer() const override { return m_data.eventBuffer; }
-		const InputState& getInputState() const override { return m_inputState; }
+		void* getNativeWindow() override { return static_cast<void*>(m_windowHandle); }
+		const WindowInputState& getInputState() const override { return m_inputState; }
 	private:
-		GLFWwindow* m_window;
+		friend class WindowsWindowInputState;
+
+		GLFWwindow* m_windowHandle;
 		Scope<GraphicsContext> m_context;
-
-		struct WindowData
-		{
-			std::string title;
-			unsigned int width;
-			unsigned int height;
-			bool VSync;
-			EventBuffer eventBuffer;
-		};
-
-		WindowData m_data;
-		WindowsInputState m_inputState;
+		WindowsWindowInputState m_inputState;
 	};
 
 }

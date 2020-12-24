@@ -2,8 +2,10 @@
 
 #include "Minerva/core/core.h"
 #include "Minerva/core/Window.h"
-#include "Minerva/core/LayerStack.h"
-#include "Minerva/ImGui/ImGuiLayer.h"
+#include "Minerva/ImGui/ImGuiContext.h"
+#include "Minerva/Events/EventBuffer.h"
+
+#include <vector>
 
 
 namespace Minerva
@@ -18,10 +20,14 @@ namespace Minerva
 
 		void run();
 
-		void pushLayer(Layer* layer);
-		void pushOverlay(Layer* overlay);
+		Window* createWindow(const WindowProperties& properties = WindowProperties());
+		void deleteWindow(Window* window);
 
-		Window& getWindow() { return *m_window; }
+		void enableImGui(Window* window);
+		void disableImGui();
+
+		virtual void onEvent(const Event& event);
+		virtual void onUpdate() {};
 
 		static Application& get() { return *s_instance; }
 	protected:
@@ -29,17 +35,16 @@ namespace Minerva
 	private:
 		static Application* s_instance;
 
-		std::unique_ptr<Window> m_window;
+		std::vector<Scope<Window>> m_windows;
+		EventBuffer m_eventBuffer;
 		bool m_running = false;
-		bool m_minimised = false;
-
-		LayerStack m_layerStack;
-		ImGuiLayer* m_ImGuiLayer;
-
-		float m_lastFrameTime;
+		float m_lastFrameTime = 0.0f;
+		bool m_enableImGui = false;
+		Scope<ImGuiContext> m_ImGuiContext;
+		Window* m_ImGuiWindow = nullptr;
 	};
 
-	// To be defined in CLIENT
+	// To be defined in client code.
 	Application* createApplication();
 
 }

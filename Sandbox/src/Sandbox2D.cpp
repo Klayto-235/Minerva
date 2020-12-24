@@ -15,6 +15,8 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::onAttach()
 {
+	Minerva::Renderer::init();
+
 	m_squareVA = Minerva::VertexArray::create();
 
 	float squareVertices[3 * 4] = {
@@ -43,7 +45,7 @@ void Sandbox2D::onDetach()
 {
 }
 
-void Sandbox2D::onUpdate(const float timeStep, const Minerva::Window::InputState& inputState)
+void Sandbox2D::onUpdate(const float timeStep, const Minerva::WindowInputState& inputState)
 {
 	// Update
 	m_cameraController.onUpdate(timeStep, inputState);

@@ -9,70 +9,76 @@
 namespace Minerva
 {
 
-	bool WindowsWindow::WindowsInputState::isKeyPressed(Key key) const
+#pragma region /////////////// WindowsWindowInputState ///////////////
+
+	bool WindowsWindowInputState::isKeyPressed(Key key) const
 	{
-		auto state = glfwGetKey(m_window.m_window, static_cast<int>(key));
+		auto state = glfwGetKey(m_window.m_windowHandle, static_cast<int>(key));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsWindow::WindowsInputState::isMouseButtonPressed(MouseButton button) const
+	bool WindowsWindowInputState::isMouseButtonPressed(MouseButton button) const
 	{
-		auto state = glfwGetMouseButton(m_window.m_window, static_cast<int>(button));
+		auto state = glfwGetMouseButton(m_window.m_windowHandle, static_cast<int>(button));
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsWindow::WindowsInputState::getMousePosition() const
+	std::pair<float, float> WindowsWindowInputState::getMousePosition() const
 	{
 		double x, y;
-		glfwGetCursorPos(m_window.m_window, &x, &y);
+		glfwGetCursorPos(m_window.m_windowHandle, &x, &y);
 		return { static_cast<float>(x), static_cast<float>(y) };
 	}
 
-	float WindowsWindow::WindowsInputState::getMouseX() const
+	float WindowsWindowInputState::getMouseX() const
 	{
 		auto [x, y] = getMousePosition();
 		return x;
 	}
 
-	float WindowsWindow::WindowsInputState::getMouseY() const
+	float WindowsWindowInputState::getMouseY() const
 	{
 		auto [x, y] = getMousePosition();
 		return y;
 	}
 
+#pragma endregion
+
+#pragma region /////////////// WindowsWindow ///////////////
+
 	WindowsWindow::WindowsWindow(const WindowProperties& properties)
-		: m_data{ properties.title, properties.width, properties.height }, m_inputState(*this)
+		: Window(properties), m_inputState(*this)
 	{
 		MN_CORE_INFO("Creating window \"{0}\" ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-		MN_CORE_ASSERT(m_window, "WindowsWindow::WindowsWindow: Could not create window \"{0}\".", m_data.title);
+		m_windowHandle = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
+		MN_CORE_ASSERT(m_windowHandle, "WindowsWindow::WindowsWindow: Could not create window \"{0}\".", m_data.title);
 
-		m_context = createScope<OpenGLContext>(m_window);
+		m_context = createScope<OpenGLContext>(m_windowHandle);
 
-		glfwSetWindowUserPointer(m_window, &m_data);
+		glfwSetWindowUserPointer(m_windowHandle, &m_data);
 		setVSync(true);
 
-		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_windowHandle, [](GLFWwindow* windowHandle, int width, int height)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			data.width = width;
 			data.height = height;
 			data.eventBuffer.add<WindowResizeEvent>(width, height);
 		});
 
-		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+		glfwSetWindowCloseCallback(m_windowHandle, [](GLFWwindow* windowHandle)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			data.eventBuffer.add<WindowCloseEvent>();
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			data.eventBuffer.add<WindowCloseEvent>(nullptr);
 		});
 
-		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_windowHandle, [](GLFWwindow* windowHandle, int key, int scancode, int action, int mods)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -89,15 +95,15 @@ namespace Minerva
 			}
 		});
 
-		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int character)
+		glfwSetCharCallback(m_windowHandle, [](GLFWwindow* windowHandle, unsigned int character)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			data.eventBuffer.add<TextCharEvent>(static_cast<int>(character));
 		});
 
-		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_windowHandle, [](GLFWwindow* windowHandle, int button, int action, int mods)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			switch (action)
 			{
 			case GLFW_PRESS:
@@ -110,15 +116,15 @@ namespace Minerva
 			}
 		});
 
-		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
+		glfwSetScrollCallback(m_windowHandle, [](GLFWwindow* windowHandle, double xOffset, double yOffset)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			data.eventBuffer.add<MouseScrollEvent>((float)xOffset, (float)yOffset);
 		});
 
-		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y)
+		glfwSetCursorPosCallback(m_windowHandle, [](GLFWwindow* windowHandle, double x, double y)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			data.eventBuffer.add<MouseMoveEvent>((float)x, (float)y);
 		});
 	}
@@ -126,22 +132,25 @@ namespace Minerva
 	WindowsWindow::~WindowsWindow()
 	{
 		MN_CORE_INFO("Destroying window \"{0}\".", m_data.title);
-		glfwDestroyWindow(m_window);
-	}
-
-	void WindowsWindow::onUpdate()
-	{
-		m_context->swapBuffers();
-		m_data.eventBuffer.clear();
+		glfwMakeContextCurrent(m_windowHandle);
+		deleteLayers(); // Free OpenGL resources before context destruction.
+		glfwDestroyWindow(m_windowHandle);
 	}
 
 	void WindowsWindow::setVSync(bool enabled)
 	{
+		// Retain context because this is exposed in public Window API.
+		GLFWwindow* currentContext = glfwGetCurrentContext();
+		glfwMakeContextCurrent(m_windowHandle);
 		if (enabled) glfwSwapInterval(1);
 		else glfwSwapInterval(0);
-
 		m_data.VSync = enabled;
+		glfwMakeContextCurrent(currentContext);
 	}
+
+#pragma endregion
+
+#pragma region /////////////// Window ///////////////
 
 #ifdef MN_PLATFORM_WINDOWS
 	void Window::init()
@@ -154,9 +163,9 @@ namespace Minerva
 		MN_CORE_ASSERT(success, "Window::init: Could not intialise GLFW.");
 	}
 
-	Window* Window::create(const WindowProperties& properties)
+	Scope<Window> Window::create(const WindowProperties& properties)
 	{
-		return new WindowsWindow(properties);
+		return createScope<WindowsWindow>(properties);
 	}
 
 	void Window::pollEvents()
@@ -169,5 +178,7 @@ namespace Minerva
 		glfwTerminate();
 	}
 #endif // MN_PLATFORM_WINDOWS
+
+#pragma endregion
 
 }

@@ -10,7 +10,7 @@ public:
 
 	void onAttach() override;
 	void onDetach() override;
-	void onUpdate(const float timeStep, const Minerva::Window::InputState& inputState) override;
+	void onUpdate(const float timeStep, const Minerva::WindowInputState& inputState) override;
 	void onImGuiRender() override;
 	bool onEvent(const Minerva::Event& event) override;
 private:

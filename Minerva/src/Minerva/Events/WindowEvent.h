@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Minerva/Events/Event.h"
+#include "Minerva/core/Window.h"
+
+#include <sstream>
+
 
 namespace Minerva
 {
@@ -32,10 +36,24 @@ namespace Minerva
 	class  WindowCloseEvent : public Event
 	{
 	public:
-		WindowCloseEvent() {}
+		explicit WindowCloseEvent(Window* window)
+			: m_window(window) {}
+
+		Window* getWindow() const { return m_window; }
+
+#if defined MN_ENABLE_DEBUG_CODE
+		std::string toString() const override
+		{
+			std::stringstream ss;
+			ss << "WindowCloseEvent: \"" << m_window->getTitle() << '"';
+			return ss.str();
+		};
+#endif
 
 		EVENT_CLASS_TYPE(WindowClose)
 		EVENT_CLASS_CATEGORY(EventCategoryWindow)
+	private:
+		Window* m_window;
 	};
 
 }

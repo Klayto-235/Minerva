@@ -17,6 +17,8 @@ public:
 	ExampleLayer()
 		: Layer("Example"), m_cameraController(1280.0f / 720.0f, true)
 	{
+		Minerva::Renderer::init();
+
 		m_vertexArray = Minerva::VertexArray::create();
 
 		float vertices[3 * 7] = {
@@ -108,7 +110,7 @@ public:
 		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->uploadUniformInt("u_texture", 0);
 	}
 
-	void onUpdate(const float ts, const Minerva::Window::InputState& inputState) override
+	void onUpdate(const float ts, const Minerva::WindowInputState& inputState) override
 	{
 		Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Minerva::RenderCommand::clear();
@@ -176,14 +178,18 @@ class Sandbox : public Minerva::Application
 public:
 	Sandbox()
 	{
-		//pushLayer(new ExampleLayer());
-		pushLayer(new Sandbox2D());
+		m_window = createWindow();
+		m_window->pushLayer(m_window->createLayer<Sandbox2D>());
+
+		enableImGui(m_window);
 	}
 
 	~Sandbox()
 	{
-
 	}
+
+private:
+	Minerva::Window* m_window;
 };
 
 Minerva::Application* Minerva::createApplication()

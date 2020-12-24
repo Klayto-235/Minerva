@@ -3,6 +3,9 @@
 #include "Minerva/Events/Event.h"
 #include "Minerva/core/input_codes.h"
 
+#include <sstream>
+
+
 namespace Minerva
 {
 

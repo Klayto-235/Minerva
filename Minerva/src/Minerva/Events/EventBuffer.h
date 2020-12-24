@@ -14,19 +14,16 @@ namespace Minerva
 	public:
 		class Iterator;
 
-		EventBuffer()
-		{
-			m_buffer.reserve(8);
-		}
+		EventBuffer() = default;
 		EventBuffer(const EventBuffer& other) = delete;
 		EventBuffer& operator=(const EventBuffer& other) = delete;
+		~EventBuffer() { clear(); }
 
 		template <typename T = Event, typename ...Args>
 		void add(Args&&... args)
 		{
-			static_assert(std::is_base_of<Event, T>::value, "Invalid template argument for EventBuffer::post.");
-			// emplace_back unnecessary since there is a temporary anyway...
-			m_buffer.emplace_back(new T(args...));
+			static_assert(std::is_base_of<Event, T>::value, "EventBuffer::post: Invalid template argument.");
+			m_buffer.push_back(new T(std::forward<Args>(args)...));
 		}
 		void clear()
 		{

@@ -5,49 +5,76 @@
 namespace Minerva
 {
 
-	LayerStack::~LayerStack()
-	{
-		for (Layer* layer : m_layers)
-		{
-			layer->onDetach();
-			delete layer;
-		}
-	}
-
 	void LayerStack::pushLayer(Layer* layer)
 	{
-		m_layers.emplace(m_layers.begin() + m_nLayers, layer);
+		m_layers.insert(m_layers.begin() + m_nLayers, layer);
 		++m_nLayers;
 		layer->onAttach();
 	}
 
 	void LayerStack::pushOverlay(Layer* overlay)
 	{
-		m_layers.emplace_back(overlay);
+		m_layers.push_back(overlay);
 		overlay->onAttach();
 	}
 
-	void LayerStack::popLayer(Layer* layer)
+	int LayerStack::removeLayer(Layer* layer)
 	{
-		auto it = std::find(m_layers.begin(), m_layers.begin() + m_nLayers, layer);
-		if (it != m_layers.begin() + m_nLayers)
+		auto it = m_layers.begin();
+		int layerCount = m_layers.size();
+		while ((it = std::find(it, m_layers.begin() + m_nLayers, layer)) != m_layers.begin() + m_nLayers)
 		{
 			layer->onDetach();
-			m_layers.erase(it);
+			it = m_layers.erase(it);
 			--m_nLayers;
 		}
-		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popLayer: Could not find layer.");
+		return layerCount - m_layers.size();
 	}
 
-	void LayerStack::popOverlay(Layer* overlay)
+	int LayerStack::removeOverlay(Layer* overlay)
 	{
-		auto it = std::find(m_layers.begin() + m_nLayers, m_layers.end(), overlay);
-		if (it != m_layers.end())
+		auto it = m_layers.begin() + m_nLayers;
+		int layerCount = m_layers.size();
+		while ((it = std::find(it, m_layers.end(), overlay)) != m_layers.end())
 		{
 			overlay->onDetach();
-			m_layers.erase(it);
+			it = m_layers.erase(it);
 		}
-		MN_CORE_ASSERT(it != m_layers.end(), "LayerStack::popOverlay: Could not find overlay.");
+		return layerCount - m_layers.size();
+	}
+
+	Layer* LayerStack::popLayer()
+	{
+		if (m_nLayers != 0)
+		{
+			--m_nLayers;
+			auto it = m_layers.begin() + m_nLayers; // m_nLayers has been decremented
+			Layer* layer = *it;
+			layer->onDetach();
+			m_layers.erase(it);
+			return layer;
+		}
+		else return nullptr;
+	}
+
+	Layer* LayerStack::popOverlay()
+	{
+		if (m_layers.size() - m_nLayers != 0)
+		{
+			Layer* overlay = m_layers.back();
+			overlay->onDetach();
+			m_layers.pop_back();
+			return overlay;
+		}
+		else return nullptr;
+	}
+
+	void LayerStack::clear()
+	{
+		for (auto& layer : m_layers)
+			layer->onDetach();
+		m_layers.clear();
+		m_nLayers = 0;
 	}
 
 }

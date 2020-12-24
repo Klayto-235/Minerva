@@ -7,7 +7,7 @@
 namespace Minerva
 {
 
-	void OrthographicCameraController::onUpdate(float timeStep, const Window::InputState& inputState)
+	void OrthographicCameraController::onUpdate(float timeStep, const WindowInputState& inputState)
 	{
 		if (inputState.isKeyPressed(Minerva::Key::A))
 		{
