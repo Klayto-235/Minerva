@@ -18,10 +18,10 @@ namespace Minerva
 		overlay->onAttach();
 	}
 
-	int LayerStack::removeLayer(Layer* layer)
+	size_t LayerStack::removeLayer(Layer* layer)
 	{
 		auto it = m_layers.begin();
-		int layerCount = m_layers.size();
+		auto layerCount = m_layers.size();
 		while ((it = std::find(it, m_layers.begin() + m_nLayers, layer)) != m_layers.begin() + m_nLayers)
 		{
 			layer->onDetach();
@@ -31,10 +31,10 @@ namespace Minerva
 		return layerCount - m_layers.size();
 	}
 
-	int LayerStack::removeOverlay(Layer* overlay)
+	size_t LayerStack::removeOverlay(Layer* overlay)
 	{
 		auto it = m_layers.begin() + m_nLayers;
-		int layerCount = m_layers.size();
+		auto layerCount = m_layers.size();
 		while ((it = std::find(it, m_layers.end(), overlay)) != m_layers.end())
 		{
 			overlay->onDetach();

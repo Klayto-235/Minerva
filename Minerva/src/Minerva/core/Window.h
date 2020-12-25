@@ -3,6 +3,7 @@
 #include "Minerva/core/core.h"
 #include "Minerva/Events/EventBuffer.h"
 #include "Minerva/core/input_codes.h"
+#include "Minerva/Renderer/Renderer2D.h"
 #include "Minerva/core/LayerStack.h"
 
 #include <string>
@@ -94,13 +95,16 @@ namespace Minerva
 		void pushOverlay(Layer* overlay);
 		Layer* popLayer();
 		Layer* popOverlay();
-		int removeLayer(Layer* layer);
-		int removeOverlay(Layer* overlay);
+		size_t removeLayer(Layer* layer);
+		size_t removeOverlay(Layer* overlay);
 		void clearLayerStack();
 
 	protected:
 		Window(const WindowProperties& properties)
 			: m_data{ properties.title, properties.width, properties.height, false } {}
+
+		void initResources();
+		void freeResources();
 
 		struct WindowData
 		{
@@ -127,6 +131,7 @@ namespace Minerva
 		static Scope<Window> create(const WindowProperties& properties);
 
 		bool m_minimised = false;
+		Scope<Renderer2D> m_renderer2D;
 		std::vector<Scope<Layer>> m_layers;
 		LayerStack m_layerStack;
 	};
@@ -195,13 +200,13 @@ namespace Minerva
 		return m_layerStack.popOverlay();
 	}
 
-	inline int Window::removeLayer(Layer* layer)
+	inline size_t Window::removeLayer(Layer* layer)
 	{
 		MN_CORE_ASSERT(!g_lockWindows, "Window::removeLayer: Cannot remove layer while windows are locked.");
 		return m_layerStack.removeLayer(layer);
 	}
 
-	inline int Window::removeOverlay(Layer* overlay)
+	inline size_t Window::removeOverlay(Layer* overlay)
 	{
 		MN_CORE_ASSERT(!g_lockWindows, "Window::removeOverlay: Cannot remove overlay while windows are locked.");
 		return m_layerStack.removeOverlay(overlay);

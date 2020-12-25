@@ -127,13 +127,15 @@ namespace Minerva
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
 			data.eventBuffer.add<MouseMoveEvent>((float)x, (float)y);
 		});
+
+		initResources();
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
 		MN_CORE_INFO("Destroying window \"{0}\".", m_data.title);
 		glfwMakeContextCurrent(m_windowHandle);
-		deleteLayers(); // Free OpenGL resources before context destruction.
+		freeResources(); // Free OpenGL resources before context destruction.
 		glfwDestroyWindow(m_windowHandle);
 	}
 

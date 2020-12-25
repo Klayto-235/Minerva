@@ -8,6 +8,18 @@
 namespace Minerva
 {
 
+	void Window::initResources()
+	{
+		RenderCommand::init();
+		m_renderer2D = createScope<Renderer2D>();
+	}
+
+	void Window::freeResources()
+	{
+		deleteLayers();
+		m_renderer2D.reset();
+	}
+
 	void Window::onUpdate(const float timeStep, EventBuffer& appEventBuffer)
 	{
 		for (auto& event : m_data.eventBuffer)
@@ -36,9 +48,14 @@ namespace Minerva
 
 		if (!m_minimised)
 		{
+			for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
+			{
+				(*it)->onUpdate(timeStep, getInputState());
+			}
+
 			for (auto& layer : m_layerStack)
 			{
-				layer->onUpdate(timeStep, getInputState());
+				layer->onRender(*m_renderer2D);
 			}
 		}
 	}

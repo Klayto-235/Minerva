@@ -19,8 +19,8 @@ namespace Minerva
 
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* overlay);
-		int removeLayer(Layer* layer);
-		int removeOverlay(Layer* overlay);
+		size_t removeLayer(Layer* layer);
+		size_t removeOverlay(Layer* overlay);
 		Layer* popLayer();
 		Layer* popOverlay();
 		void clear();
