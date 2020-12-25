@@ -37,7 +37,26 @@ namespace Minerva
 			unsigned int width = 1280, unsigned int height = 720)
 			: title(title), width(width), height(height) {}
 	};
-
+	
+	/** The base abstract class for platform-specific window implementations.
+	 * 
+	 * This class contains all platform-independent window functionality and exposes platform-dependent
+	 * features through virtual functions. It provides access to internal @ref WindowInputState,
+	 * @ref EventBuffer, and @ref LayerStack fields. Additionally, it allows the user to create
+	 * @ref Layer objects owned by the window. This ensures that the layers are destroyed with the
+	 * same graphics context bound as when they were created.
+	 * 
+	 * @ref Event objects can be added to the internal event buffer by calling @postEvent. Events are
+	 * processed and cleared each frame when the window is updated.
+	 * 
+	 * Generally, layers can be pushed multiple times and to different windows. However, layers with
+	 * OpenGL resources cannot be shared between windows and should be created with @ref createLayer.
+	 * Owned layer migration between windows is checked when asserts are enabled.
+	 * 
+	 * Owned layer and layer stack manipulation functions cannot be called from layers, but may be
+	 * called from the client application class constructor and overrides of functions such as
+	 * Application::onUpdate and Application::onEvent.
+	*/
 	class Window
 	{
 	public:
@@ -62,9 +81,12 @@ namespace Minerva
 		void postEvent(Args&&... args) { m_data.eventBuffer.add<T, Args>(std::forward<Args>(args)...); }
 
 		// Owned Layer(s)
+		/// Creates an owned layer and returns a pointer to it.
 		template<typename T, typename ...Args>
 		T* createLayer(Args&&... args);
+		/// Removes an owned layer from the layer stack and deletes it.
 		void deleteLayer(Layer* layer);
+		/// Removes all owned layers from the layer stack and deletes them.
 		void deleteLayers();
 
 		// LayerStack
