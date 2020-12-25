@@ -9,14 +9,17 @@
 	inline void checkGLErrors(const char* call, const char* file, int line)
 	{
 		GLenum error;
-		bool noError = true;
-		while ((error = glGetError()) != GL_NO_ERROR)
+		unsigned char nErrors = 0;
+		while ((error = glGetError()) != GL_NO_ERROR && nErrors < 64)
 		{
 			MN_CORE_ERROR("OpenGL error ({0}): {1}; {2}:{3}.", error, call, file, line);
-			noError = false;
+			++nErrors;
 		}
+
+		if (nErrors >= 64)
+			MN_CORE_ERROR("Infinite OpenGL error loop detected; broke out after {0} iterations.", nErrors);
 	#if defined MN_ENABLE_OPENGL_ASSERTS
-		MN_CORE_ASSERT(noError, "OpenGL error.");
+		MN_CORE_ASSERT(nErrors == 0, "OpenGL error.");
 	#endif
 	}
 

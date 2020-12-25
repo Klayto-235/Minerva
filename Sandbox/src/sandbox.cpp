@@ -121,7 +121,7 @@ public:
 
 		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->bind();
 		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->
-			uploadUniformFloat3("u_color", m_squareColor);
+			uploadUniformFloat4("u_color", m_squareColor);
 
 		for (int y = 0; y < 20; y++)
 		{
@@ -170,7 +170,7 @@ private:
 
 	Minerva::OrthographicCameraController m_cameraController;
 
-	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
+	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };
 
 class Sandbox : public Minerva::Application
