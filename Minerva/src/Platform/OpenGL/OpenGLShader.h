@@ -24,6 +24,11 @@ namespace Minerva
 		void bind() const override;
 		void unbind() const override;
 
+		void setInt(const std::string& name, int value) override;
+		void setFloat3(const std::string& name, const glm::vec3& vector) override;
+		void setFloat4(const std::string& name, const glm::vec4& vector) override;
+		void setMat4(const std::string& name, const glm::mat4& matrix) override;
+
 		void uploadUniformInt(const std::string& name, int value);
 
 		void uploadUniformFloat(const std::string& name, float value);

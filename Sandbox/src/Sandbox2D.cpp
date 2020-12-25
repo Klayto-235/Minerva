@@ -5,8 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Platform/OpenGL/OpenGLShader.h>
-
 
 Sandbox2D::Sandbox2D()
 	: Layer("Sandbox2D"), m_cameraController(1280.0f / 720.0f)
@@ -15,6 +13,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::onAttach()
 {
+	m_chessboardTexture = Minerva::Texture2D::create("assets/textures/chess_board.png");
 }
 
 void Sandbox2D::onDetach()
@@ -32,7 +31,9 @@ void Sandbox2D::onRender(Minerva::Renderer2D& renderer2D)
 	Minerva::RenderCommand::clear();
 
 	renderer2D.beginScene(m_cameraController.getCamera());
-	renderer2D.drawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_quadColor);
+	renderer2D.drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, m_quadColor);
+	renderer2D.drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+	renderer2D.drawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_chessboardTexture);
 	renderer2D.endScene();
 }
 

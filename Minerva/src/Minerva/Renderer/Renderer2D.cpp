@@ -2,7 +2,7 @@
 #include "Minerva/Renderer/Renderer2D.h"
 #include "Minerva/Renderer/RenderCommand.h"
 
-#include "Platform/OpenGL/OpenGLShader.h" // TEMPORARY
+#include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Minerva
@@ -12,16 +12,17 @@ namespace Minerva
 	{
 		m_squareVertexArray = VertexArray::create();
 
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		Ref<VertexBuffer> squareVertexBuffer(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 		squareVertexBuffer->setLayout({
-			{ ShaderDataType::Float3, "a_position" }
+			{ ShaderDataType::Float3, "a_position" },
+			{ ShaderDataType::Float2, "a_texCoord" }
 		});
 		m_squareVertexArray->addVertexBuffer(squareVertexBuffer);
 
@@ -31,19 +32,35 @@ namespace Minerva
 		m_squareVertexArray->setIndexBuffer(squareIndexBuffer);
 
 		m_flatColorShader = Minerva::Shader::create("assets/shaders/flat_color.glsl");
+		m_textureShader = Minerva::Shader::create("assets/shaders/texture.glsl");
+		m_textureShader->bind();
+		m_textureShader->setInt("u_texture", 0);
 	}
 
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(m_flatColorShader)->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(m_flatColorShader)->
-			uploadUniformMat4("u_VP", camera.getViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(m_flatColorShader)->
-			uploadUniformMat4("u_M", glm::mat4(1.0f));
+		m_flatColorShader->bind();
+		m_flatColorShader->setMat4("u_VP", camera.getViewProjectionMatrix());
+
+		m_textureShader->bind();
+		m_textureShader->setMat4("u_VP", camera.getViewProjectionMatrix());
 	}
 
 	void Renderer2D::endScene()
 	{
+	}
+
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		m_flatColorShader->bind();
+		m_flatColorShader->setFloat4("u_color", color);
+
+		const glm::mat4 transform = glm::scale(
+			glm::translate(glm::mat4(1.0f), position), { size.x, size.y, 1.0f });
+		m_flatColorShader->setMat4("u_M", transform);
+
+		m_squareVertexArray->bind();
+		RenderCommand::drawIndexed(m_squareVertexArray);
 	}
 
 	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -51,13 +68,23 @@ namespace Minerva
 		drawQuad({ position.x, position.y, 0.0f }, size, color);
 	}
 
-	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(m_flatColorShader)->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(m_flatColorShader)->uploadUniformFloat4("u_color", color);
+		m_textureShader->bind();
+
+		const glm::mat4 transform = glm::scale(
+			glm::translate(glm::mat4(1.0f), position), { size.x, size.y, 1.0f });
+		m_textureShader->setMat4("u_M", transform);
+
+		texture->bind();
 
 		m_squareVertexArray->bind();
 		RenderCommand::drawIndexed(m_squareVertexArray);
+	}
+
+	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	{
+		drawQuad({ position.x, position.y, 0.0f }, size, texture);
 	}
 
 }

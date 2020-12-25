@@ -55,6 +55,26 @@ namespace Minerva
 		GLCALL(glUseProgram(0));
 	}
 
+	void OpenGLShader::setInt(const std::string& name, int value)
+	{
+		uploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& vector)
+	{
+		uploadUniformFloat3(name, vector);
+	}
+
+	void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& vector)
+	{
+		uploadUniformFloat4(name, vector);
+	}
+
+	void OpenGLShader::setMat4(const std::string& name, const glm::mat4& matrix)
+	{
+		uploadUniformMat4(name, matrix);
+	}
+
 	void OpenGLShader::uploadUniformInt(const std::string& name, int value)
 	{
 		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));

@@ -8,8 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Platform/OpenGL/OpenGLShader.h> // TEMPORARY
-
 
 class ExampleLayer : public Minerva::Layer
 {
@@ -106,8 +104,8 @@ public:
 		m_texture = Minerva::Texture2D::create("assets/textures/chess_board.png");
 		m_textureAlpha = Minerva::Texture2D::create("assets/textures/alpha_test.png");
 
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->bind();
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(textureShader)->uploadUniformInt("u_texture", 0);
+		textureShader->bind();
+		textureShader->setInt("u_texture", 0);
 	}
 
 	void onUpdate(const float ts, const Minerva::WindowInputState& inputState) override
@@ -119,9 +117,8 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->bind();
-		std::dynamic_pointer_cast<Minerva::OpenGLShader>(m_flatColorShader)->
-			uploadUniformFloat4("u_color", m_squareColor);
+		m_flatColorShader->bind();
+		m_flatColorShader->setFloat4("u_color", m_squareColor);
 
 		for (int y = 0; y < 20; y++)
 		{
