@@ -17,6 +17,8 @@ namespace Minerva
 
 	Application::Application()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!s_instance, "Application::Application: Application already exists.");
 		s_instance = this;
 
@@ -26,6 +28,8 @@ namespace Minerva
 
 	Application::~Application()
 	{
+		MN_PROFILE_FUNCTION();
+
 		disableImGui();
 		m_windows.clear();
 
@@ -37,11 +41,15 @@ namespace Minerva
 
 	void Application::run()
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_running = true;
 		m_lastFrameTime = static_cast<float>(glfwGetTime());
 
 		while (m_running)
 		{
+			MN_PROFILE_SCOPE("Run loop iteration");
+
 			for (auto& event : m_eventBuffer)
 				onEvent(*event);
 			m_eventBuffer.clear();
@@ -98,6 +106,8 @@ namespace Minerva
 
 	Window* Application::createWindow(const WindowProperties& properties)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows,
 			"Application::createWindow: Cannot create window while windows are locked.");
 		m_windows.push_back(Window::create(properties));
@@ -106,6 +116,8 @@ namespace Minerva
 
 	void Application::deleteWindow(Window* window)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows,
 			"Application::deleteWindow: Cannot delete window while windows are locked.");
 		auto it = std::find_if(m_windows.begin(), m_windows.end(),
@@ -118,6 +130,8 @@ namespace Minerva
 
 	void Application::enableImGui(Window* window)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows,
 			"Application::enableImGui: Cannot enable ImGui while windows are locked.");
 		MN_CORE_ASSERT(std::find_if(m_windows.begin(), m_windows.end(),
@@ -132,6 +146,8 @@ namespace Minerva
 
 	void Application::disableImGui()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows,
 			"Application::disableImGui: Cannot disable ImGui while windows are locked.");
 		if (m_enableImGui)
@@ -145,6 +161,8 @@ namespace Minerva
 
 	void Application::onEvent(const Event& event)
 	{
+		MN_PROFILE_FUNCTION();
+
 		// Currently, only WindowCloseEvent(s) get here.
 		deleteWindow(static_cast<const WindowCloseEvent&>(event).getWindow());
 		if (m_windows.size() == 0)

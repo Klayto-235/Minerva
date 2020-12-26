@@ -11,6 +11,8 @@ namespace Minerva
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_windowHandle(windowHandle)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(windowHandle, "OpenGLContext::OpenGLContext: WindowHandle is null.");
 
 #if defined MN_ENABLE_ASSERTS
@@ -39,7 +41,16 @@ namespace Minerva
 
 	void OpenGLContext::swapBuffers()
 	{
+		MN_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_windowHandle);
+	}
+
+	void OpenGLContext::makeCurrent() const
+	{
+		MN_PROFILE_FUNCTION();
+
+		glfwMakeContextCurrent(m_windowHandle);
 	}
 
 }

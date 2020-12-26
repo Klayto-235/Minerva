@@ -12,3 +12,6 @@
 
 # ImGui ini
 imgui.ini
+
+# Profiling
+**/profile-*.json

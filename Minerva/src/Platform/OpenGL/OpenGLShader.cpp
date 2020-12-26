@@ -27,6 +27,8 @@ namespace Minerva
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
 	{
+		MN_PROFILE_FUNCTION();
+
 		std::string source = readFile(filePath);
 		auto shaderSources = parse(source);
 		compile(shaderSources);
@@ -34,6 +36,8 @@ namespace Minerva
 
 	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
 	{
+		MN_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = vertexSource;
 		shaderSources[GL_FRAGMENT_SHADER] = fragmentSource;
@@ -42,36 +46,50 @@ namespace Minerva
 
 	OpenGLShader::~OpenGLShader()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glDeleteProgram(m_renderID));
 	}
 
 	void OpenGLShader::bind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glUseProgram(m_renderID));
 	}
 
 	void OpenGLShader::unbind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glUseProgram(0));
 	}
 
 	void OpenGLShader::setInt(const std::string& name, int value)
 	{
+		MN_PROFILE_FUNCTION();
+
 		uploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& vector)
 	{
+		MN_PROFILE_FUNCTION();
+
 		uploadUniformFloat3(name, vector);
 	}
 
 	void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& vector)
 	{
+		MN_PROFILE_FUNCTION();
+
 		uploadUniformFloat4(name, vector);
 	}
 
 	void OpenGLShader::setMat4(const std::string& name, const glm::mat4& matrix)
 	{
+		MN_PROFILE_FUNCTION();
+
 		uploadUniformMat4(name, matrix);
 	}
 
@@ -119,6 +137,8 @@ namespace Minerva
 
 	std::string OpenGLShader::readFile(const std::string& filePath)
 	{
+		MN_PROFILE_FUNCTION();
+
 		std::string data;
 		std::ifstream ifs(filePath, std::ios::in | std::ios::binary);
 		if (ifs)
@@ -146,6 +166,8 @@ namespace Minerva
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::parse(const std::string& source)
 	{
+		MN_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 		constexpr char typeToken[] = "#type";
 		constexpr size_t tokenLength = sizeof(typeToken);
@@ -193,6 +215,8 @@ namespace Minerva
 
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(shaderSources.size() <= 2,
 			"OpenGLShader::compile: Currently, only two shaders are supported.");
 		std::array<GLuint, 2> shaderIDs = { 0 };

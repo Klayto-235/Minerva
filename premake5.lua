@@ -90,7 +90,8 @@ workspace "Minerva"
 				"MN_DEBUG",
 				"MN_ENABLE_ASSERTS",
 				"MN_ENABLE_DEBUG_CODE",
-				"MN_ENABLE_OPENGL_ASSERTS"
+				"MN_ENABLE_OPENGL_ASSERTS",
+				"MN_ENABLE_PROFILING"
 			}
 			runtime "Debug"
 			symbols "On"
@@ -100,7 +101,8 @@ workspace "Minerva"
 			defines
 			{
 				"MN_RELEASE",
-				"MN_ENABLE_DEBUG_CODE"
+				"MN_ENABLE_DEBUG_CODE",
+				"MN_ENABLE_PROFILING"
 			}
 			runtime "Release"
 			symbols "Off"
@@ -155,7 +157,8 @@ workspace "Minerva"
 				"MN_DEBUG",
 				"MN_ENABLE_ASSERTS",
 				"MN_ENABLE_DEBUG_CODE",
-				"MN_ENABLE_OPENGL_ASSERTS"
+				"MN_ENABLE_OPENGL_ASSERTS",
+				"MN_ENABLE_PROFILING"
 			}
 			runtime "Debug"
 			symbols "On"
@@ -165,7 +168,8 @@ workspace "Minerva"
 			defines
 			{
 				"MN_RELEASE",
-				"MN_ENABLE_DEBUG_CODE"
+				"MN_ENABLE_DEBUG_CODE",
+				"MN_ENABLE_PROFILING"
 			}
 			runtime "Release"
 			symbols "Off"

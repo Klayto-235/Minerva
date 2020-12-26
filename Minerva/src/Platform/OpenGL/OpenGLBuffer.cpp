@@ -10,23 +10,35 @@ namespace Minerva
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t count)
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glCreateBuffers(1, &m_renderID));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW));
+		{
+			MN_PROFILE_SCOPE("Upload data - OpenGLVertexBuffer::OpenGLVertexBuffer");
+
+			GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW));
+		}
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glDeleteBuffers(1, &m_renderID));
 	}
 
 	void OpenGLVertexBuffer::bind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
 	}
 
 	void OpenGLVertexBuffer::unbind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
@@ -37,6 +49,8 @@ namespace Minerva
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
 		: m_count(count)
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glCreateBuffers(1, &m_renderID));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
 		GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));
@@ -44,16 +58,22 @@ namespace Minerva
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glDeleteBuffers(1, &m_renderID));
 	}
 
 	void OpenGLIndexBuffer::bind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID));
 	}
 
 	void OpenGLIndexBuffer::unbind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 	}
 
@@ -84,26 +104,36 @@ namespace Minerva
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glCreateVertexArrays(1, &m_renderID));
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glDeleteVertexArrays(1, &m_renderID));
 	}
 
 	void OpenGLVertexArray::bind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindVertexArray(m_renderID));
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindVertexArray(0));
 	}
 
 	void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(),
 			"OpenGLVertexArray::addVertexBuffer: Vertex buffer layout has no elements.");
 
@@ -129,6 +159,8 @@ namespace Minerva
 
 	void OpenGLVertexArray::setIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindVertexArray(m_renderID));
 		indexBuffer->bind();
 

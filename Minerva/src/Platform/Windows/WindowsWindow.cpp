@@ -49,6 +49,8 @@ namespace Minerva
 	WindowsWindow::WindowsWindow(const WindowProperties& properties)
 		: Window(properties), m_inputState(*this)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_INFO("Creating window \"{0}\" ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -133,6 +135,8 @@ namespace Minerva
 
 	WindowsWindow::~WindowsWindow()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_INFO("Destroying window \"{0}\".", m_data.title);
 		glfwMakeContextCurrent(m_windowHandle);
 		freeResources(); // Free OpenGL resources before context destruction.
@@ -141,6 +145,8 @@ namespace Minerva
 
 	void WindowsWindow::setVSync(bool enabled)
 	{
+		MN_PROFILE_FUNCTION();
+
 		// Retain context because this is exposed in public Window API.
 		GLFWwindow* currentContext = glfwGetCurrentContext();
 		glfwMakeContextCurrent(m_windowHandle);
@@ -157,6 +163,8 @@ namespace Minerva
 #ifdef MN_PLATFORM_WINDOWS
 	void Window::init()
 	{
+		MN_PROFILE_FUNCTION();
+
 		glfwSetErrorCallback([](int error, const char* description)
 		{
 			MN_CORE_ERROR("GLFW Error ({0}): {1}.", error, description);
@@ -172,11 +180,15 @@ namespace Minerva
 
 	void Window::pollEvents()
 	{
+		MN_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 	}
 
 	void Window::terminate()
 	{
+		MN_PROFILE_FUNCTION();
+
 		glfwTerminate();
 	}
 #endif // MN_PLATFORM_WINDOWS

@@ -31,7 +31,7 @@ namespace Minerva
 		explicit WindowsWindow(const WindowProperties& properties);
 		~WindowsWindow();
 
-		void makeContextCurrent() const override { glfwMakeContextCurrent(m_windowHandle); }
+		void makeContextCurrent() const override { m_context->makeCurrent(); }
 		void swapBuffers() override { m_context->swapBuffers(); }
 
 		void setVSync(bool enabled) override;

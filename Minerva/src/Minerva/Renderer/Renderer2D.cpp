@@ -10,6 +10,8 @@ namespace Minerva
 
 	Renderer2D::Renderer2D()
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_squareVertexArray = VertexArray::create();
 
 		float squareVertices[5 * 4] = {
@@ -40,18 +42,28 @@ namespace Minerva
 		m_textureShader->setInt("u_texture", 0);
 	}
 
+	Renderer2D::~Renderer2D()
+	{
+		MN_PROFILE_FUNCTION();
+	}
+
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_textureShader->bind();
 		m_textureShader->setMat4("u_VP", camera.getViewProjectionMatrix());
 	}
 
 	void Renderer2D::endScene()
 	{
+		MN_PROFILE_FUNCTION();
 	}
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_textureShader->bind();
 		m_textureShader->setFloat4("u_color", color);
 
@@ -72,6 +84,8 @@ namespace Minerva
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_textureShader->bind();
 		m_textureShader->setFloat4("u_color", glm::vec4(1.0f));
 

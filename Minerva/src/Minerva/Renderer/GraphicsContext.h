@@ -13,6 +13,7 @@ namespace Minerva
 		GraphicsContext& operator=(const GraphicsContext& other) = delete;
 
 		virtual void swapBuffers() = 0;
+		virtual void makeCurrent() const = 0;
 	};
 
 }

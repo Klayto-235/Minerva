@@ -14,9 +14,11 @@ namespace Minerva
 
 	ImGuiContext::ImGuiContext(Window& window)
 	{
+		MN_PROFILE_FUNCTION();
+
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
-		m_context = ImGui::CreateContext();
+		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -46,7 +48,8 @@ namespace Minerva
 
 	ImGuiContext::~ImGuiContext()
 	{
-		ImGui::SetCurrentContext(m_context);
+		MN_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -54,7 +57,8 @@ namespace Minerva
 
 	void ImGuiContext::beginFrame()
 	{
-		ImGui::SetCurrentContext(m_context);
+		MN_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -62,6 +66,8 @@ namespace Minerva
 
 	void ImGuiContext::endFrame()
 	{
+		MN_PROFILE_FUNCTION();
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

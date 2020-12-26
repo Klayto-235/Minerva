@@ -7,7 +7,9 @@ namespace Minerva
 
 	void Renderer::init()
 	{
-		
+		MN_PROFILE_FUNCTION();
+
+		RenderCommand::init();
 	}
 
 	void Renderer::onWindowResize(uint32_t width, uint32_t height)

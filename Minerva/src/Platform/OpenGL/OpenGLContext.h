@@ -15,6 +15,7 @@ namespace Minerva
 		explicit OpenGLContext(GLFWwindow* windowHandle);
 
 		virtual void swapBuffers() override;
+		virtual void makeCurrent() const override;
 	private:
 		GLFWwindow* m_windowHandle;
 	};

@@ -5,6 +5,7 @@
 #include "Minerva/core/input_codes.h"
 #include "Minerva/Renderer/Renderer2D.h"
 #include "Minerva/core/LayerStack.h"
+#include "Minerva/debug/Profiler.h"
 
 #include <string>
 
@@ -139,6 +140,8 @@ namespace Minerva
 	template<typename T, typename ...Args>
 	inline T* Window::createLayer(Args && ...args)
 	{
+		MN_PROFILE_FUNCTION();
+
 		static_assert(std::is_base_of<Layer, T>::value, "Window::createLayer: Invalid template argument.");
 		MN_CORE_ASSERT(!g_lockWindows, "Window::createLayer: Cannot create layer while windows are locked.");
 		makeContextCurrent();
@@ -151,6 +154,8 @@ namespace Minerva
 
 	inline void Window::deleteLayer(Layer* layer)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::deleteLayer: Cannot delete layer while windows are locked.");
 		auto it = std::find_if(m_layers.begin(), m_layers.end(),
 			[layer](const Scope<Layer>& other) { return layer == other.get(); });
@@ -162,6 +167,8 @@ namespace Minerva
 
 	inline void Window::deleteLayers()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::deleteLayers: Cannot delete layers while windows are locked.");
 		makeContextCurrent();
 		for (auto& layer : m_layers)
@@ -174,6 +181,8 @@ namespace Minerva
 
 	inline void Window::pushLayer(Layer* layer)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::pushLayer: Cannot push layer while windows are locked.");
 		MN_CORE_ASSERT(layer->m_owner == nullptr || layer->m_owner == this,
 			"Window::pushLayer: Cannot push layer that is owned by another window.");
@@ -182,6 +191,8 @@ namespace Minerva
 
 	inline void Window::pushOverlay(Layer* overlay)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::pushOverlay: Cannot push overlay while windows are locked.");
 		MN_CORE_ASSERT(overlay->m_owner == nullptr || overlay->m_owner == this,
 			"Window::pushOverlay: Cannot push overlay that is owned by another window.");
@@ -190,30 +201,40 @@ namespace Minerva
 
 	inline Layer* Window::popLayer()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::popLayer: Cannot pop layer while windows are locked.");
 		return m_layerStack.popLayer();
 	}
 
 	inline Layer* Window::popOverlay()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::popOverlay: Cannot pop overlay while windows are locked.");
 		return m_layerStack.popOverlay();
 	}
 
 	inline size_t Window::removeLayer(Layer* layer)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::removeLayer: Cannot remove layer while windows are locked.");
 		return m_layerStack.removeLayer(layer);
 	}
 
 	inline size_t Window::removeOverlay(Layer* overlay)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::removeOverlay: Cannot remove overlay while windows are locked.");
 		return m_layerStack.removeOverlay(overlay);
 	}
 
 	inline void Window::clearLayerStack()
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(!g_lockWindows, "Window::clearLayerStack: Cannot clear layer stack while windows are locked.");
 		m_layerStack.clear();
 	}

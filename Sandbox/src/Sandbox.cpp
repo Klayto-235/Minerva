@@ -175,6 +175,8 @@ class Sandbox : public Minerva::Application
 public:
 	Sandbox()
 	{
+		MN_PROFILE_FUNCTION();
+
 		m_window = createWindow();
 		m_window->pushLayer(m_window->createLayer<Sandbox2D>());
 
@@ -183,6 +185,7 @@ public:
 
 	~Sandbox()
 	{
+		MN_PROFILE_FUNCTION();
 	}
 
 private:

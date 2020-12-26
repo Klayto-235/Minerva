@@ -15,8 +15,6 @@ namespace Minerva
 
         void beginFrame();
         void endFrame();
-    private:
-        ::ImGuiContext* m_context;
     };
 
 }

@@ -14,6 +14,7 @@ namespace Minerva
 	{
 	public:
 		Renderer2D();
+		~Renderer2D();
 
 		void beginScene(const OrthographicCamera& camera);
 		void endScene();

@@ -9,6 +9,8 @@ namespace Minerva
 
 	void OrthographicCameraController::onUpdate(float timeStep, const WindowInputState& inputState)
 	{
+		MN_PROFILE_FUNCTION();
+
 		if (inputState.isKeyPressed(Minerva::Key::A))
 		{
 			m_cameraPosition.x -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * timeStep;
@@ -46,6 +48,8 @@ namespace Minerva
 
 	bool OrthographicCameraController::onEvent(const Event& event)
 	{
+		MN_PROFILE_FUNCTION();
+
 		const EventType eventType = event.getEventType();
 		if (eventType == EventType::MouseScroll)
 		{

@@ -13,9 +13,16 @@ namespace Minerva
 		: m_filePath(filePath)
 #endif
 	{
+		MN_PROFILE_FUNCTION();
+
 		int width, height, channels;
+		stbi_uc* data = nullptr;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+		{
+			MN_PROFILE_SCOPE("Load data - OpenGLTexture2D::OpenGLTexture2D");
+
+			data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+		}
 		MN_CORE_ASSERT(data, "OpenGLTexture2D::OpenGLTexture2D: Could not load image \"{0}\".", filePath);
 		m_width = width;
 		m_height = height;
@@ -39,8 +46,12 @@ namespace Minerva
 		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT));
 
 		GLCALL(glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height));
-		GLCALL(glTextureSubImage2D(m_renderID, 0, 0, 0, m_width,
-			m_height, m_dataFormat, GL_UNSIGNED_BYTE, data));
+		{
+			MN_PROFILE_SCOPE("Upload data - OpenGLTexture2D::OpenGLTexture2D");
+
+			GLCALL(glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height,
+				m_dataFormat, GL_UNSIGNED_BYTE, data));
+		}
 
 		stbi_image_free(data);
 	}
@@ -48,6 +59,8 @@ namespace Minerva
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_width(width), m_height(height), m_internalFormat(GL_RGBA8), m_dataFormat(GL_RGBA)
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID));
 
 		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
@@ -61,11 +74,15 @@ namespace Minerva
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glDeleteTextures(1, &m_renderID));
 	}
 
 	void OpenGLTexture2D::setData(void* data, uint32_t size)
 	{
+		MN_PROFILE_FUNCTION();
+
 		MN_CORE_ASSERT(size == m_width * m_height * (m_dataFormat == GL_RGBA ? 4 : 3),
 			"OpenGLTexture2D::setData: Parameter size must be equal to texture size.");
 		glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
@@ -73,6 +90,8 @@ namespace Minerva
 
 	void OpenGLTexture2D::bind(uint32_t slot) const
 	{
+		MN_PROFILE_FUNCTION();
+
 		GLCALL(glBindTextureUnit(slot, m_renderID));
 	}
 
