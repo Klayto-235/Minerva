@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Minerva/core/Log.h"
-
 #include <memory>
 
 
@@ -42,4 +40,5 @@ namespace Minerva
 
 	template<typename T>
 	using Ptr = std::weak_ptr<T>;
+
 }
