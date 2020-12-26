@@ -67,7 +67,7 @@ namespace Minerva
 					window->onImGuiRender();
 					g_lockWindows = false;
 #else
-					window->onUpdate(deltaTime);
+					window->onUpdate(deltaTime, m_eventBuffer);
 					window->onImGuiRender();
 #endif
 					if (window.get() != m_ImGuiWindow) // necessary?
@@ -88,7 +88,7 @@ namespace Minerva
 					window->onUpdate(deltaTime, m_eventBuffer);
 					g_lockWindows = false;
 #else
-					window->onUpdate(deltaTime);
+					window->onUpdate(deltaTime, m_eventBuffer);
 #endif
 					window->swapBuffers();
 				}

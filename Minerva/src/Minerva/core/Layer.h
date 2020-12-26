@@ -37,7 +37,7 @@ namespace Minerva
 			: m_name(name) {}
 #else
 	protected:
-		explicit Layer(const std::string& name = "Layer") = default;
+		explicit Layer(const std::string& name) {};
 #endif
 
 #if defined MN_ENABLE_ASSERTS
