@@ -27,7 +27,7 @@ namespace Minerva
 			glm::mat4 viewProjectionMatrix;
 		};
 
-		static SceneData* s_sceneData; // Raw
+		static Scope<SceneData> s_sceneData;
 	};
 
 }

@@ -124,10 +124,18 @@ namespace Minerva
 		if (ifs)
 		{
 			ifs.seekg(0, std::ios::end);
-			data.resize(ifs.tellg());
-			ifs.seekg(0, std::ios::beg);
-			ifs.read(&data[0], data.size());
-			ifs.close();
+			auto size = ifs.tellg();
+			if (size != -1)
+			{
+				data.resize(size);
+				ifs.seekg(0, std::ios::beg);
+				ifs.read(&data[0], data.size());
+				ifs.close();
+			}
+			else
+			{
+				MN_CORE_ERROR("Could not read from file \"{0}\".", filePath);
+			}
 		}
 		else
 		{

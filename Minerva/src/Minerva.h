@@ -2,6 +2,8 @@
 
 ////////////////////////////////////////
 /////////////// core ///////////////////
+#include "Minerva/core/core.h"
+
 #include "Minerva/core/Application.h"
 #include "Minerva/core/Layer.h"
 #include "Minerva/core/Log.h"

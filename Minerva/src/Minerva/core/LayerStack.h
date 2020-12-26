@@ -9,7 +9,7 @@
 namespace Minerva
 {
 
-	class  LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack() = default;

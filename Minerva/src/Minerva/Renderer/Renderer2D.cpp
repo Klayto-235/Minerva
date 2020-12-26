@@ -31,7 +31,10 @@ namespace Minerva
 			sizeof(squareIndices) / sizeof(squareIndices[0])));
 		m_squareVertexArray->setIndexBuffer(squareIndexBuffer);
 
-		m_flatColorShader = Minerva::Shader::create("assets/shaders/flat_color.glsl");
+		uint32_t data = 0xffffffff;
+		m_whiteTexture = Texture2D::create(1, 1);
+		m_whiteTexture->setData(&data, sizeof(uint32_t));
+
 		m_textureShader = Minerva::Shader::create("assets/shaders/texture.glsl");
 		m_textureShader->bind();
 		m_textureShader->setInt("u_texture", 0);
@@ -39,9 +42,6 @@ namespace Minerva
 
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
 	{
-		m_flatColorShader->bind();
-		m_flatColorShader->setMat4("u_VP", camera.getViewProjectionMatrix());
-
 		m_textureShader->bind();
 		m_textureShader->setMat4("u_VP", camera.getViewProjectionMatrix());
 	}
@@ -52,12 +52,14 @@ namespace Minerva
 
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		m_flatColorShader->bind();
-		m_flatColorShader->setFloat4("u_color", color);
+		m_textureShader->bind();
+		m_textureShader->setFloat4("u_color", color);
 
 		const glm::mat4 transform = glm::scale(
 			glm::translate(glm::mat4(1.0f), position), { size.x, size.y, 1.0f });
-		m_flatColorShader->setMat4("u_M", transform);
+		m_textureShader->setMat4("u_M", transform);
+
+		m_whiteTexture->bind();
 
 		m_squareVertexArray->bind();
 		RenderCommand::drawIndexed(m_squareVertexArray);
@@ -71,6 +73,7 @@ namespace Minerva
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
 		m_textureShader->bind();
+		m_textureShader->setFloat4("u_color", glm::vec4(1.0f));
 
 		const glm::mat4 transform = glm::scale(
 			glm::translate(glm::mat4(1.0f), position), { size.x, size.y, 1.0f });

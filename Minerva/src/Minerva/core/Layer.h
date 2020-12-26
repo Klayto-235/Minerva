@@ -15,7 +15,7 @@ namespace Minerva
 
 	class WindowInputState;
 
-	class  Layer
+	class Layer
 	{
 	public:
 		virtual ~Layer() = default;
@@ -37,7 +37,7 @@ namespace Minerva
 			: m_name(name) {}
 #else
 	protected:
-		explicit Layer(const std::string& name) {};
+		explicit Layer(const std::string& name = "Layer") {};
 #endif
 
 #if defined MN_ENABLE_ASSERTS

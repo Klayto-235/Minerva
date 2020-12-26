@@ -24,8 +24,8 @@ namespace Minerva
 		void drawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture);
 	private:
 		Ref<VertexArray> m_squareVertexArray;
-		Ref<Shader> m_flatColorShader;
 		Ref<Shader> m_textureShader;
+		Ref<Texture2D> m_whiteTexture;
 	};
 
 }

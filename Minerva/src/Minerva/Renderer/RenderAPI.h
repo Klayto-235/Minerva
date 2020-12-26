@@ -30,6 +30,7 @@ namespace Minerva
 
 		virtual void drawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 
+		static Scope<RenderAPI> create();
 		static API getAPI() { return s_API; }
 	private:
 		static API s_API;

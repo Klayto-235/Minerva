@@ -9,7 +9,7 @@
 namespace Minerva
 {
 
-	class  MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		MouseButton getMouseButton() const { return m_button; }
@@ -22,7 +22,7 @@ namespace Minerva
 		MouseButton m_button;
 	};
 
-	class  MouseButtonPressEvent : public MouseButtonEvent
+	class MouseButtonPressEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressEvent(MouseButton button)
@@ -40,7 +40,7 @@ namespace Minerva
 		EVENT_CLASS_TYPE(MouseButtonPress)
 	};
 
-	class  MouseButtonReleaseEvent : public MouseButtonEvent
+	class MouseButtonReleaseEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleaseEvent(MouseButton button)
@@ -58,7 +58,7 @@ namespace Minerva
 		EVENT_CLASS_TYPE(MouseButtonRelease)
 	};
 
-	class  MouseMoveEvent : public Event
+	class MouseMoveEvent : public Event
 	{
 	public:
 		MouseMoveEvent(float x, float y)
@@ -82,7 +82,7 @@ namespace Minerva
 		float m_x, m_y;
 	};
 
-	class  MouseScrollEvent : public Event
+	class MouseScrollEvent : public Event
 	{
 	public:
 		MouseScrollEvent(float xOffset, float yOffset)

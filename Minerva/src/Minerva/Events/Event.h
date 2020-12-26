@@ -40,7 +40,7 @@ namespace Minerva
 
 #define EVENT_CLASS_CATEGORY(category) int getEventCategoryFlags() const override { return category; }
 
-	class  Event
+	class Event
 	{
 	public:
 		virtual ~Event() = default;

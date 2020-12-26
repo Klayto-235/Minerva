@@ -20,7 +20,7 @@ namespace Minerva
 	 * called from the client application class constructor and overrides of functions such as
 	 * Application::onUpdate and Application::onEvent.
 	*/
-	class  Application
+	class Application
 	{
 	public:
 		virtual ~Application();
