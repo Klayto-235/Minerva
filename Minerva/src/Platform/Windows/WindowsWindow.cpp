@@ -4,6 +4,7 @@
 #include "Minerva/Events/KeyEvent.h"
 #include "Minerva/Events/MouseEvent.h"
 #include "Platform/OpenGL/OpenGLContext.h"
+#include "Minerva/Renderer/RenderAPI.h"
 
 
 namespace Minerva
@@ -56,6 +57,11 @@ namespace Minerva
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#if defined(MN_ENABLE_OPENGL_ERRORS)
+		if (RenderAPI::getAPI() == RenderAPI::API::OpenGL)
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
+
 		m_windowHandle = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
 		MN_CORE_ASSERT(m_windowHandle, "WindowsWindow::WindowsWindow: Could not create window \"{0}\".", m_data.title);
 

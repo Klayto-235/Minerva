@@ -1,6 +1,7 @@
 #include "mnpch.h"
 #include "Platform/OpenGL/OpenGLShader.h"
-#include "Platform/OpenGL/OpenGL_core.h"
+
+#include <glad/glad.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -48,21 +49,21 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glDeleteProgram(m_renderID));
+		glDeleteProgram(m_renderID);
 	}
 
 	void OpenGLShader::bind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glUseProgram(m_renderID));
+		glUseProgram(m_renderID);
 	}
 
 	void OpenGLShader::unbind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glUseProgram(0));
+		glUseProgram(0);
 	}
 
 	void OpenGLShader::setInt(const std::string& name, int value)
@@ -95,44 +96,44 @@ namespace Minerva
 
 	void OpenGLShader::uploadUniformInt(const std::string& name, int value)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniform1i(location, value));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::uploadUniformFloat(const std::string& name, float value)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniform1f(location, value));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform1f(location, value);
 	}
 
 	void OpenGLShader::uploadUniformFloat2(const std::string& name, const glm::vec2& vector)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniform2f(location, vector.x, vector.y));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform2f(location, vector.x, vector.y);
 	}
 
 	void OpenGLShader::uploadUniformFloat3(const std::string& name, const glm::vec3& vector)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniform3f(location, vector.x, vector.y, vector.z));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform3f(location, vector.x, vector.y, vector.z);
 	}
 
 	void OpenGLShader::uploadUniformFloat4(const std::string& name, const glm::vec4& vector)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniform4f(location, vector.x, vector.y, vector.z, vector.w));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
 	}
 
 	void OpenGLShader::uploadUniformMat3(const std::string& name, const glm::mat3& matrix)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix)));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void OpenGLShader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		GLCALL(GLint location = glGetUniformLocation(m_renderID, name.c_str()));
-		GLCALL(glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix)));
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	std::string OpenGLShader::readFile(const std::string& filePath)
@@ -221,28 +222,28 @@ namespace Minerva
 			"OpenGLShader::compile: Currently, only two shaders are supported.");
 		std::array<GLuint, 2> shaderIDs = { 0 };
 
-		m_renderID = GLCALL(glCreateProgram());
+		m_renderID = glCreateProgram();
 
 		int shaderIDidx = 0;
 		bool compilationError = false;
 		for (auto& kv : shaderSources)
 		{
-			GLuint shaderID = GLCALL(glCreateShader(kv.first));
+			GLuint shaderID = glCreateShader(kv.first);
 			shaderIDs[shaderIDidx++] = shaderID;
 
 			const GLchar* shaderSource = kv.second.c_str();
-			GLCALL(glShaderSource(shaderID, 1, &shaderSource, nullptr));
-			GLCALL(glCompileShader(shaderID));
+			glShaderSource(shaderID, 1, &shaderSource, nullptr);
+			glCompileShader(shaderID);
 
 			GLint result = 0;
-			GLCALL(glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result));
+			glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
 			if (result == GL_FALSE)
 			{
 				GLint maxLength = 0;
-				GLCALL(glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &maxLength));
+				glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &maxLength);
 
 				std::vector<GLchar> infoLog(maxLength);
-				GLCALL(glGetShaderInfoLog(shaderID, maxLength, &maxLength, &infoLog[0]));
+				glGetShaderInfoLog(shaderID, maxLength, &maxLength, &infoLog[0]);
 
 				MN_CORE_ERROR("{0}", infoLog.data());
 				MN_CORE_ASSERT(false, "OpenGLShader::compile: Could not compile shader.");
@@ -254,28 +255,28 @@ namespace Minerva
 
 		if (!compilationError)
 		{
-			for (auto id : shaderIDs) GLCALL(glAttachShader(m_renderID, id));
-			GLCALL(glLinkProgram(m_renderID));
+			for (auto id : shaderIDs) glAttachShader(m_renderID, id);
+			glLinkProgram(m_renderID);
 
 			GLint result = 0;
-			GLCALL(glGetProgramiv(m_renderID, GL_LINK_STATUS, &result));
+			glGetProgramiv(m_renderID, GL_LINK_STATUS, &result);
 			if (result == GL_FALSE)
 			{
 				GLint maxLength = 0;
-				GLCALL(glGetProgramiv(m_renderID, GL_INFO_LOG_LENGTH, &maxLength));
+				glGetProgramiv(m_renderID, GL_INFO_LOG_LENGTH, &maxLength);
 
 				std::vector<GLchar> infoLog(maxLength);
-				GLCALL(glGetProgramInfoLog(m_renderID, maxLength, &maxLength, &infoLog[0]));
+				glGetProgramInfoLog(m_renderID, maxLength, &maxLength, &infoLog[0]);
 
-				GLCALL(glDeleteProgram(m_renderID));
+				glDeleteProgram(m_renderID);
 
 				MN_CORE_ERROR("{0}", infoLog.data());
 				MN_CORE_ASSERT(false, "OpenGLShader::compile: Could not link shader program.");
 			}
-			else for (auto id : shaderIDs) GLCALL(glDetachShader(m_renderID, id));
+			else for (auto id : shaderIDs) glDetachShader(m_renderID, id);
 		}
 
-		while (shaderIDidx--) GLCALL(glDeleteShader(shaderIDs[shaderIDidx]));
+		while (shaderIDidx--) glDeleteShader(shaderIDs[shaderIDidx]);
 	}
 
 }

@@ -1,6 +1,7 @@
 #include "mnpch.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
-#include "Platform/OpenGL/OpenGL_core.h"
+
+#include <glad/glad.h>
 
 
 namespace Minerva
@@ -12,12 +13,12 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glCreateBuffers(1, &m_renderID));
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
+		glCreateBuffers(1, &m_renderID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 		{
 			MN_PROFILE_SCOPE("Upload data - OpenGLVertexBuffer::OpenGLVertexBuffer");
 
-			GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW));
+			glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), vertices, GL_STATIC_DRAW);
 		}
 	}
 
@@ -25,21 +26,21 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glDeleteBuffers(1, &m_renderID));
+		glDeleteBuffers(1, &m_renderID);
 	}
 
 	void OpenGLVertexBuffer::bind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
+		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 	}
 
 	void OpenGLVertexBuffer::unbind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 #pragma endregion
@@ -51,30 +52,30 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glCreateBuffers(1, &m_renderID));
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_renderID));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));
+		glCreateBuffers(1, &m_renderID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glDeleteBuffers(1, &m_renderID));
+		glDeleteBuffers(1, &m_renderID);
 	}
 
 	void OpenGLIndexBuffer::bind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderID);
 	}
 
 	void OpenGLIndexBuffer::unbind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 #pragma endregion
@@ -106,28 +107,28 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glCreateVertexArrays(1, &m_renderID));
+		glCreateVertexArrays(1, &m_renderID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glDeleteVertexArrays(1, &m_renderID));
+		glDeleteVertexArrays(1, &m_renderID);
 	}
 
 	void OpenGLVertexArray::bind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindVertexArray(m_renderID));
+		glBindVertexArray(m_renderID);
 	}
 
 	void OpenGLVertexArray::unbind() const
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindVertexArray(0));
+		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
@@ -137,20 +138,20 @@ namespace Minerva
 		MN_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(),
 			"OpenGLVertexArray::addVertexBuffer: Vertex buffer layout has no elements.");
 
-		GLCALL(glBindVertexArray(m_renderID));
+		glBindVertexArray(m_renderID);
 		vertexBuffer->bind();
 
 		const auto& layout = vertexBuffer->getLayout();
 		uint32_t stride = layout.getStride();
 		for (const auto& element : layout)
 		{
-			GLCALL(glEnableVertexAttribArray(m_nAttributes));
-			GLCALL(glVertexAttribPointer(m_nAttributes,
+			glEnableVertexAttribArray(m_nAttributes);
+			glVertexAttribPointer(m_nAttributes,
 				shaderDataTypeComponentCount(element.type),
 				shaderDataTypeToOpenGLType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				stride,
-				reinterpret_cast<const void*>((uint64_t)(element.offset))));
+				reinterpret_cast<const void*>((uint64_t)(element.offset)));
 			m_nAttributes++;
 		}
 
@@ -161,7 +162,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindVertexArray(m_renderID));
+		glBindVertexArray(m_renderID);
 		indexBuffer->bind();
 
 		m_indexBuffer = indexBuffer;

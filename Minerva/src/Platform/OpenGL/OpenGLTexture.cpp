@@ -1,6 +1,7 @@
 #include "mnpch.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
-#include "Platform/OpenGL/OpenGL_core.h"
+
+#include <glad/glad.h>
 
 #include <stb_image.h>
 
@@ -37,20 +38,20 @@ namespace Minerva
 			m_dataFormat = GL_RGB;
 		}
 
-		GLCALL(glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID));
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID);
 
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT));
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		GLCALL(glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height));
+		glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height);
 		{
 			MN_PROFILE_SCOPE("Upload data - OpenGLTexture2D::OpenGLTexture2D");
 
-			GLCALL(glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height,
-				m_dataFormat, GL_UNSIGNED_BYTE, data));
+			glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height,
+				m_dataFormat, GL_UNSIGNED_BYTE, data);
 		}
 
 		stbi_image_free(data);
@@ -61,22 +62,22 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID));
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID);
 
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT));
-		GLCALL(glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		GLCALL(glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height));
+		glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glDeleteTextures(1, &m_renderID));
+		glDeleteTextures(1, &m_renderID);
 	}
 
 	void OpenGLTexture2D::setData(void* data, uint32_t size)
@@ -92,7 +93,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		GLCALL(glBindTextureUnit(slot, m_renderID));
+		glBindTextureUnit(slot, m_renderID);
 	}
 
 }

@@ -1,12 +1,38 @@
 #include "mnpch.h"
 #include "Platform/OpenGL/OpenGLContext.h"
-#include "Platform/OpenGL/OpenGL_core.h"
+
+#include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 
 
 namespace Minerva
 {
+
+#ifdef MN_ENABLE_OPENGL_ERRORS
+	void OpenGLDebugMessageCallback(
+		unsigned source,
+		unsigned type,
+		unsigned id,
+		unsigned severity,
+		int length,
+		const char* message,
+		const void* userParam)
+	{
+		switch (severity)
+		{
+		case GL_DEBUG_SEVERITY_HIGH:			MN_CORE_CRITICAL(message); break;
+		case GL_DEBUG_SEVERITY_MEDIUM:			MN_CORE_ERROR(message); break;
+		case GL_DEBUG_SEVERITY_LOW:				MN_CORE_WARN(message); break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION:	MN_CORE_TRACE(message); break;
+		default: MN_CORE_ASSERT(false, "OpenGLDebugMessageCallback: Unknown severity level.");
+		}
+
+#ifdef MN_ENABLE_OPENGL_ASSERTS
+		MN_CORE_ASSERT(false, "OpenGL error (context {0}).", userParam);
+#endif
+	}
+#endif
 
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		: m_windowHandle(windowHandle)
@@ -27,7 +53,6 @@ namespace Minerva
 
 		MN_CORE_INFO("OpenGL Info:\n\tVendor: {0}\n\tRenderer: {1}\n\tVersion: {2}",
 			glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
-		GLCALL(;); // Check for errors.
 
 #if defined MN_ENABLE_ASSERTS
 		int versionMajor;
@@ -36,6 +61,14 @@ namespace Minerva
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 		MN_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5),
 			"OpenGLContext::OpenGLContext: Minerva requires at least OpenGL version 4.5.");
+#endif
+
+#ifdef MN_ENABLE_OPENGL_ERRORS
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(OpenGLDebugMessageCallback, static_cast<void*>(this));
+
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 #endif
 	}
 

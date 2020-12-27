@@ -65,11 +65,6 @@ namespace Minerva
 	class Profiler
 	{
 	public:
-		Profiler()
-		{
-
-		}
-
 		~Profiler()
 		{
 			endSession();
