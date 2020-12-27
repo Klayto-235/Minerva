@@ -1,5 +1,5 @@
 workspace "Minerva"
-	architecture "x64"
+	architecture "x86_64"
 
 	configurations
 	{
@@ -101,7 +101,6 @@ workspace "Minerva"
 			defines
 			{
 				"MN_RELEASE",
-				"MN_ENABLE_DEBUG_CODE",
 				"MN_ENABLE_PROFILING"
 			}
 			runtime "Release"
