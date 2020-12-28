@@ -4,22 +4,21 @@
 
 #include <string>
 #include <chrono>
-#include <algorithm>
-#include <fstream>
+#include <cstdint>
+#include <vector>
 #include <thread>
 #include <atomic>
-#include <cstdint>
+#include <mutex>
 
 
 namespace Minerva
 {
-	// NOT THREAD SAFE
 
 	struct ProfileTimerResult
 	{
 		const char* name;
 		long long start, stop;
-		size_t threadID;
+		std::thread::id threadID;
 	};
 
 	class ProfileBuffer
@@ -65,86 +64,33 @@ namespace Minerva
 	class Profiler
 	{
 	public:
-		~Profiler()
-		{
-			endSession();
-		}
-
-		void beginSession(const std::string& filePath = "profile-results.json")
-		{
-			if (m_running)
-				endSession();
-			m_running = true;
-			m_profilerThread = createScope<std::thread>(profileThreadFunction,
-				std::ref(m_running), std::ref(m_buffer), filePath);
-		}
-
-		void endSession()
-		{
-			if (m_running)
-			{
-				m_running = false;
-				m_profilerThread->join();
-			}
-		}
+		~Profiler();
 
 		void writeResult(ProfileTimerResult&& result)
 		{
 			m_buffer.push(std::move(result));
 		}
 
+		static void beginSession(const std::string& filePath);
+		static void endSession();
+
 		static Profiler& get()
 		{
-			static Profiler instance;
+			thread_local Profiler instance;
 			return instance;
 		}
 
 	private:
-		static void profileThreadFunction(bool& run, ProfileBuffer& buffer, const std::string filePath)
-		{
-			ProfileTimerResult result{};
-			int resultCount = 0;
-			std::ofstream outputStream(filePath);
-			MN_CORE_ASSERT(outputStream.is_open(), "Could not open file \"{0}\".", filePath);
+		Profiler();
 
-			outputStream << "{\"otherData\": {},\"traceEvents\":[";
-			outputStream.flush();
+		static void profileThreadFunction(const std::string filePath);
 
-			while (run)
-			{
-				while (buffer.pop(result))
-				{
-					if (resultCount++ > 0)
-						outputStream << ",";
-
-					std::string name(result.name ? result.name : "");
-					std::replace(name.begin(), name.end(), '"', '\'');
-
-					outputStream << "{";
-					outputStream << "\"cat\":\"function\",";
-					outputStream << "\"dur\":" << (result.stop - result.start) << ',';
-					outputStream << "\"name\":\"" << name << "\",";
-					outputStream << "\"ph\":\"X\",";
-					outputStream << "\"pid\":0,";
-					outputStream << "\"tid\":" << result.threadID << ",";
-					outputStream << "\"ts\":" << result.start;
-					outputStream << "}";
-
-					outputStream.flush();
-				}
-
-				std::this_thread::yield();
-			}
-
-			outputStream << "]}";
-			outputStream.flush();
-
-			outputStream.close();
-		}
-
-		bool m_running = false;
 		ProfileBuffer m_buffer;
-		Scope<std::thread> m_profilerThread;
+
+		static volatile bool s_running;
+		static Scope<std::thread> s_profileThread;
+		static std::vector<ProfileBuffer*> s_buffers;
+		static std::mutex s_buffersMutex, s_sessionMutex;
 	};
 
 	class ProfileTimer
@@ -171,8 +117,7 @@ namespace Minerva
 			long long end = std::chrono::time_point_cast<std::chrono::microseconds>
 				(endTimePoint).time_since_epoch().count();
 
-			size_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-			Profiler::get().writeResult({ m_name, start, end, threadID });
+			Profiler::get().writeResult({ m_name, start, end, std::this_thread::get_id() });
 
 			m_stopped = true;
 		}
@@ -186,8 +131,8 @@ namespace Minerva
 }
 
 #if defined MN_ENABLE_PROFILING
-	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::get().beginSession(filePath)
-	#define MN_PROFILE_END_SESSION() ::Minerva::Profiler::get().endSession()
+	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::beginSession(filePath)
+	#define MN_PROFILE_END_SESSION() ::Minerva::Profiler::endSession()
 	#define MN_PROFILE_SCOPE(name) ::Minerva::ProfileTimer timer##__LINE__(name)
 	#define MN_PROFILE_FUNCTION() MN_PROFILE_SCOPE(__FUNCTION__)
 #else
