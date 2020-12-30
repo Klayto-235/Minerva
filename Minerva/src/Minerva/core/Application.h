@@ -8,6 +8,8 @@
 #include <vector>
 
 
+int main(int argc, char** argv);
+
 namespace Minerva
 {
 	/** The base application class that the client inherits from.
@@ -27,8 +29,6 @@ namespace Minerva
 		Application(const Application& other) = delete;
 		Application& operator=(const Application& other) = delete;
 
-		void run();
-
 		/// Creates a window and returns a pointer to it.
 		Window* createWindow(const WindowProperties& properties = WindowProperties());
 		/// Deletes a window and disables ImGui if it was enabled with this window.
@@ -46,6 +46,10 @@ namespace Minerva
 	protected:
 		Application();
 	private:
+		friend int ::main(int argc, char** argv);
+
+		void run();
+
 		static Application* s_instance;
 
 		std::vector<Scope<Window>> m_windows;
