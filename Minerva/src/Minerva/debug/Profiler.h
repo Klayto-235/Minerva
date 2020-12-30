@@ -105,7 +105,7 @@ namespace Minerva
 		ProfileTimer(const char* name)
 			: m_name(name)
 		{
-			m_startTimePoint = std::chrono::high_resolution_clock::now();
+			m_startTimePoint = std::chrono::steady_clock::now();
 		}
 
 		~ProfileTimer()
@@ -116,7 +116,7 @@ namespace Minerva
 
 		void stop()
 		{
-			auto stopTimePoint = std::chrono::high_resolution_clock::now();
+			auto stopTimePoint = std::chrono::steady_clock::now();
 
 			long long start = std::chrono::time_point_cast<std::chrono::microseconds>
 				(m_startTimePoint).time_since_epoch().count();
@@ -130,7 +130,7 @@ namespace Minerva
 
 	private:
 		const char* m_name;
-		std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimePoint;
+		std::chrono::time_point<std::chrono::steady_clock> m_startTimePoint;
 		bool m_stopped = false;
 	};
 

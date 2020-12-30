@@ -1,0 +1,9 @@
+[22:42:16] [info] MINERVA: Log initialised.
+[22:42:16] [info] MINERVA: Initialising window system.
+[22:42:16] [info] MINERVA: Creating window "Minerva Engine" (1280 x 720).
+[22:42:16] [info] MINERVA: OpenGL Info:
+	Vendor: ATI Technologies Inc.
+	Renderer: AMD Radeon HD 6900 Series
+	Version: 4.5.13399 Core Profile Context 15.200.1062.1004
+[22:42:23] [info] MINERVA: Destroying window "Minerva Engine".
+[22:42:23] [info] MINERVA: Terminating window system.
