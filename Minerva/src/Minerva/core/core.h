@@ -18,6 +18,9 @@
 
 #define BIT(x) (1 << x)
 
+#define TOKENPASTE(x,y) x##y
+#define TOKENPASTE2(x,y) TOKENPASTE(x,y)
+#define UNIQUE(x) TOKENPASTE2(x, __LINE__)
 
 namespace Minerva
 {
