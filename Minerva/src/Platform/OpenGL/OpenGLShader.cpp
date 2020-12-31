@@ -73,6 +73,13 @@ namespace Minerva
 		uploadUniformInt(name, value);
 	}
 
+	void OpenGLShader::setFloat(const std::string& name, float value)
+	{
+		MN_PROFILE_FUNCTION();
+
+		uploadUniformFloat(name, value);
+	}
+
 	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& vector)
 	{
 		MN_PROFILE_FUNCTION();

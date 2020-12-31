@@ -82,12 +82,14 @@ namespace Minerva
 		drawQuad({ position.x, position.y, 0.0f }, size, color);
 	}
 
-	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture,
+		float tilingFactor, const glm::vec4& tintColor)
 	{
 		MN_PROFILE_FUNCTION();
 
 		m_textureShader->bind();
-		m_textureShader->setFloat4("u_color", glm::vec4(1.0f));
+		m_textureShader->setFloat4("u_color", tintColor);
+		m_textureShader->setFloat("u_tilingFactor", tilingFactor);
 
 		const glm::mat4 transform = glm::scale(
 			glm::translate(glm::mat4(1.0f), position), { size.x, size.y, 1.0f });
@@ -99,9 +101,57 @@ namespace Minerva
 		RenderCommand::drawIndexed(m_squareVertexArray);
 	}
 
-	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture,
+		float tilingFactor, const glm::vec4& tintColor)
 	{
-		drawQuad({ position.x, position.y, 0.0f }, size, texture);
+		drawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float angle, const glm::vec4& color)
+	{
+		MN_PROFILE_FUNCTION();
+
+		m_textureShader->bind();
+		m_textureShader->setFloat4("u_color", color);
+
+		const glm::mat4 transform = glm::scale(glm::rotate(glm::translate(glm::mat4(1.0f), position),
+			angle, { 0.0f, 0.0f, 1.0f }), { size.x, size.y, 1.0f });
+		m_textureShader->setMat4("u_M", transform);
+
+		m_whiteTexture->bind();
+
+		m_squareVertexArray->bind();
+		RenderCommand::drawIndexed(m_squareVertexArray);
+	}
+
+	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, const glm::vec4& color)
+	{
+		drawRotatedQuad({ position.x, position.y, 0.0f }, size, angle, color);
+	}
+
+	void Renderer2D::drawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float angle, const Ref<Texture2D>& texture,
+		float tilingFactor, const glm::vec4& tintColor)
+	{
+		MN_PROFILE_FUNCTION();
+
+		m_textureShader->bind();
+		m_textureShader->setFloat4("u_color", tintColor);
+		m_textureShader->setFloat("u_tilingFactor", tilingFactor);
+
+		const glm::mat4 transform = glm::scale(glm::rotate(glm::translate(glm::mat4(1.0f), position),
+			angle, { 0.0f, 0.0f, 1.0f }), { size.x, size.y, 1.0f });
+		m_textureShader->setMat4("u_M", transform);
+
+		texture->bind();
+
+		m_squareVertexArray->bind();
+		RenderCommand::drawIndexed(m_squareVertexArray);
+	}
+
+	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, const Ref<Texture2D>& texture,
+		float tilingFactor, const glm::vec4& tintColor)
+	{
+		drawRotatedQuad({ position.x, position.y, 0.0f }, size, angle, texture, tilingFactor, tintColor);
 	}
 
 }
