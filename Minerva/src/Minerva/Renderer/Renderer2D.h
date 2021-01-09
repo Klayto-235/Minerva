@@ -33,6 +33,21 @@ namespace Minerva
 			const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 		void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle,
 			const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
+	
+#if defined MN_ENABLE_DEBUG_CODE
+		struct Statistics
+		{
+			uint32_t nDrawCalls = 0;
+			uint32_t nQuads = 0;
+
+			uint32_t getVertexCount() { return 4*nQuads; }
+			uint32_t getIndexCount() { return 6*nQuads; }
+		};
+		void resetStatistics() { m_statistics = {}; }
+		const Statistics& getStatistics() const { return m_statistics; }
+	private:
+		Statistics m_statistics;
+#endif
 	private:
 		struct QuadVertex
 		{

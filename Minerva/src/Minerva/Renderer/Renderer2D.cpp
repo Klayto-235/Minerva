@@ -25,7 +25,7 @@ namespace Minerva
 		});
 		m_quadVertexArray->addVertexBuffer(m_quadVertexBuffer);
 
-		m_quadVertexBufferStage = Scope<QuadVertex[]>(new QuadVertex[sc_maxQuads]);
+		m_quadVertexBufferStage = Scope<QuadVertex[]>(new QuadVertex[4*sc_maxQuads]);
 
 		uint32_t* quadIndices = new uint32_t[sc_maxIndices];
 		for (uint32_t i = 0, offset = 0; i < sc_maxIndices; i += 6, offset += 4)
@@ -94,6 +94,11 @@ namespace Minerva
 
 			m_quadVertexArray->bind();
 			RenderCommand::drawIndexed(m_quadVertexArray, 0, 6*m_quadVertexBufferStageQuadCount);
+
+#if defined MN_ENABLE_DEBUG_CODE
+			++m_statistics.nDrawCalls;
+			m_statistics.nQuads += m_quadVertexBufferStageQuadCount;
+#endif
 
 			m_quadVertexBufferPtr = m_quadVertexBufferStage.get();
 			m_quadVertexBufferStageQuadCount = 0;

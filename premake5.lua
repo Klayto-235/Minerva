@@ -100,7 +100,8 @@ workspace "Minerva"
 		filter "configurations:Release"
 			defines
 			{
-				"MN_RELEASE"
+				"MN_RELEASE",
+				"MN_ENABLE_DEBUG_CODE"
 			}
 			runtime "Release"
 			symbols "Off"
