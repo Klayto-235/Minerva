@@ -29,9 +29,9 @@ namespace Minerva
 			s_renderAPI->clear();
 		}
 
-		static void drawIndexed(const Ref<VertexArray>& vertexArray)
+		static void drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t offset = 0, uint32_t count = 0)
 		{
-			s_renderAPI->drawIndexed(vertexArray);
+			s_renderAPI->drawIndexed(vertexArray, offset, count);
 		}
 	private:
 		static Scope<RenderAPI> s_renderAPI;

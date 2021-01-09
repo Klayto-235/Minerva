@@ -35,7 +35,7 @@ void Sandbox2D::onRender(Minerva::Renderer2D& renderer2D)
 {
 	MN_PROFILE_FUNCTION();
 
-	Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+	Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Minerva::RenderCommand::clear();
 
 	renderer2D.beginScene(m_cameraController.getCamera());
@@ -43,9 +43,9 @@ void Sandbox2D::onRender(Minerva::Renderer2D& renderer2D)
 	renderer2D.drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 	renderer2D.drawQuad({ 0.0f, 0.0f, -0.1f }, { 8.0f, 8.0f }, m_chessboardTexture, 2.0f);
 	renderer2D.drawQuad({ -1.0f, 0.5f, 0.1f }, { 1.0f, 1.0f }, m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-	renderer2D.drawRotatedQuad({ 1.0f, 0.0f, 0.1f }, { 1.0f, 1.0f }, glm::radians(30.0f),
-		m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-	renderer2D.drawRotatedQuad({ 1.0f, -0.5f }, { 0.5f, 0.75f }, glm::radians(-15.0f), { 0.5f, 0.5f, 0.5f, 1.0f });
+	//renderer2D.drawRotatedQuad({ 1.0f, 0.0f, 0.1f }, { 1.0f, 1.0f }, glm::radians(30.0f),
+	//	m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
+	//renderer2D.drawRotatedQuad({ 1.0f, -0.5f }, { 0.5f, 0.75f }, glm::radians(-15.0f), { 0.5f, 0.5f, 0.5f, 1.0f });
 	renderer2D.endScene();
 }
 

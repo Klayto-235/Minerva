@@ -18,6 +18,7 @@ namespace Minerva
 
 		void beginScene(const OrthographicCamera& camera);
 		void endScene();
+		void flush();
 
 		void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		void drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
@@ -33,9 +34,31 @@ namespace Minerva
 		void drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle,
 			const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 	private:
-		Ref<VertexArray> m_squareVertexArray;
+		struct QuadVertex
+		{
+			glm::vec3 position;
+			glm::vec4 color;
+			glm::vec2 texCoord;
+			float texIndex;
+			float tilingFactor;
+		};
+
+		static constexpr uint32_t sc_maxQuads = 10000;
+		static constexpr uint32_t sc_maxVertices = 4*sc_maxQuads;
+		static constexpr uint32_t sc_maxIndices = 6*sc_maxQuads;
+		static constexpr uint32_t sc_maxTextureSlots = 16;
+
+		Ref<VertexArray> m_quadVertexArray;
+		Ref<VertexBuffer> m_quadVertexBuffer;
 		Ref<Shader> m_textureShader;
 		Ref<Texture2D> m_whiteTexture;
+
+		Scope<QuadVertex[]> m_quadVertexBufferStage;
+		QuadVertex* m_quadVertexBufferPtr = nullptr;
+		uint32_t m_quadVertexBufferStageQuadCount = 0;
+
+		std::array<Ref<Texture2D>, sc_maxTextureSlots> m_textureSlots;
+		uint32_t m_textureSlotCount = 1; // 0 taken by white
 	};
 
 }

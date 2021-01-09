@@ -9,11 +9,14 @@ namespace Minerva
     class OpenGLVertexBuffer : public VertexBuffer
     {
 	public:
+		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(float* vertices, uint32_t count);
 		~OpenGLVertexBuffer();
 
 		void bind() const override;
 		void unbind() const override;
+
+		void setData(const void* data, uint32_t size) override;
 
 		virtual const BufferLayout& getLayout() const override { return m_layout; }
 		virtual void setLayout(const BufferLayout& layout) override { m_layout = layout; }

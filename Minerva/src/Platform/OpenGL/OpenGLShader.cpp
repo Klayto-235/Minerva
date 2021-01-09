@@ -73,6 +73,13 @@ namespace Minerva
 		uploadUniformInt(name, value);
 	}
 
+	void OpenGLShader::setIntArray(const std::string& name, int* values, uint32_t count)
+	{
+		MN_PROFILE_FUNCTION();
+
+		uploadUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::setFloat(const std::string& name, float value)
 	{
 		MN_PROFILE_FUNCTION();
@@ -105,6 +112,12 @@ namespace Minerva
 	{
 		GLint location = glGetUniformLocation(m_renderID, name.c_str());
 		glUniform1i(location, value);
+	}
+
+	void OpenGLShader::uploadUniformIntArray(const std::string& name, int* values, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_renderID, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::uploadUniformFloat(const std::string& name, float value)

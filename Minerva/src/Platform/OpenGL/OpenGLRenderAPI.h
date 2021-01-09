@@ -15,7 +15,7 @@ namespace Minerva
 		void setClearColor(const glm::vec4& color) override;
 		void clear() override;
 
-		void drawIndexed(const Ref<VertexArray>& vertexArray) override;
+		void drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexOffset, uint32_t indexCount) override;
 	};
 
 }

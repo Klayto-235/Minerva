@@ -30,9 +30,14 @@ namespace Minerva
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRenderAPI::drawIndexed(const Ref<VertexArray>& vertexArray)
+	void OpenGLRenderAPI::drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexOffset, uint32_t indexCount)
 	{
-		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+		MN_CORE_ASSERT(indexCount + indexOffset <= vertexArray->getIndexBuffer()->getCount(),
+			"OpenGLRenderAPI::drawIndexed: index interval exceeds bounds of index buffer.");
+
+		glDrawElements(GL_TRIANGLES, (indexCount > 0) ? indexCount :
+			(vertexArray->getIndexBuffer()->getCount() - indexOffset),
+			GL_UNSIGNED_INT, reinterpret_cast<const void*>((uint64_t)indexOffset));
 	}
 
 }

@@ -19,6 +19,20 @@ namespace Minerva {
 		}
 	}
 
+	Ref<VertexBuffer> VertexBuffer::create(uint32_t size)
+	{
+		switch (Renderer::getAPI())
+		{
+		case RenderAPI::API::OpenGL: return createRef<OpenGLVertexBuffer>(size);
+		case RenderAPI::API::None:
+			MN_CORE_ASSERT(false, "VertexBuffer::create: RenderAPI::API::None is not supported.");
+			return nullptr;
+		default:
+			MN_CORE_ASSERT(false, "VertexBuffer::create: Unknown RenderAPI::API.");
+			return nullptr;
+		}
+	}
+
 	Ref<IndexBuffer> IndexBuffer::create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::getAPI())

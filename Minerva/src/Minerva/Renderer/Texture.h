@@ -20,6 +20,8 @@ namespace Minerva
 		virtual void setData(void* data, uint32_t size) = 0;
 
 		virtual void bind(uint32_t slot = 0) const = 0;
+
+		virtual bool operator==(const Texture& other) const = 0;
 	};
 
 	class Texture2D : public Texture

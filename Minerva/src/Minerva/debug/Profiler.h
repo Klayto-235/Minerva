@@ -34,13 +34,13 @@ namespace Minerva
 			}
 
 			m_buffer[head] = element;
-			m_head.store((head + 1) & mc_bufferSizeMask, std::memory_order_release);
+			m_head.store((head + 1) & sc_bufferSizeMask, std::memory_order_release);
 		}
 
 		bool pop(ProfileTimerResult& out_element)
 		{
 			const uint16_t tail = m_tail.load(std::memory_order_relaxed);
-			const uint16_t newTail = (tail + 1) & mc_bufferSizeMask;
+			const uint16_t newTail = (tail + 1) & sc_bufferSizeMask;
 			const uint16_t head = m_head.load(std::memory_order_acquire);
 			if (newTail != head)
 			{
@@ -55,10 +55,10 @@ namespace Minerva
 		}
 
 	private:
-		static constexpr int mc_bufferSizeLog2 = 12; // <= 16
-		static constexpr int mc_bufferSizeMask = BIT(mc_bufferSizeLog2) - 1;
+		static constexpr int sc_bufferSizeLog2 = 12; // <= 16
+		static constexpr int sc_bufferSizeMask = BIT(sc_bufferSizeLog2) - 1;
 		std::atomic_uint16_t m_head = 1, m_tail = 0;
-		std::array<ProfileTimerResult, mc_bufferSizeMask + 1> m_buffer{};
+		std::array<ProfileTimerResult, sc_bufferSizeMask + 1> m_buffer{};
 	};
 
 	class Profiler
@@ -135,6 +135,8 @@ namespace Minerva
 	};
 
 }
+
+//#define MN_ENABLE_PROFILING
 
 #if defined MN_ENABLE_PROFILING
 	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::beginSession(filePath)
