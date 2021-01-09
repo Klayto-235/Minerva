@@ -20,4 +20,5 @@ private:
 	Minerva::Ref<Minerva::Texture2D> m_chessboardTexture;
 
 	glm::vec4 m_quadColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+	float m_quadRotation = 0.0f;
 };

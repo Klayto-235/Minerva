@@ -58,6 +58,7 @@ namespace Minerva
 			const float currentTime = static_cast<float>(glfwGetTime());
 			const float deltaTime = currentTime - m_lastFrameTime;
 			m_lastFrameTime = currentTime;
+			//MN_CORE_TRACE("{} ms", deltaTime * 1000.0f);
 
 			Window::pollEvents();
 

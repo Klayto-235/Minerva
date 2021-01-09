@@ -29,6 +29,8 @@ void Sandbox2D::onUpdate(const float timeStep, const Minerva::WindowInputState& 
 	MN_PROFILE_FUNCTION();
 
 	m_cameraController.onUpdate(timeStep, inputState);
+
+	m_quadRotation += timeStep * glm::pi<float>();
 }
 
 void Sandbox2D::onRender(Minerva::Renderer2D& renderer2D)
@@ -43,9 +45,10 @@ void Sandbox2D::onRender(Minerva::Renderer2D& renderer2D)
 	renderer2D.drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 	renderer2D.drawQuad({ 0.0f, 0.0f, -0.1f }, { 8.0f, 8.0f }, m_chessboardTexture, 2.0f);
 	renderer2D.drawQuad({ -1.0f, 0.5f, 0.1f }, { 1.0f, 1.0f }, m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-	//renderer2D.drawRotatedQuad({ 1.0f, 0.0f, 0.1f }, { 1.0f, 1.0f }, glm::radians(30.0f),
-	//	m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-	//renderer2D.drawRotatedQuad({ 1.0f, -0.5f }, { 0.5f, 0.75f }, glm::radians(-15.0f), { 0.5f, 0.5f, 0.5f, 1.0f });
+	renderer2D.drawRotatedQuad({ 1.0f, 0.0f, 0.1f }, { 1.0f, 1.0f }, glm::radians(30.0f),
+		m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
+	renderer2D.drawRotatedQuad({ 1.0f, -0.5f }, { 0.5f, 0.75f }, glm::radians(-15.0f), { 0.5f, 0.5f, 0.5f, 1.0f });
+	renderer2D.drawRotatedQuad({ 0.5f, 1.5f, 0.1f }, { 1.0f, 1.0f }, m_quadRotation, m_chessboardTexture);
 	renderer2D.endScene();
 }
 
