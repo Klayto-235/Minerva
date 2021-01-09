@@ -161,14 +161,25 @@ namespace Minerva
 		uint32_t stride = layout.getStride();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(m_nAttributes);
-			glVertexAttribPointer(m_nAttributes,
-				shaderDataTypeComponentCount(element.type),
-				shaderDataTypeToOpenGLType(element.type),
-				element.normalized ? GL_TRUE : GL_FALSE,
-				stride,
-				reinterpret_cast<const void*>((uint64_t)(element.offset)));
-			m_nAttributes++;
+			const auto componentCount = shaderDataTypeComponentCount(element.type);
+			const auto componentType = shaderDataTypeToOpenGLType(element.type);
+			const auto normalised = element.normalised ? GL_TRUE : GL_FALSE;
+
+			uint8_t iterationCount = 1;
+			if (element.type == ShaderDataType::Mat3 || element.type == ShaderDataType::Mat4)
+				iterationCount = componentCount;
+
+			for (uint8_t i = 0; i < iterationCount; ++i)
+			{
+				glEnableVertexAttribArray(m_nAttributes);
+				glVertexAttribPointer(m_nAttributes,
+					componentCount,
+					componentType,
+					normalised,
+					stride,
+					reinterpret_cast<const void*>((uint64_t)(element.offset + 4*componentCount*i)));
+				++m_nAttributes;
+			}
 		}
 
 		m_vertexBuffers.push_back(vertexBuffer);

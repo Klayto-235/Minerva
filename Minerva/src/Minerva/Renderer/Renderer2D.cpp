@@ -114,28 +114,30 @@ namespace Minerva
 		if (m_quadVertexBufferStageQuadCount == sc_maxQuads)
 			flush();
 
-		m_quadVertexBufferPtr->position = { position.x - size.x/2.0f, position.y - size.y/2.0f, position.z };
+		const glm::vec2 halfSize = size/2.0f;
+
+		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = 0.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
-		m_quadVertexBufferPtr->position = { position.x + size.x/2.0f, position.y - size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = 0.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
-		m_quadVertexBufferPtr->position = { position.x + size.x/2.0f, position.y + size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = 0.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
-		m_quadVertexBufferPtr->position = { position.x - size.x/2.0f, position.y + size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = 0.0f;
@@ -176,28 +178,30 @@ namespace Minerva
 			++m_textureSlotCount;
 		}
 
-		m_quadVertexBufferPtr->position = { position.x - size.x/2.0f, position.y - size.y/2.0f, position.z };
+		const glm::vec2 halfSize = size/2.0f;
+
+		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
-		m_quadVertexBufferPtr->position = { position.x + size.x/2.0f, position.y - size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
-		m_quadVertexBufferPtr->position = { position.x + size.x/2.0f, position.y + size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
-		m_quadVertexBufferPtr->position = { position.x - size.x/2.0f, position.y + size.y/2.0f, position.z };
+		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = textureIndex;
