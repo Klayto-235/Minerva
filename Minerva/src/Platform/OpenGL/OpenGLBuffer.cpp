@@ -68,6 +68,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 
 		glCreateBuffers(1, &m_renderID);
+		// GL_ELEMENT_ARRAY_BUFFER requires a VA to be bound, GL_ARRAY_BUFFER allows loading data without VA.
 		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
