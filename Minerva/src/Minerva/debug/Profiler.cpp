@@ -82,13 +82,10 @@ namespace Minerva
 				for (ProfileTimerResult* result = reinterpret_cast<ProfileTimerResult*>(buffer.data());
 					result < reinterpret_cast<ProfileTimerResult*>(&buffer.back()); ++result)
 				{
-					std::string name(result->name ? result->name : "");
-					std::replace(name.begin(), name.end(), '"', '\'');
-
 					outputStream << ",{";
 					outputStream << "\"cat\":\"function\",";
 					outputStream << "\"dur\":" << (result->stop - result->start) << ',';
-					outputStream << "\"name\":\"" << name << "\",";
+					outputStream << "\"name\":\"" << result->name << "\",";
 					outputStream << "\"ph\":\"X\",";
 					outputStream << "\"pid\":0,";
 					outputStream << "\"tid\":" << result->threadID << ",";

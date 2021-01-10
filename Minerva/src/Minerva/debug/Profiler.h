@@ -134,15 +134,59 @@ namespace Minerva
 		bool m_stopped = false;
 	};
 
+	namespace ProfilerUtils
+	{
+		template <size_t N>
+		struct CharArray
+		{
+			char data[N];
+		};
+
+		template <size_t N, size_t K>
+		constexpr auto parseScopeName(const char(&name)[N], const char(&remove)[K])
+		{
+			CharArray<N> result = {};
+
+			size_t srcIndex = 0;
+			size_t dstIndex = 0;
+			while (srcIndex < N)
+			{
+				size_t matchIndex = 0;
+				while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && name[srcIndex + matchIndex] == remove[matchIndex])
+					matchIndex++;
+				if (matchIndex == K - 1)
+					srcIndex += matchIndex;
+				result.data[dstIndex++] = name[srcIndex] == '"' ? '\'' : name[srcIndex];
+				srcIndex++;
+			}
+
+			return result;
+		}
+	}
 }
 
 //#define MN_ENABLE_PROFILING
 
 #if defined MN_ENABLE_PROFILING
+	#if defined(__GNUC__) || (defined(__ICC) && (__ICC >= 600))
+		#define MN_PROFILE_FUNC_SIG __PRETTY_FUNCTION__
+	#elif (defined(__FUNCSIG__) || (_MSC_VER))
+		#define MN_PROFILE_FUNC_SIG __FUNCSIG__
+	#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600))
+		#define MN_PROFILE_FUNC_SIG __FUNCTION__
+	#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+		#define MN_PROFILE_FUNC_SIG __func__
+	#elif defined(__cplusplus) && (__cplusplus >= 201103)
+		#define MN_PROFILE_FUNC_SIG __func__
+	#else
+		#define MN_PROFILE_FUNC_SIG "MN_PROFILE_FUNC_SIG unknown"
+	#endif
+
 	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::beginSession(filePath)
 	#define MN_PROFILE_END_SESSION() ::Minerva::Profiler::endSession()
-	#define MN_PROFILE_SCOPE(name) ::Minerva::ProfileTimer UNIQUE(timer)(name)
-	#define MN_PROFILE_FUNCTION() MN_PROFILE_SCOPE(__FUNCTION__)
+	#define MN_PROFILE_SCOPE(name) static constexpr auto parsedName = ::Minerva::ProfilerUtils::parseScopeName(name, "__cdecl ");\
+		::Minerva::ProfileTimer UNIQUE(timer)(parsedName.data)
+	#define MN_PROFILE_FUNCTION() MN_PROFILE_SCOPE(MN_PROFILE_FUNC_SIG)
 #else
 	#define MN_PROFILE_BEGIN_SESSION(filePath)
 	#define MN_PROFILE_END_SESSION()
