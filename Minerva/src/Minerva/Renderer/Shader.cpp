@@ -13,10 +13,10 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(vertexSource, fragmentSource);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "OpenGLShader::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "Shader::create: RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "OpenGLShader::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Shader::create: Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}
@@ -27,10 +27,10 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(filePath);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "OpenGLShader::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "Shader::create: RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "OpenGLShader::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Shader::create: Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}

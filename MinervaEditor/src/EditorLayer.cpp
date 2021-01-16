@@ -21,7 +21,12 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		m_chessboardTexture = Minerva::Texture2D::create("assets/textures/chess_board.png");
+		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
+
+		FramebufferProperties framebufferProperties;
+		framebufferProperties.width = 1280;
+		framebufferProperties.height = 720;
+		m_framebuffer = Framebuffer::create(framebufferProperties);
 	}
 
 	void EditorLayer::onDetach()
@@ -29,7 +34,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 	}
 
-	void EditorLayer::onUpdate(const float timeStep, const Minerva::WindowInputState& inputState)
+	void EditorLayer::onUpdate(const float timeStep, const WindowInputState& inputState)
 	{
 		MN_PROFILE_FUNCTION();
 
@@ -38,14 +43,16 @@ namespace Minerva
 		m_quadRotation += timeStep * glm::pi<float>();
 	}
 
-	void EditorLayer::onRender(Minerva::Renderer2D& renderer2D)
+	void EditorLayer::onRender(Renderer2D& renderer2D)
 	{
 		MN_PROFILE_FUNCTION();
 
 		renderer2D.resetStatistics();
 
-		Minerva::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-		Minerva::RenderCommand::clear();
+		m_framebuffer->bind();
+
+		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::clear();
 
 		renderer2D.beginScene(m_cameraController.getCamera());
 		renderer2D.drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, m_quadColor); // doesn't blend well because it's drawn first
@@ -68,6 +75,8 @@ namespace Minerva
 			}
 		}
 		renderer2D.endScene();
+
+		m_framebuffer->unbind();
 
 		m_renderer2DStatistics = renderer2D.getStatistics();
 	}
@@ -104,14 +113,14 @@ namespace Minerva
 
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_quadColor));
 
-			uint32_t textureID = m_chessboardTexture->getRenderID();
-			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), ImVec2{ 256.0f, 256.0f });
+			uint32_t textureID = m_framebuffer->getColorAttachmentRenderID();
+			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), ImVec2{ 1280.0f, 720.0f }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 			ImGui::End();
 		}
 	}
 
-	bool EditorLayer::onEvent(const Minerva::Event& event)
+	bool EditorLayer::onEvent(const Event& event)
 	{
 		MN_PROFILE_FUNCTION();
 

@@ -22,6 +22,8 @@ namespace Minerva
 
 		Ref<Texture2D> m_chessboardTexture;
 
+		Ref<Framebuffer> m_framebuffer;
+
 		glm::vec4 m_quadColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		float m_quadRotation = 0.0f;
 

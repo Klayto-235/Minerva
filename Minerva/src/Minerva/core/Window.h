@@ -32,11 +32,11 @@ namespace Minerva
 	struct WindowProperties
 	{
 		std::string title;
-		unsigned int width;
-		unsigned int height;
+		uint32_t width;
+		uint32_t height;
 
 		WindowProperties(const std::string& title = "Minerva Engine",
-			unsigned int width = 1280, unsigned int height = 720)
+			uint32_t width = 1280, uint32_t height = 720)
 			: title(title), width(width), height(height) {}
 	};
 	
@@ -68,8 +68,8 @@ namespace Minerva
 
 		// Basic info
 		std::string getTitle() const { return m_data.title; }
-		unsigned int getWidth() const { return m_data.width; }
-		unsigned int getHeight() const { return m_data.height; }
+		uint32_t getWidth() const { return m_data.width; }
+		uint32_t getHeight() const { return m_data.height; }
 		bool isVSync() const { return m_data.VSync; }
 
 		// Virtuals
@@ -110,8 +110,8 @@ namespace Minerva
 		struct WindowData
 		{
 			std::string title;
-			unsigned int width;
-			unsigned int height;
+			uint32_t width;
+			uint32_t height;
 			bool VSync;
 			EventBuffer eventBuffer;
 		};
