@@ -21,6 +21,8 @@ namespace Minerva
 		void setData(void* data, uint32_t size) override;
 
 		void bind(uint32_t slot = 0) const override;
+		
+		uint32_t getRenderID() const override { return m_renderID; } // needed for ImGui
 
 		bool operator==(const Texture& other) const override 
 		{

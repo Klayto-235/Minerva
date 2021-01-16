@@ -19,8 +19,7 @@ namespace Minerva
 	 * Windows are managed by the Application class to ensure correct asset deletion order.
 	 * 
 	 * Window and ImGui related functions cannot be called from @ref Layer objects, but may be
-	 * called from the client application class constructor and overrides of functions such as
-	 * Application::onUpdate and Application::onEvent.
+	 * called from the client application class.
 	*/
 	class Application
 	{
@@ -28,6 +27,8 @@ namespace Minerva
 		virtual ~Application();
 		Application(const Application& other) = delete;
 		Application& operator=(const Application& other) = delete;
+
+		void stop() { m_running = false; }
 
 		/// Creates a window and returns a pointer to it.
 		Window* createWindow(const WindowProperties& properties = WindowProperties());

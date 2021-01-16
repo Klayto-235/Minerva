@@ -76,17 +76,39 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		ImGui::Begin("Settings");
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", m_renderer2DStatistics.nDrawCalls);
-		ImGui::Text("Quads: %d", m_renderer2DStatistics.nQuads);
-		ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
-		ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				bool exitSelected = false;
+				ImGui::MenuItem("Exit", nullptr, &exitSelected);
+				if (exitSelected)
+					Application::get().stop();
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
 
-		ImGui::ColorEdit4("Quad Color", glm::value_ptr(m_quadColor));
+		//bool showDemo = true;
+		//ImGui::ShowDemoWindow(&showDemo);
 
-		ImGui::End();
+		if (ImGui::Begin("Settings"))
+		{
+			ImGui::Text("Renderer2D Stats:");
+			ImGui::Text("Draw Calls: %d", m_renderer2DStatistics.nDrawCalls);
+			ImGui::Text("Quads: %d", m_renderer2DStatistics.nQuads);
+			ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
+			ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
+
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_quadColor));
+
+			uint32_t textureID = m_chessboardTexture->getRenderID();
+			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), ImVec2{ 256.0f, 256.0f });
+
+			ImGui::End();
+		}
 	}
 
 	bool EditorLayer::onEvent(const Minerva::Event& event)

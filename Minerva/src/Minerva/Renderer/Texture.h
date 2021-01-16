@@ -21,6 +21,8 @@ namespace Minerva
 
 		virtual void bind(uint32_t slot = 0) const = 0;
 
+		virtual uint32_t getRenderID() const = 0; // needed for ImGui
+
 		virtual bool operator==(const Texture& other) const = 0;
 	};
 

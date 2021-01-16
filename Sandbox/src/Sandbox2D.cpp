@@ -71,17 +71,18 @@ void Sandbox2D::onImGuiRender()
 {
 	MN_PROFILE_FUNCTION();
 
-	ImGui::Begin("Settings");
+	if (ImGui::Begin("Settings"))
+	{
+		ImGui::Text("Renderer2D Stats:");
+		ImGui::Text("Draw Calls: %d", m_renderer2DStatistics.nDrawCalls);
+		ImGui::Text("Quads: %d", m_renderer2DStatistics.nQuads);
+		ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
+		ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
 
-	ImGui::Text("Renderer2D Stats:");
-	ImGui::Text("Draw Calls: %d", m_renderer2DStatistics.nDrawCalls);
-	ImGui::Text("Quads: %d", m_renderer2DStatistics.nQuads);
-	ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
-	ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
+		ImGui::ColorEdit4("Quad Color", glm::value_ptr(m_quadColor));
 
-	ImGui::ColorEdit4("Quad Color", glm::value_ptr(m_quadColor));
-
-	ImGui::End();
+		ImGui::End();
+	}
 }
 
 bool Sandbox2D::onEvent(const Minerva::Event& event)
