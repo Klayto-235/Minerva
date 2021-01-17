@@ -13,7 +13,7 @@ workspace "Minerva"
 		"MultiProcessorCompile"
 	}
 	
-	startproject "Sandbox"
+	startproject "MinervaEditor"
 
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 

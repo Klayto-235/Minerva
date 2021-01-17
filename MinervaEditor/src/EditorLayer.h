@@ -20,6 +20,8 @@ namespace Minerva
 	private:
 		OrthographicCameraController m_cameraController;
 
+		ImVec2 m_viewportSize = { 0.0f, 0.0f };
+
 		Ref<Texture2D> m_chessboardTexture;
 
 		Ref<Framebuffer> m_framebuffer;

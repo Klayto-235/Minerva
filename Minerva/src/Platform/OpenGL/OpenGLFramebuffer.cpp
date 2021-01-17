@@ -16,10 +16,19 @@ namespace Minerva
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_renderID);
+		glDeleteTextures(1, &m_colorAttachmentTextureRenderID);
+		glDeleteTextures(1, &m_depthAttachmentTextureRenderID);
 	}
 
 	void OpenGLFramebuffer::invalidate()
 	{
+		if (m_renderID != 0)
+		{
+			glDeleteFramebuffers(1, &m_renderID);
+			glDeleteTextures(1, &m_colorAttachmentTextureRenderID);
+			glDeleteTextures(1, &m_depthAttachmentTextureRenderID);
+		}
+
 		glCreateFramebuffers(1, &m_renderID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_renderID);
 
@@ -42,9 +51,18 @@ namespace Minerva
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void OpenGLFramebuffer::resize(uint32_t width, uint32_t height)
+	{
+		m_properties.width = width;
+		m_properties.height = height;
+
+		invalidate();
+	}
+
 	void OpenGLFramebuffer::bind() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_renderID);
+		glViewport(0, 0, m_properties.width, m_properties.height);
 	}
 
 	void OpenGLFramebuffer::unbind() const

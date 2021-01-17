@@ -100,8 +100,22 @@ namespace Minerva
 			ImGui::EndMainMenuBar();
 		}
 
-		//bool showDemo = true;
-		//ImGui::ShowDemoWindow(&showDemo);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+		if (ImGui::Begin("Viewport"))
+		{
+			ImVec2 viewportWindowSize = ImGui::GetContentRegionAvail();
+			if (m_viewportSize.x != viewportWindowSize.x || m_viewportSize.y != viewportWindowSize.y)
+			{
+				m_viewportSize = viewportWindowSize;
+				m_framebuffer->resize((uint32_t)viewportWindowSize.x, (uint32_t)viewportWindowSize.y);
+
+				m_cameraController.onEvent(WindowResizeEvent((uint32_t)viewportWindowSize.x, (uint32_t)viewportWindowSize.y));
+			}
+			uint32_t textureID = m_framebuffer->getColorAttachmentRenderID();
+			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), m_viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		}
+		ImGui::End();
+		ImGui::PopStyleVar();
 
 		if (ImGui::Begin("Settings"))
 		{
@@ -112,12 +126,11 @@ namespace Minerva
 			ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
 
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_quadColor));
-
-			uint32_t textureID = m_framebuffer->getColorAttachmentRenderID();
-			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), ImVec2{ 1280.0f, 720.0f }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-			ImGui::End();
 		}
+		ImGui::End();
+
+		//bool showDemo = true;
+		//ImGui::ShowDemoWindow(&showDemo);
 	}
 
 	bool EditorLayer::onEvent(const Event& event)

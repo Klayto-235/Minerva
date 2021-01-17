@@ -12,11 +12,11 @@ namespace Minerva
 	class WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(unsigned int width, unsigned int height)
+		WindowResizeEvent(uint32_t width, uint32_t height)
 			: m_width(width), m_height(height) {}
 
-		unsigned int getWidth() const { return m_width; }
-		unsigned int getHeight() const { return m_height; }
+		uint32_t getWidth() const { return m_width; }
+		uint32_t getHeight() const { return m_height; }
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override
@@ -30,7 +30,7 @@ namespace Minerva
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryWindow)
 	private:
-		unsigned int m_width, m_height;
+		uint32_t m_width, m_height;
 	};
 
 	class WindowCloseEvent : public Event

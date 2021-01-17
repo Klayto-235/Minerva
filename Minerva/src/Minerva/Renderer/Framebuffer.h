@@ -19,6 +19,8 @@ namespace Minerva
 		virtual ~Framebuffer() = default;
 		Framebuffer(const Framebuffer& other) = delete;
 		Framebuffer& operator=(const Framebuffer& other) = delete;
+		
+		virtual void resize(uint32_t width, uint32_t height) = 0;
 
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
