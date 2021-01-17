@@ -56,8 +56,7 @@ namespace Minerva
 	 * Owned layer migration between windows is checked when asserts are enabled.
 	 * 
 	 * Owned layer and layer stack manipulation functions cannot be called from layers, but may be
-	 * called from the client application class constructor and overrides of functions such as
-	 * Application::onUpdate and Application::onEvent.
+	 * called from the client application class.
 	*/
 	class Window
 	{
