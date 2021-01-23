@@ -30,7 +30,7 @@ namespace Minerva
 #endif
 
 		GLFWwindow* windowHandle = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-		MN_CORE_ASSERT(windowHandle, "Window::impl_createWindow: Could not create window \"{0}\".", m_data.title);
+		MN_CORE_ASSERT(windowHandle, "Could not create window \"{0}\".", m_data.title);
 		m_nativeWindowHandle = windowHandle;
 
 		m_graphicsContext = createScope<OpenGLContext>(windowHandle);
@@ -146,7 +146,7 @@ namespace Minerva
 			MN_CORE_ERROR("GLFW Error ({0}): {1}.", error, description);
 		});
 		int success = glfwInit();
-		MN_CORE_ASSERT(success, "Window::init: Could not intialise GLFW.");
+		MN_CORE_ASSERT(success, "Could not intialise GLFW.");
 	}
 
 	void Window::pollEvents()

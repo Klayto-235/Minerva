@@ -21,7 +21,7 @@ namespace Minerva
 		else if (strView == "fragment"sv || strView == "pixel"sv)	return GL_FRAGMENT_SHADER;
 		else
 		{
-			MN_CORE_ASSERT(false, "stringToShaderType: Unknown shader type.");
+			MN_CORE_ASSERT(false, "Unknown shader type.");
 			return 0;
 		}
 	}
@@ -230,7 +230,7 @@ namespace Minerva
 			shaderSources.emplace(shaderType,
 				std::string_view(source.data() + shaderSourceBegin, shaderSourceLength));
 		}
-		MN_CORE_ASSERT(!syntaxError, "OpenGLShader::parse: Shader source syntax error.");
+		MN_CORE_ASSERT(!syntaxError, "Shader source syntax error.");
 		return shaderSources;
 	}
 
@@ -238,8 +238,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(shaderSources.size() <= 2,
-			"OpenGLShader::compile: Currently, only two shaders are supported.");
+		MN_CORE_ASSERT(shaderSources.size() <= 2, "Currently, only two shaders are supported.");
 		std::array<GLuint, 2> shaderIDs = { 0 };
 
 		m_renderID = glCreateProgram();
@@ -266,7 +265,7 @@ namespace Minerva
 				glGetShaderInfoLog(shaderID, maxLength, &maxLength, &infoLog[0]);
 
 				MN_CORE_ERROR("{0}", infoLog.data());
-				MN_CORE_ASSERT(false, "OpenGLShader::compile: Could not compile shader.");
+				MN_CORE_ASSERT(false, "Could not compile shader.");
 				
 				compilationError = true;
 				break;
@@ -291,7 +290,7 @@ namespace Minerva
 				glDeleteProgram(m_renderID);
 
 				MN_CORE_ERROR("{0}", infoLog.data());
-				MN_CORE_ASSERT(false, "OpenGLShader::compile: Could not link shader program.");
+				MN_CORE_ASSERT(false, "Could not link shader program.");
 			}
 			else for (auto id : shaderIDs) glDetachShader(m_renderID, id);
 		}

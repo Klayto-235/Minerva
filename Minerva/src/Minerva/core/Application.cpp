@@ -18,8 +18,7 @@ namespace Minerva
 	Application::Application()
 	{
 		MN_PROFILE_FUNCTION();
-
-		MN_CORE_ASSERT(!s_instance, "Application::Application: Application already exists.");
+		MN_CORE_ASSERT(!s_instance, "Application already exists.");
 		s_instance = this;
 
 		MN_CORE_INFO("Initialising window system.");
@@ -108,8 +107,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(!g_lockWindows,
-			"Application::createWindow: Cannot create window while windows are locked.");
+		MN_CORE_ASSERT(!g_lockWindows, "Cannot create window while windows are locked.");
 		m_windows.push_back(Scope<Window>(new Window(properties)));
 		return m_windows.back().get();
 	}
@@ -118,11 +116,10 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(!g_lockWindows,
-			"Application::deleteWindow: Cannot delete window while windows are locked.");
+		MN_CORE_ASSERT(!g_lockWindows, "Cannot delete window while windows are locked.");
 		auto it = std::find_if(m_windows.begin(), m_windows.end(),
 			[window](const auto& other) { return window == other.get(); });
-		MN_CORE_ASSERT(it != m_windows.end(), "Application::deleteWindow: Could not find window.");
+		MN_CORE_ASSERT(it != m_windows.end(), "Could not find window.");
 
 		if (m_enableImGui && (*it).get() == m_ImGuiWindow) disableImGui();
 		m_windows.erase(it);
@@ -132,11 +129,9 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(!g_lockWindows,
-			"Application::enableImGui: Cannot enable ImGui while windows are locked.");
+		MN_CORE_ASSERT(!g_lockWindows, "Cannot enable ImGui while windows are locked.");
 		MN_CORE_ASSERT(std::find_if(m_windows.begin(), m_windows.end(),
-			[window](const auto& other) { return window == other.get(); }) != m_windows.end(),
-			"Application::enableImGui: Window does not exist.");
+			[window](const auto& other) { return window == other.get(); }) != m_windows.end(), "Window does not exist.");
 		if (m_enableImGui) disableImGui();
 		m_ImGuiWindow = window;
 		m_ImGuiWindow->m_graphicsContext->makeCurrent();
@@ -148,8 +143,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(!g_lockWindows,
-			"Application::disableImGui: Cannot disable ImGui while windows are locked.");
+		MN_CORE_ASSERT(!g_lockWindows, "Cannot disable ImGui while windows are locked.");
 		if (m_enableImGui)
 		{
 			m_enableImGui = false;

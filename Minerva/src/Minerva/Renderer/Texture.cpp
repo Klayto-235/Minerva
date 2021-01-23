@@ -13,10 +13,10 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLTexture2D>(filePath);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "Texture2D::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "Texture2D::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}
@@ -27,10 +27,10 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLTexture2D>(width, height);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "Texture2D::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "Texture2D::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}

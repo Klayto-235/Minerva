@@ -114,7 +114,7 @@ namespace Minerva
 		case ShaderDataType::Int4:		return GL_INT;
 		case ShaderDataType::Bool:		return GL_BOOL;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeToOpenGLType: Unknown ShaderDataType.");
+			MN_CORE_ASSERT(false, "Unknown ShaderDataType.");
 			return 0;
 		}
 	}
@@ -151,8 +151,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(),
-			"OpenGLVertexArray::addVertexBuffer: Vertex buffer layout has no elements.");
+		MN_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(), "Vertex buffer layout has no elements.");
 
 		glBindVertexArray(m_renderID);
 		vertexBuffer->bind();

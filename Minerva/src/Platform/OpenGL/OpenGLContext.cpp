@@ -25,7 +25,7 @@ namespace Minerva
 		case GL_DEBUG_SEVERITY_MEDIUM:			MN_CORE_ERROR(message); break;
 		case GL_DEBUG_SEVERITY_LOW:				MN_CORE_WARN(message); break;
 		case GL_DEBUG_SEVERITY_NOTIFICATION:	MN_CORE_TRACE(message); break;
-		default: MN_CORE_ASSERT(false, "OpenGLDebugMessageCallback: Unknown severity level.");
+		default: MN_CORE_ASSERT(false, "Unknown severity level.");
 		}
 
 #ifdef MN_ENABLE_OPENGL_ASSERTS
@@ -39,17 +39,16 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(windowHandle, "OpenGLContext::OpenGLContext: WindowHandle is null.");
+		MN_CORE_ASSERT(windowHandle, "WindowHandle is null.");
 
 #if defined MN_ENABLE_ASSERTS
 		auto* glViewport_old = glViewport;
 #endif
 		glfwMakeContextCurrent(m_windowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		MN_CORE_ASSERT(status, "OpenGLContext::OpenGLContext: Could not initialise glad.");
+		MN_CORE_ASSERT(status, "Could not initialise glad.");
 		// Attempt to detect a change in function pointers for multi-context support.
-		MN_CORE_ASSERT(glViewport_old == nullptr || glViewport_old == glViewport,
-			"OpenGLContext::OpenGLContext: OpenGL function pointers have changed.");
+		MN_CORE_ASSERT(glViewport_old == nullptr || glViewport_old == glViewport, "OpenGL function pointers have changed.");
 
 		MN_CORE_INFO("OpenGL Info:\n\tVendor: {0}\n\tRenderer: {1}\n\tVersion: {2}",
 			glGetString(GL_VENDOR), glGetString(GL_RENDERER), glGetString(GL_VERSION));
@@ -60,7 +59,7 @@ namespace Minerva
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 		MN_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5),
-			"OpenGLContext::OpenGLContext: Minerva requires at least OpenGL version 4.5.");
+			"Minerva requires at least OpenGL version 4.5.");
 #endif
 
 #ifdef MN_ENABLE_OPENGL_ERRORS

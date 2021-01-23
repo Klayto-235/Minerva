@@ -24,7 +24,7 @@ namespace Minerva
 
 			data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 		}
-		MN_CORE_ASSERT(data, "OpenGLTexture2D::OpenGLTexture2D: Could not load image \"{0}\".", filePath);
+		MN_CORE_ASSERT(data, "Could not load image \"{0}\".", filePath);
 		m_width = width;
 		m_height = height;
 		if (channels == 4)
@@ -85,7 +85,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 
 		MN_CORE_ASSERT(size == m_width * m_height * (m_dataFormat == GL_RGBA ? 4 : 3),
-			"OpenGLTexture2D::setData: Parameter size must be equal to texture size.");
+			"Parameter size must be equal to texture size.");
 		glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 	}
 

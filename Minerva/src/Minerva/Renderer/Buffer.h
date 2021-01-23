@@ -30,7 +30,7 @@ namespace Minerva
 		case ShaderDataType::Int4:		return 4 * 4;
 		case ShaderDataType::Bool:		return 1;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeSize: Unknown data type.");
+			MN_CORE_ASSERT(false, "Unknown data type.");
 			return 0;
 		}
 	}
@@ -51,7 +51,7 @@ namespace Minerva
 		case ShaderDataType::Int4:		return 4;
 		case ShaderDataType::Bool:		return 1;
 		default:
-			MN_CORE_ASSERT(false, "shaderDataTypeComponentCount: Unknown data type.");
+			MN_CORE_ASSERT(false, "Unknown data type.");
 			return 0;
 		}
 	}

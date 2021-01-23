@@ -106,7 +106,7 @@ namespace Minerva
 	{
 		std::lock_guard<std::mutex> lock(s_buffersMutex);
 		auto it = std::find(s_buffers.begin(), s_buffers.end(), &m_buffer);
-		MN_CORE_ASSERT(it != s_buffers.end(), "Profiler::~Profiler: Could not find buffer.");
+		MN_CORE_ASSERT(it != s_buffers.end(), "Could not find buffer.");
 		s_buffers.erase(it);
 	}
 

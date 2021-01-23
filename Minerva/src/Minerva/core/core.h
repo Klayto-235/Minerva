@@ -7,10 +7,15 @@
 	#error Platform not supported by Minerva.
 #endif
 
+#define MN_ASSERT_FUNC_SIG __FUNCTION__
+#define MN_DEBUG_BREAK() __debugbreak() // make portable
+
 #ifdef MN_ENABLE_ASSERTS
 	#define VA_ARGS(...) , ##__VA_ARGS__
-	#define MN_ASSERT(x, s, ...) { if(!(x)) { MN_ERROR("Assertion Failed: " s VA_ARGS(__VA_ARGS__)); __debugbreak(); } }
-	#define MN_CORE_ASSERT(x, s, ...) { if(!(x)) { MN_CORE_ERROR("Assertion Failed: " s VA_ARGS(__VA_ARGS__)); __debugbreak(); } }
+	#define MN_ASSERT(x, s, ...) { if(!(x)) { MN_ERROR("Assertion Failed: " MN_ASSERT_FUNC_SIG ": " s\
+		VA_ARGS(__VA_ARGS__)); MN_DEBUG_BREAK(); } }
+	#define MN_CORE_ASSERT(x, s, ...) { if(!(x)) { MN_CORE_ERROR("Assertion Failed: " MN_ASSERT_FUNC_SIG ": " s\
+		VA_ARGS(__VA_ARGS__)); MN_DEBUG_BREAK(); } }
 #else
 	#define MN_ASSERT(x, s, ...)
 	#define MN_CORE_ASSERT(x, s, ...)

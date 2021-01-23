@@ -13,10 +13,10 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(vertexSource, fragmentSource);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "Shader::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "Shader::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}
@@ -27,17 +27,17 @@ namespace Minerva
 		{
 		case RenderAPI::API::OpenGL: return createRef<OpenGLShader>(filePath);
 		case RenderAPI::API::None:
-			MN_CORE_ASSERT(false, "Shader::create: RenderAPI::API::None is not supported.");
+			MN_CORE_ASSERT(false, "RenderAPI::API::None is not supported.");
 			return nullptr;
 		default:
-			MN_CORE_ASSERT(false, "Shader::create: Unknown RenderAPI::API.");
+			MN_CORE_ASSERT(false, "Unknown RenderAPI::API.");
 			return nullptr;
 		}
 	}
 
 	void ShaderLibrary::add(Ref<Shader>& shader, const std::string& name)
 	{
-		MN_CORE_ASSERT(m_shaders.find(name) == m_shaders.end(), "ShaderLibrary::add: Shader already exists.");
+		MN_CORE_ASSERT(m_shaders.find(name) == m_shaders.end(), "Shader already exists.");
 		m_shaders.emplace(name, shader);
 	}
 
@@ -55,7 +55,7 @@ namespace Minerva
 		else ++nameBegin;
 		size_t nameEnd = filePath.rfind('.');
 		if (nameEnd == std::string::npos || nameEnd <= nameBegin) nameEnd = filePath.length();
-		MN_CORE_ASSERT(nameBegin != nameEnd, "ShaderLibrary::load: Invalid file path.");
+		MN_CORE_ASSERT(nameBegin != nameEnd, "Invalid file path.");
 
 		auto shader = Shader::create(filePath);
 		add(shader, filePath.substr(nameBegin, nameEnd - nameBegin));
@@ -65,7 +65,7 @@ namespace Minerva
 	Ref<Shader> ShaderLibrary::get(const std::string& name)
 	{
 		MN_CORE_ASSERT(m_shaders.find(name) != m_shaders.end(),
-			"ShaderLibrary::get: Could not find shader \"{0}\".", name);
+			"Could not find shader \"{0}\".", name);
 		return m_shaders.find(name)->second;
 	}
 

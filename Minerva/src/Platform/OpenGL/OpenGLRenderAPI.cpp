@@ -33,7 +33,7 @@ namespace Minerva
 	void OpenGLRenderAPI::drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexOffset, uint32_t indexCount)
 	{
 		MN_CORE_ASSERT(indexCount + indexOffset <= vertexArray->getIndexBuffer()->getCount(),
-			"OpenGLRenderAPI::drawIndexed: index interval exceeds bounds of index buffer.");
+			"index interval exceeds bounds of index buffer.");
 
 		glDrawElements(GL_TRIANGLES, (indexCount > 0) ? indexCount :
 			(vertexArray->getIndexBuffer()->getCount() - indexOffset),

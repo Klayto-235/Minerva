@@ -165,7 +165,7 @@ namespace Minerva
 	}
 }
 
-#define MN_ENABLE_PROFILING
+//#define MN_ENABLE_PROFILING
 
 #if defined MN_ENABLE_PROFILING
 	#if defined(__GNUC__) || (defined(__ICC) && (__ICC >= 600))
