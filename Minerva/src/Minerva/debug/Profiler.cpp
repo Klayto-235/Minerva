@@ -13,7 +13,7 @@ namespace Minerva
 	Scope<std::thread> Profiler::s_profileThread;
 	std::vector<ProfileBuffer*> Profiler::s_buffers;
 	std::mutex Profiler::s_buffersMutex, Profiler::s_sessionMutex;
-	unsigned Profiler::s_threadIDCounter = 0;
+	uint32_t Profiler::s_threadIDCounter = 0;
 
 	void Profiler::beginSession(const std::string& filePath)
 	{
@@ -52,8 +52,8 @@ namespace Minerva
 
 			const std::string binaryFilePath = s_filePath + ".bin";
 			const std::string jsonFilePath = s_filePath + ".json";
-			std::ifstream inputStream(s_filePath + ".bin", std::ios::binary);
-			std::ofstream outputStream(s_filePath + ".json");
+			std::ifstream inputStream(binaryFilePath, std::ios::binary | std::ios::ate);
+			std::ofstream outputStream(jsonFilePath, std::ios::binary);
 			MN_CORE_ASSERT(inputStream.is_open(), "Could not open file \"{0}\".", binaryFilePath);
 			MN_CORE_ASSERT(outputStream.is_open(), "Could not open file \"{0}\".", jsonFilePath);
 

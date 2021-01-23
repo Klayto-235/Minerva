@@ -16,9 +16,9 @@ namespace Minerva
 
 	struct ProfileTimerResult
 	{
-		long long start, stop;
+		uint64_t start, stop;
 		const char* name;
-		unsigned threadID;
+		uint32_t threadID;
 	};
 
 	class ProfileBuffer
@@ -66,7 +66,7 @@ namespace Minerva
 	public:
 		~Profiler();
 
-		void writeResult(const char* name, long long start, long long stop)
+		void writeResult(const char* name, uint64_t start, uint64_t stop)
 		{
 			m_buffer.push({ start, stop, name, m_threadID });
 		}
@@ -86,7 +86,7 @@ namespace Minerva
 		static void impl_endSession();
 		static void profileThreadFunction(const std::string filePath);
 
-		unsigned m_threadID;
+		uint32_t m_threadID;
 		ProfileBuffer m_buffer;
 
 		static volatile bool s_running;
@@ -94,7 +94,7 @@ namespace Minerva
 		static Scope<std::thread> s_profileThread;
 		static std::vector<ProfileBuffer*> s_buffers;
 		static std::mutex s_buffersMutex, s_sessionMutex;
-		static unsigned s_threadIDCounter;
+		static uint32_t s_threadIDCounter;
 	};
 
 	// WARNING: currently, ProfileTimer name pointer is used at the end of the profile session.
@@ -118,9 +118,9 @@ namespace Minerva
 		{
 			auto stopTimePoint = std::chrono::steady_clock::now();
 
-			long long start = std::chrono::time_point_cast<std::chrono::microseconds>
+			uint64_t start = std::chrono::time_point_cast<std::chrono::microseconds>
 				(m_startTimePoint).time_since_epoch().count();
-			long long stop = std::chrono::time_point_cast<std::chrono::microseconds>
+			uint64_t stop = std::chrono::time_point_cast<std::chrono::microseconds>
 				(stopTimePoint).time_since_epoch().count();
 
 			Profiler::get().writeResult(m_name, start, stop);
@@ -165,7 +165,7 @@ namespace Minerva
 	}
 }
 
-//#define MN_ENABLE_PROFILING
+#define MN_ENABLE_PROFILING
 
 #if defined MN_ENABLE_PROFILING
 	#if defined(__GNUC__) || (defined(__ICC) && (__ICC >= 600))
@@ -184,8 +184,8 @@ namespace Minerva
 
 	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::beginSession(filePath)
 	#define MN_PROFILE_END_SESSION() ::Minerva::Profiler::endSession()
-	#define MN_PROFILE_SCOPE(name) static constexpr auto parsedName = ::Minerva::ProfilerUtils::parseScopeName(name, "__cdecl ");\
-		::Minerva::ProfileTimer UNIQUE(timer)(parsedName.data)
+	#define MN_PROFILE_SCOPE(name) static const auto _parsedName =\
+		::Minerva::ProfilerUtils::parseScopeName(name, "__cdecl "); volatile ::Minerva::ProfileTimer _timer(_parsedName.data)
 	#define MN_PROFILE_FUNCTION() MN_PROFILE_SCOPE(MN_PROFILE_FUNC_SIG)
 #else
 	#define MN_PROFILE_BEGIN_SESSION(filePath)

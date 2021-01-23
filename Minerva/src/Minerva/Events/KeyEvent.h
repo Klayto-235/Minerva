@@ -28,7 +28,7 @@ namespace Minerva
 		KeyPressEvent(Key key, bool repeat)
 			: KeyEvent(key), m_repeat(repeat) {}
 
-		int isRepeat() const { return m_repeat; }
+		bool isRepeat() const { return m_repeat; }
 
 #if defined MN_ENABLE_DEBUG_CODE
 		std::string toString() const override

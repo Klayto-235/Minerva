@@ -31,7 +31,7 @@ namespace Minerva
 		std::vector<Layer*>::reverse_iterator rend() { return m_layers.rend(); }
 	private:
 		std::vector<Layer*> m_layers;
-		unsigned int m_nLayers = 0;
+		uint32_t m_nLayers = 0;
 	};
 
 }
