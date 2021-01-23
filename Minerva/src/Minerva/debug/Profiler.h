@@ -83,7 +83,7 @@ namespace Minerva
 	private:
 		Profiler();
 
-		static void int_endSession();
+		static void impl_endSession();
 		static void profileThreadFunction(const std::string filePath);
 
 		unsigned m_threadID;

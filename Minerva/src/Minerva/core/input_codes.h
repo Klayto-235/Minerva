@@ -4,6 +4,7 @@ namespace Minerva
 {
 
 	// Codes taken from glfw3.h
+	// Keep values sorted so SIZE is always correct.
 
 	enum class Key
 	{
@@ -128,11 +129,19 @@ namespace Minerva
 		RightControl,
 		RightAlt,
 		RightSuper,
-		Menu
+		Menu,
+
+		SIZE
 	};
 
 	enum class MouseButton
 	{
+		// Aliases
+		ButtonLast		= 7,
+		ButtonLeft		= 0,
+		ButtonRight		= 1,
+		ButtonMiddle	= 2,
+
 		Button1			= 0,
 		Button2,
 		Button3,
@@ -141,10 +150,8 @@ namespace Minerva
 		Button6,
 		Button7,
 		Button8,
-		ButtonLast		= 7,
-		ButtonLeft		= 0,
-		ButtonRight		= 1,
-		ButtonMiddle	= 2
+
+		SIZE		
 	};
 
 }

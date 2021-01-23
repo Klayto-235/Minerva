@@ -1,100 +1,77 @@
 #include "mnpch.h"
-#include "Platform/Windows/WindowsWindow.h"
+
+#if defined MN_PLATFORM_WINDOWS
+
+#include "Minerva/core/Window.h"
 #include "Minerva/Events/WindowEvent.h"
 #include "Minerva/Events/KeyEvent.h"
 #include "Minerva/Events/MouseEvent.h"
 #include "Platform/OpenGL/OpenGLContext.h"
 #include "Minerva/Renderer/RenderAPI.h"
 
+#include <GLFW/glfw3.h>
+
 
 namespace Minerva
 {
 
-#pragma region /////////////// WindowsWindowInputState ///////////////
-
-	bool WindowsWindowInputState::isKeyPressed(Key key) const
-	{
-		auto state = glfwGetKey(m_window.m_windowHandle, static_cast<int>(key));
-		return state == GLFW_PRESS || state == GLFW_REPEAT;
-	}
-
-	bool WindowsWindowInputState::isMouseButtonPressed(MouseButton button) const
-	{
-		auto state = glfwGetMouseButton(m_window.m_windowHandle, static_cast<int>(button));
-		return state == GLFW_PRESS;
-	}
-
-	std::pair<float, float> WindowsWindowInputState::getMousePosition() const
-	{
-		double x, y;
-		glfwGetCursorPos(m_window.m_windowHandle, &x, &y);
-		return { static_cast<float>(x), static_cast<float>(y) };
-	}
-
-	float WindowsWindowInputState::getMouseX() const
-	{
-		auto [x, y] = getMousePosition();
-		return x;
-	}
-
-	float WindowsWindowInputState::getMouseY() const
-	{
-		auto [x, y] = getMousePosition();
-		return y;
-	}
-
-#pragma endregion
-
-#pragma region /////////////// WindowsWindow ///////////////
-
-	WindowsWindow::WindowsWindow(const WindowProperties& properties)
-		: Window(properties), m_inputState(*this)
+	void Window::impl_createWindow()
 	{
 		MN_PROFILE_FUNCTION();
-
-		MN_CORE_INFO("Creating window \"{0}\" ({1} x {2}).", m_data.title, m_data.width, m_data.height);
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #if defined(MN_ENABLE_OPENGL_ERRORS)
+		// Yes, the if statement should be here. This code should be RenderAPI agnostic.
+		// The rest of the Windows Window code should be rewritten with this in mind.
 		if (RenderAPI::getAPI() == RenderAPI::API::OpenGL)
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 
-		m_windowHandle = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-		MN_CORE_ASSERT(m_windowHandle, "WindowsWindow::WindowsWindow: Could not create window \"{0}\".", m_data.title);
+		GLFWwindow* windowHandle = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
+		MN_CORE_ASSERT(windowHandle, "Window::impl_createWindow: Could not create window \"{0}\".", m_data.title);
+		m_nativeWindowHandle = windowHandle;
 
-		m_context = createScope<OpenGLContext>(m_windowHandle);
+		m_graphicsContext = createScope<OpenGLContext>(windowHandle);
 
-		glfwSetWindowUserPointer(m_windowHandle, &m_data);
+		glfwSetWindowUserPointer(windowHandle, &m_data);
 		setVSync(true);
 
-		glfwSetWindowSizeCallback(m_windowHandle, [](GLFWwindow* windowHandle, int width, int height)
+		glfwSetWindowSizeCallback(windowHandle, [](GLFWwindow* windowHandle, int width, int height)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			data.width = width;
 			data.height = height;
 			data.eventBuffer.add<WindowResizeEvent>(width, height);
 		});
 
-		glfwSetWindowCloseCallback(m_windowHandle, [](GLFWwindow* windowHandle)
+		glfwSetWindowCloseCallback(windowHandle, [](GLFWwindow* windowHandle)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			data.eventBuffer.add<WindowCloseEvent>(nullptr);
 		});
 
-		glfwSetKeyCallback(m_windowHandle, [](GLFWwindow* windowHandle, int key, int scancode, int action, int mods)
+		glfwSetWindowFocusCallback(windowHandle, [](GLFWwindow* windowHandle, int focused)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
+			if (focused == GLFW_FALSE)
+				data.inputState.onLoseFocus();
+		});
+
+		glfwSetKeyCallback(windowHandle, [](GLFWwindow* windowHandle, int key, int scancode, int action, int mods)
+		{
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			switch (action)
 			{
 			case GLFW_PRESS:
 				data.eventBuffer.add<KeyPressEvent>(static_cast<Key>(key), false);
+				data.inputState.setKey(static_cast<Key>(key), true);
 				break;
 
 			case GLFW_RELEASE:
 				data.eventBuffer.add<KeyReleaseEvent>(static_cast<Key>(key));
+				data.inputState.setKey(static_cast<Key>(key), false);
 				break;
 
 			case GLFW_REPEAT:
@@ -103,70 +80,63 @@ namespace Minerva
 			}
 		});
 
-		glfwSetCharCallback(m_windowHandle, [](GLFWwindow* windowHandle, unsigned int character)
+		glfwSetCharCallback(windowHandle, [](GLFWwindow* windowHandle, unsigned int character)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			data.eventBuffer.add<TextCharEvent>(static_cast<int>(character));
 		});
 
-		glfwSetMouseButtonCallback(m_windowHandle, [](GLFWwindow* windowHandle, int button, int action, int mods)
+		glfwSetMouseButtonCallback(windowHandle, [](GLFWwindow* windowHandle, int button, int action, int mods)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			switch (action)
 			{
 			case GLFW_PRESS:
 				data.eventBuffer.add<MouseButtonPressEvent>(static_cast<MouseButton>(button));
+				data.inputState.setMouseButton(static_cast<MouseButton>(button), true);
 				break;
 
 			case GLFW_RELEASE:
 				data.eventBuffer.add<MouseButtonReleaseEvent>(static_cast<MouseButton>(button));
+				data.inputState.setMouseButton(static_cast<MouseButton>(button), false);
 				break;
 			}
 		});
 
-		glfwSetScrollCallback(m_windowHandle, [](GLFWwindow* windowHandle, double xOffset, double yOffset)
+		glfwSetScrollCallback(windowHandle, [](GLFWwindow* windowHandle, double xOffset, double yOffset)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			data.eventBuffer.add<MouseScrollEvent>((float)xOffset, (float)yOffset);
 		});
 
-		glfwSetCursorPosCallback(m_windowHandle, [](GLFWwindow* windowHandle, double x, double y)
+		glfwSetCursorPosCallback(windowHandle, [](GLFWwindow* windowHandle, double x, double y)
 		{
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(windowHandle);
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(windowHandle));
 			data.eventBuffer.add<MouseMoveEvent>((float)x, (float)y);
+			data.inputState.setMousePosition((float)x, (float)y);
 		});
-
-		initResources();
 	}
 
-	WindowsWindow::~WindowsWindow()
+	void Window::impl_destroyWindow()
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_INFO("Destroying window \"{0}\".", m_data.title);
-		glfwMakeContextCurrent(m_windowHandle);
-		freeResources(); // Free OpenGL resources before context destruction.
-		glfwDestroyWindow(m_windowHandle);
+		glfwDestroyWindow(static_cast<GLFWwindow*>(m_nativeWindowHandle));
 	}
 
-	void WindowsWindow::setVSync(bool enabled)
+	void Window::setVSync(bool enable)
 	{
 		MN_PROFILE_FUNCTION();
 
-		// Retain context because this is exposed in public Window API.
+		// Retain current context because this is exposed in public Window API.
 		GLFWwindow* currentContext = glfwGetCurrentContext();
-		glfwMakeContextCurrent(m_windowHandle);
-		if (enabled) glfwSwapInterval(1);
+		glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_nativeWindowHandle));
+		if (enable) glfwSwapInterval(1);
 		else glfwSwapInterval(0);
-		m_data.VSync = enabled;
+		m_VSync = enable;
 		glfwMakeContextCurrent(currentContext);
 	}
 
-#pragma endregion
-
-#pragma region /////////////// Window ///////////////
-
-#ifdef MN_PLATFORM_WINDOWS
 	void Window::init()
 	{
 		MN_PROFILE_FUNCTION();
@@ -177,11 +147,6 @@ namespace Minerva
 		});
 		int success = glfwInit();
 		MN_CORE_ASSERT(success, "Window::init: Could not intialise GLFW.");
-	}
-
-	Scope<Window> Window::create(const WindowProperties& properties)
-	{
-		return createScope<WindowsWindow>(properties);
 	}
 
 	void Window::pollEvents()
@@ -197,8 +162,7 @@ namespace Minerva
 
 		glfwTerminate();
 	}
-#endif // MN_PLATFORM_WINDOWS
-
-#pragma endregion
 
 }
+
+#endif // MN_PLATFORM_WINDOWS

@@ -63,12 +63,12 @@ namespace Minerva
 
 			if (m_enableImGui)
 			{
-				m_ImGuiWindow->makeContextCurrent();
+				m_ImGuiWindow->m_graphicsContext->makeCurrent();
 				m_ImGuiContext->beginFrame();
 
 				for (auto& window : m_windows)
 				{
-					window->makeContextCurrent();
+					window->m_graphicsContext->makeCurrent();
 #ifdef MN_ENABLE_ASSERTS
 					g_lockWindows = true;
 					window->onUpdate(deltaTime, m_eventBuffer);
@@ -79,18 +79,18 @@ namespace Minerva
 					window->onImGuiRender();
 #endif
 					if (window.get() != m_ImGuiWindow) // necessary?
-						window->swapBuffers();
+						window->m_graphicsContext->swapBuffers();
 				}
 
-				m_ImGuiWindow->makeContextCurrent();
+				m_ImGuiWindow->m_graphicsContext->makeCurrent();
 				m_ImGuiContext->endFrame();
-				m_ImGuiWindow->swapBuffers(); // necessary?
+				m_ImGuiWindow->m_graphicsContext->swapBuffers(); // necessary?
 			}
 			else
 			{
 				for (auto& window : m_windows)
 				{
-					window->makeContextCurrent();
+					window->m_graphicsContext->makeCurrent();
 #ifdef MN_ENABLE_ASSERTS
 					g_lockWindows = true;
 					window->onUpdate(deltaTime, m_eventBuffer);
@@ -98,7 +98,7 @@ namespace Minerva
 #else
 					window->onUpdate(deltaTime, m_eventBuffer);
 #endif
-					window->swapBuffers();
+					window->m_graphicsContext->swapBuffers();
 				}
 			}
 		}
@@ -110,7 +110,7 @@ namespace Minerva
 
 		MN_CORE_ASSERT(!g_lockWindows,
 			"Application::createWindow: Cannot create window while windows are locked.");
-		m_windows.push_back(Window::create(properties));
+		m_windows.push_back(Scope<Window>(new Window(properties)));
 		return m_windows.back().get();
 	}
 
@@ -139,7 +139,7 @@ namespace Minerva
 			"Application::enableImGui: Window does not exist.");
 		if (m_enableImGui) disableImGui();
 		m_ImGuiWindow = window;
-		m_ImGuiWindow->makeContextCurrent();
+		m_ImGuiWindow->m_graphicsContext->makeCurrent();
 		m_ImGuiContext = createScope<ImGuiContext>(*window);
 		m_enableImGui = true;
 	}
@@ -153,7 +153,7 @@ namespace Minerva
 		if (m_enableImGui)
 		{
 			m_enableImGui = false;
-			m_ImGuiWindow->makeContextCurrent();
+			m_ImGuiWindow->m_graphicsContext->makeCurrent();
 			m_ImGuiContext.reset();
 			m_ImGuiWindow = nullptr;
 		}

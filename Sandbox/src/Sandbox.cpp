@@ -13,7 +13,7 @@ public:
 		MN_PROFILE_FUNCTION();
 
 		m_window = createWindow();
-		m_window->pushLayer(m_window->createLayer<Sandbox2D>());
+		m_window->pushLayer(m_window->newLayer<Sandbox2D>());
 
 		enableImGui(m_window);
 	}

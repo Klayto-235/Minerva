@@ -19,7 +19,7 @@ namespace Minerva
 	{
 		std::lock_guard<std::mutex> lock(s_sessionMutex);
 
-		int_endSession();
+		impl_endSession();
 
 		s_filePath = filePath;
 		s_running = true;
@@ -29,7 +29,7 @@ namespace Minerva
 	void Profiler::endSession()
 	{
 		std::lock_guard<std::mutex> lock(s_sessionMutex);
-		int_endSession();
+		impl_endSession();
 	}
 
 	Profiler::Profiler()
@@ -41,7 +41,7 @@ namespace Minerva
 		++s_threadIDCounter; // Best not chew up all 2^32 IDs!
 	}
 
-	void Profiler::int_endSession()
+	void Profiler::impl_endSession()
 	{
 		if (s_running)
 		{
