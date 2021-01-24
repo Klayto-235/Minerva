@@ -47,8 +47,6 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		renderer2D.resetStatistics();
-
 		m_framebuffer->bind();
 
 		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -78,7 +76,10 @@ namespace Minerva
 
 		m_framebuffer->unbind();
 
+#if defined MN_ENABLE_DEBUG_CODE
 		m_renderer2DStatistics = renderer2D.getStatistics();
+		renderer2D.resetStatistics();
+#endif
 	}
 
 	void EditorLayer::onImGuiRender()
@@ -114,16 +115,23 @@ namespace Minerva
 			uint32_t textureID = m_framebuffer->getColorAttachmentRenderID();
 			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), m_viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		}
+
+		bool viewportFocused = ImGui::IsWindowFocused();
+		bool viewportHovered = ImGui::IsWindowHovered();
+		Application::get().setImGuiViewportWindowState(viewportFocused, viewportHovered);
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 
 		if (ImGui::Begin("Settings"))
 		{
+#if defined MN_ENABLE_DEBUG_CODE
 			ImGui::Text("Renderer2D Stats:");
 			ImGui::Text("Draw Calls: %d", m_renderer2DStatistics.nDrawCalls);
 			ImGui::Text("Quads: %d", m_renderer2DStatistics.nQuads);
 			ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
 			ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
+#endif
 
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_quadColor));
 		}

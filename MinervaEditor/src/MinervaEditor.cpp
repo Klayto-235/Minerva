@@ -15,9 +15,9 @@ namespace Minerva
 			MN_PROFILE_FUNCTION();
 
 			m_window = createWindow({ "Minerva Editor" });
-			m_window->pushLayer(m_window->newLayer<EditorLayer>());
-
 			enableImGui(m_window);
+
+			m_window->pushLayer(m_window->newLayer<EditorLayer>());
 		}
 
 		~MinervaEditor()

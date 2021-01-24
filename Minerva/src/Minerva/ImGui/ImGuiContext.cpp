@@ -3,14 +3,19 @@
 #include "Minerva/core/Window.h"
 
 #include <imgui.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_glfw.h>
+#include "Minerva/ImGui/imgui_impl_opengl3.h"
+#include "Minerva/ImGui/imgui_impl_glfw.h"
 
 #include <GLFW/glfw3.h>
 
 
 namespace Minerva
 {
+	extern bool g_ImGuiOverrideBlockKeyEvents;
+	extern bool g_ImGuiOverrideBlockMouseButtonEvents;
+	extern bool g_ImGuiOverrideBlockMouseScrollEvents;
+	extern bool g_ImGuiOverrideBlockMouseButtonLeftRelease;
+	extern bool g_ImGuiOverrideBlockMouseButtonRightRelease;
 
 	ImGuiContext::ImGuiContext(Window& window)
 	{
@@ -79,6 +84,40 @@ namespace Minerva
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
+	}
+
+	void ImGuiContext::setOverrideBlockKeyEvents(bool overrideBlock)
+	{
+		g_ImGuiOverrideBlockKeyEvents = overrideBlock;
+	}
+
+	void ImGuiContext::setOverrideBlockMouseButtonEvents(bool overrideBlock)
+	{
+		g_ImGuiOverrideBlockMouseButtonEvents = overrideBlock;
+	}
+
+	void ImGuiContext::setOverrideBlockMouseScrollEvents(bool overrideBlock)
+	{
+		g_ImGuiOverrideBlockMouseScrollEvents = overrideBlock;
+	}
+
+	void ImGuiContext::setOverrideBlockMouseButtonLeftRelease(bool overrideBlock)
+	{
+		g_ImGuiOverrideBlockMouseButtonLeftRelease = overrideBlock;
+	}
+
+	void ImGuiContext::setOverrideBlockMouseButtonRightRelease(bool overrideBlock)
+	{
+		g_ImGuiOverrideBlockMouseButtonRightRelease = overrideBlock;
+	}
+
+	void ImGuiContext::resetOverrideFlags()
+	{
+		g_ImGuiOverrideBlockKeyEvents = false;
+		g_ImGuiOverrideBlockMouseButtonEvents = false;
+		g_ImGuiOverrideBlockMouseScrollEvents = false;
+		g_ImGuiOverrideBlockMouseButtonLeftRelease = false;
+		g_ImGuiOverrideBlockMouseButtonRightRelease = false;
 	}
 
 }

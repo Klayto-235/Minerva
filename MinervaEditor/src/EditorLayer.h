@@ -2,6 +2,8 @@
 
 #include <Minerva/core/Layer.h>
 
+#include <imgui.h>
+
 
 namespace Minerva
 {
@@ -18,18 +20,21 @@ namespace Minerva
 		void onRender(Renderer2D& renderer2D) override;
 		void onImGuiRender() override;
 	private:
+		ImVec2 m_viewportSize = { 0.0f, 0.0f };
+		bool m_overrideBlockEvents = false;
+
 		OrthographicCameraController m_cameraController;
 
-		ImVec2 m_viewportSize = { 0.0f, 0.0f };
+		Ref<Framebuffer> m_framebuffer;
 
 		Ref<Texture2D> m_chessboardTexture;
-
-		Ref<Framebuffer> m_framebuffer;
 
 		glm::vec4 m_quadColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		float m_quadRotation = 0.0f;
 
+#if defined MN_ENABLE_DEBUG_CODE
 		Renderer2D::Statistics m_renderer2DStatistics;
+#endif
 	};
 
 }

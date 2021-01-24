@@ -18,8 +18,8 @@ namespace Minerva
 	 * 
 	 * Windows are managed by the Application class to ensure correct asset deletion order.
 	 * 
-	 * Window and ImGui related functions cannot be called from @ref Layer objects, but may be
-	 * called from the client application class.
+	 * Window and ImGui create/delete/enable/disable functions cannot be called from @ref
+	 * Layer objects, but may be called from the client application class.
 	*/
 	class Application
 	{
@@ -40,6 +40,10 @@ namespace Minerva
 		/// Disables ImGui if enabled.
 		void disableImGui();
 
+		/// Handles input forwarding to the ImGui enabled Window when an ImGui window is
+		/// used as the viewport (framebuffer + image).
+		void setImGuiViewportWindowState(bool focused, bool hovered);
+
 		virtual void onEvent(const Event& event);
 		virtual void onUpdate() {};
 
@@ -57,7 +61,10 @@ namespace Minerva
 		EventBuffer m_eventBuffer;
 		bool m_running = false;
 		float m_lastFrameTime = 0.0f;
+
 		bool m_enableImGui = false;
+		bool m_ImGuiViewportWindowFocused = false;
+		bool m_ImGuiViewportWindowHovered = false;
 		Scope<ImGuiContext> m_ImGuiContext;
 		Window* m_ImGuiWindow = nullptr;
 	};

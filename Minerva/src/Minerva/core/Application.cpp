@@ -136,6 +136,7 @@ namespace Minerva
 		m_ImGuiWindow = window;
 		m_ImGuiWindow->m_graphicsContext->makeCurrent();
 		m_ImGuiContext = createScope<ImGuiContext>(*window);
+		m_ImGuiContext->resetOverrideFlags();
 		m_enableImGui = true;
 	}
 
@@ -150,6 +151,40 @@ namespace Minerva
 			m_ImGuiWindow->m_graphicsContext->makeCurrent();
 			m_ImGuiContext.reset();
 			m_ImGuiWindow = nullptr;
+		}
+	}
+
+	void Application::setImGuiViewportWindowState(bool focused, bool hovered)
+	{
+		if (m_enableImGui)
+		{
+			if (focused != m_ImGuiViewportWindowFocused)
+			{
+				m_ImGuiViewportWindowFocused = focused;
+				m_ImGuiContext->setOverrideBlockKeyEvents(focused);
+				m_ImGuiContext->setOverrideBlockMouseScrollEvents(focused && hovered);
+
+				if (!focused)
+				{
+					m_ImGuiContext->setOverrideBlockMouseButtonLeftRelease(false);
+					m_ImGuiContext->setOverrideBlockMouseButtonRightRelease(false);
+					m_ImGuiWindow->m_data.inputState.onLoseFocus();
+				}
+			}
+			if (hovered != m_ImGuiViewportWindowHovered)
+			{
+				m_ImGuiViewportWindowHovered = hovered;
+				m_ImGuiContext->setOverrideBlockMouseScrollEvents(focused && hovered);
+				m_ImGuiContext->setOverrideBlockMouseButtonEvents(hovered);
+
+				if (!hovered)
+				{
+					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::ButtonLeft))
+						m_ImGuiContext->setOverrideBlockMouseButtonLeftRelease(true);
+					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::ButtonRight))
+						m_ImGuiContext->setOverrideBlockMouseButtonRightRelease(true);
+				}
+			}
 		}
 	}
 
