@@ -76,6 +76,7 @@ void main()
 		case 29: texColor = texture(u_textures[29], v_texCoord * v_tilingFactor); break;
 		case 30: texColor = texture(u_textures[30], v_texCoord * v_tilingFactor); break;
 		case 31: texColor = texture(u_textures[31], v_texCoord * v_tilingFactor); break;
+		default: texColor = vec4(1.0);
 	}
 	color = texColor*v_color;
 }

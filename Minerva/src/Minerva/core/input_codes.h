@@ -137,10 +137,10 @@ namespace Minerva
 	enum class MouseButton
 	{
 		// Aliases
-		ButtonLast		= 7,
-		ButtonLeft		= 0,
-		ButtonRight		= 1,
-		ButtonMiddle	= 2,
+		Last			= 7,
+		Left			= 0,
+		Right			= 1,
+		Middle			= 2,
 
 		Button1			= 0,
 		Button2,

@@ -38,6 +38,15 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
+		const FramebufferProperties& framebufferProperties = m_framebuffer->getProperties();
+		if ((framebufferProperties.width != m_viewportWindowSize.first
+			|| framebufferProperties.height != m_viewportWindowSize.second)
+			&& m_viewportWindowSize.first != 0 && m_viewportWindowSize.second != 0)
+		{
+			m_framebuffer->resize(m_viewportWindowSize.first, m_viewportWindowSize.second);
+			m_cameraController.onEvent(WindowResizeEvent(m_viewportWindowSize.first, m_viewportWindowSize.second));
+		}
+
 		m_cameraController.onUpdate(timeStep, inputState);
 
 		m_quadRotation += timeStep * glm::pi<float>();
@@ -104,16 +113,10 @@ namespace Minerva
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		if (ImGui::Begin("Viewport"))
 		{
-			ImVec2 viewportWindowSize = ImGui::GetContentRegionAvail();
-			if (m_viewportSize.x != viewportWindowSize.x || m_viewportSize.y != viewportWindowSize.y)
-			{
-				m_viewportSize = viewportWindowSize;
-				m_framebuffer->resize((uint32_t)viewportWindowSize.x, (uint32_t)viewportWindowSize.y);
-
-				m_cameraController.onEvent(WindowResizeEvent((uint32_t)viewportWindowSize.x, (uint32_t)viewportWindowSize.y));
-			}
+			auto viewportWindowSize = ImGui::GetContentRegionAvail();
+			m_viewportWindowSize = { (uint32_t)viewportWindowSize.x , (uint32_t)viewportWindowSize.y };
 			uint32_t textureID = m_framebuffer->getColorAttachmentRenderID();
-			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), m_viewportSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+			ImGui::Image(reinterpret_cast<void*>((uint64_t)textureID), viewportWindowSize, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		}
 
 		bool viewportFocused = ImGui::IsWindowFocused();
@@ -145,7 +148,10 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		return m_cameraController.onEvent(event);
+		if (event.getEventType() != EventType::WindowResize)
+			return m_cameraController.onEvent(event);
+		else
+			return false;
 	}
 
 }

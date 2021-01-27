@@ -20,7 +20,7 @@ namespace Minerva
 		void onRender(Renderer2D& renderer2D) override;
 		void onImGuiRender() override;
 	private:
-		ImVec2 m_viewportSize = { 0.0f, 0.0f };
+		std::pair<uint32_t, uint32_t> m_viewportWindowSize = { 0, 0 };
 		bool m_overrideBlockEvents = false;
 
 		OrthographicCameraController m_cameraController;

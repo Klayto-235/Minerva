@@ -29,7 +29,7 @@ namespace Minerva
 			const uint16_t head = m_head.load(std::memory_order_relaxed);
 			if (head == m_tail.load(std::memory_order_relaxed))
 			{
-				MN_CORE_ERROR("ProfilerBuffer::push: Buffer overflow.");
+				MN_CORE_ERROR(MN_ASSERT_FUNC_SIG ": Buffer overflow.");
 				MN_CORE_ASSERT(false, "Error.");
 			}
 
@@ -184,8 +184,9 @@ namespace Minerva
 
 	#define MN_PROFILE_BEGIN_SESSION(filePath) ::Minerva::Profiler::beginSession(filePath)
 	#define MN_PROFILE_END_SESSION() ::Minerva::Profiler::endSession()
-	#define MN_PROFILE_SCOPE(name) static const auto _parsedName =\
-		::Minerva::ProfilerUtils::parseScopeName(name, "__cdecl "); volatile ::Minerva::ProfileTimer _timer(_parsedName.data)
+	#define MN_PROFILE_SCOPE(name) static const auto LINE(_parsedName) =\
+		::Minerva::ProfilerUtils::parseScopeName(name, "__cdecl ");\
+		volatile ::Minerva::ProfileTimer UNIQUE(_timer)(LINE(_parsedName).data)
 	#define MN_PROFILE_FUNCTION() MN_PROFILE_SCOPE(MN_PROFILE_FUNC_SIG)
 #else
 	#define MN_PROFILE_BEGIN_SESSION(filePath)

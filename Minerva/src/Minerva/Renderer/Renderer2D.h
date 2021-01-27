@@ -66,14 +66,13 @@ namespace Minerva
 		Ref<VertexArray> m_quadVertexArray;
 		Ref<VertexBuffer> m_quadVertexBuffer;
 		Ref<Shader> m_textureShader;
-		Ref<Texture2D> m_whiteTexture;
 
 		Scope<QuadVertex[]> m_quadVertexBufferStage;
 		QuadVertex* m_quadVertexBufferPtr = nullptr;
 		uint32_t m_quadVertexBufferStageQuadCount = 0;
 
 		std::array<Ref<Texture2D>, sc_maxTextureSlots> m_textureSlots;
-		uint32_t m_textureSlotCount = 1; // 0 taken by white
+		uint32_t m_textureSlotCount = 0;
 	};
 
 }

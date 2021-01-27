@@ -25,7 +25,8 @@
 
 #define TOKENPASTE(x,y) x##y
 #define TOKENPASTE2(x,y) TOKENPASTE(x,y)
-#define UNIQUE(x) TOKENPASTE2(x, __LINE__)
+#define UNIQUE(x) TOKENPASTE2(x, __COUNTER__)
+#define LINE(x) TOKENPASTE2(x, __LINE__)
 
 namespace Minerva
 {

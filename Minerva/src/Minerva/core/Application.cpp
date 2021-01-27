@@ -179,9 +179,9 @@ namespace Minerva
 
 				if (!hovered)
 				{
-					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::ButtonLeft))
+					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::Left))
 						m_ImGuiContext->setOverrideBlockMouseButtonLeftRelease(true);
-					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::ButtonRight))
+					if (m_ImGuiWindow->m_data.inputState.isMouseButtonPressed(MouseButton::Right))
 						m_ImGuiContext->setOverrideBlockMouseButtonRightRelease(true);
 				}
 			}

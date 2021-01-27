@@ -41,10 +41,6 @@ namespace Minerva
 		delete[] quadIndices;
 		m_quadVertexArray->setIndexBuffer(quadIndexBuffer);
 
-		uint32_t data = 0xffffffff;
-		m_whiteTexture = Texture2D::create(1, 1);
-		m_whiteTexture->setData(&data, sizeof(uint32_t));
-
 		int32_t samplers[sc_maxTextureSlots];
 		for (uint32_t i = 0; i < sc_maxTextureSlots; ++i)
 			samplers[i] = i;
@@ -52,8 +48,6 @@ namespace Minerva
 		m_textureShader = Minerva::Shader::create("assets/shaders/texture.glsl");
 		m_textureShader->bind();
 		m_textureShader->setIntArray("u_textures", samplers, sc_maxTextureSlots);
-
-		m_textureSlots[0] = m_whiteTexture;
 	}
 
 	Renderer2D::~Renderer2D()
@@ -71,7 +65,7 @@ namespace Minerva
 		m_quadVertexBufferPtr = m_quadVertexBufferStage.get();
 		m_quadVertexBufferStageQuadCount = 0;
 
-		m_textureSlotCount = 1;
+		m_textureSlotCount = 0;
 	}
 
 	void Renderer2D::endScene()
@@ -103,7 +97,7 @@ namespace Minerva
 			m_quadVertexBufferPtr = m_quadVertexBufferStage.get();
 			m_quadVertexBufferStageQuadCount = 0;
 
-			m_textureSlotCount = 1;
+			m_textureSlotCount = 0;
 		}
 	}
 
@@ -119,28 +113,28 @@ namespace Minerva
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
@@ -158,7 +152,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 
 		float textureIndex = 0.0f;
-		for (uint32_t i = 1; i < m_textureSlotCount; i++)
+		for (uint32_t i = 0; i < m_textureSlotCount; i++)
 		{
 			if (*m_textureSlots[i].get() == *texture.get())
 			{
@@ -231,7 +225,7 @@ namespace Minerva
 		m_quadVertexBufferPtr->position.z = position.z;
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
@@ -239,7 +233,7 @@ namespace Minerva
 		m_quadVertexBufferPtr->position.z = position.z;
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
@@ -247,7 +241,7 @@ namespace Minerva
 		m_quadVertexBufferPtr->position.z = position.z;
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
@@ -255,7 +249,7 @@ namespace Minerva
 		m_quadVertexBufferPtr->position.z = position.z;
 		m_quadVertexBufferPtr->color = color;
 		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = 0.0f;
+		m_quadVertexBufferPtr->texIndex = -1.0f;
 		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
@@ -273,7 +267,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 
 		float textureIndex = 0.0f;
-		for (uint32_t i = 1; i < m_textureSlotCount; i++)
+		for (uint32_t i = 0; i < m_textureSlotCount; i++)
 		{
 			if (*m_textureSlots[i].get() == *texture.get())
 			{
