@@ -18,6 +18,7 @@ namespace Minerva
 		Renderer2D();
 		~Renderer2D();
 
+		void beginScene(const Camera& camera, const glm::mat4& viewMatrix);
 		void beginScene(const OrthographicCamera& camera);
 		void endScene();
 		void flush();

@@ -22,7 +22,8 @@ namespace Minerva
 		template <typename T = Event, typename ...Args>
 		void add(Args&&... args)
 		{
-			static_assert(std::is_base_of<Event, T>::value, "EventBuffer::post: Invalid template argument.");
+			static_assert(std::is_base_of<Event, T>::value,
+				MN_ASSERT_FUNC_SIG ": Invalid template argument.");
 			m_buffer.push_back(new T(std::forward<Args>(args)...));
 		}
 		void clear()

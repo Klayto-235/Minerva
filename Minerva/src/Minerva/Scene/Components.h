@@ -1,7 +1,10 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Minerva/Scene/SceneCamera.h"
+
 #include <string>
+
+#include <glm/glm.hpp>
 
 
 namespace Minerva
@@ -9,11 +12,11 @@ namespace Minerva
 
 	struct TagComponent
 	{
-		std::string tag;
+		std::string name;
 
 		TagComponent() = default;
-		TagComponent(const std::string& tag)
-			: tag(tag) {}
+		TagComponent(const std::string& name)
+			: name(name) {}
 	};
 
 	struct TransformComponent
@@ -42,6 +45,12 @@ namespace Minerva
 		SpriteRenderComponent() = default;
 		SpriteRenderComponent(const glm::vec4& color)
 			: color(color) {}
+	};
+
+	struct CameraComponent
+	{
+		SceneCamera camera;
+		bool fixedAspectRatio = false;
 	};
 
 }

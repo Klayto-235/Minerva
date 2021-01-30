@@ -12,7 +12,7 @@ namespace Minerva
 {
 
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer"), m_cameraController(1280.0f / 720.0f)
+		: Layer("EditorLayer")//, m_cameraController(1280.0f / 720.0f)
 	{
 		MN_PROFILE_FUNCTION();
 	}
@@ -30,12 +30,16 @@ namespace Minerva
 		// Texture
 		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
 
-		// Scene
+		// Scene & Camera
 		m_activeScene = createRef<Scene>();
+		m_camera = m_activeScene->newEntity();
+		m_camera.addComponent<TransformComponent>();
+		auto& cameraComponent = m_camera.addComponent<CameraComponent>();
+		cameraComponent.camera.setAspectRatio(1280.0f / 720.0f);
+		m_activeScene->setMainCamera(&m_camera);
 
-		// Entity
-		auto quad = m_activeScene->newEntity();
-		quad.addComponent<TagComponent>("My quad");
+		// My quad
+		auto quad = m_activeScene->newEntity("My quad");
 		quad.addComponent<Transform2DComponent>();
 		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 		m_quadEntity = quad;
@@ -56,10 +60,8 @@ namespace Minerva
 			&& m_viewportWindowSize.first != 0 && m_viewportWindowSize.second != 0)
 		{
 			m_framebuffer->resize(m_viewportWindowSize.first, m_viewportWindowSize.second);
-			m_cameraController.onEvent(WindowResizeEvent(m_viewportWindowSize.first, m_viewportWindowSize.second));
+			m_activeScene->onViewportResize(m_viewportWindowSize.first, m_viewportWindowSize.second);
 		}
-
-		m_cameraController.onUpdate(timeStep, inputState);
 
 		m_activeScene->onUpdate(timeStep, inputState);
 	}
@@ -73,9 +75,7 @@ namespace Minerva
 		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::clear();
 
-		renderer2D.beginScene(m_cameraController.getCamera());
 		m_activeScene->onRender(renderer2D);
-		renderer2D.endScene();
 
 		m_framebuffer->unbind();
 
@@ -99,12 +99,6 @@ namespace Minerva
 				ImGui::MenuItem("Exit", nullptr, &exitSelected);
 				if (exitSelected)
 					Application::get().stop();
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("View"))
-			{
-				ImGui::MenuItem("ImGui demo", nullptr, &m_showImGuiDemo);
 				ImGui::EndMenu();
 			}
 
@@ -139,26 +133,22 @@ namespace Minerva
 			if (m_quadEntity)
 			{
 				ImGui::Separator();
-				auto& tag = m_quadEntity.getComponent<TagComponent>().tag;
-				ImGui::Text("%s", tag.c_str());
-				auto& color = m_quadEntity.getComponent<SpriteRenderComponent>().color;
+				auto& name = m_quadEntity.getComponents<TagComponent>().name;
+				ImGui::Text("%s", name.c_str());
+				auto& color = m_quadEntity.getComponents<SpriteRenderComponent>().color;
 				ImGui::ColorEdit4("Color", glm::value_ptr(color));
 			}
+
+			ImGui::DragFloat3("Camera position", glm::value_ptr(m_camera.getComponents<TransformComponent>().matrix[3]));
 		}
 		ImGui::End();
-
-		if (m_showImGuiDemo)
-			ImGui::ShowDemoWindow(&m_showImGuiDemo);
 	}
 
 	bool EditorLayer::onEvent(const Event& event)
 	{
 		MN_PROFILE_FUNCTION();
 
-		if (event.getEventType() != EventType::WindowResize)
-			return m_cameraController.onEvent(event);
-		else
-			return false;
+		return false;
 	}
 
 }

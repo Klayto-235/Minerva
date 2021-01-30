@@ -122,7 +122,8 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		static_assert(std::is_base_of<Layer, T>::value, MN_ASSERT_FUNC_SIG ": Invalid template argument.");
+		static_assert(std::is_base_of<Layer, T>::value,
+			MN_ASSERT_FUNC_SIG ": Invalid template argument.");
 		MN_CORE_ASSERT(!g_lockWindows, "Cannot create layer while windows are locked.");
 		m_graphicsContext->makeCurrent();
 		m_layers.push_back(createScope<T>(std::forward<Args>(args)...));

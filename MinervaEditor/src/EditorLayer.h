@@ -22,16 +22,14 @@ namespace Minerva
 	private:
 		std::pair<uint32_t, uint32_t> m_viewportWindowSize = { 0, 0 };
 		bool m_overrideBlockEvents = false;
-		bool m_showImGuiDemo = false;
 
 		Ref<Framebuffer> m_framebuffer;
-
-		OrthographicCameraController m_cameraController;
 
 		Ref<Texture2D> m_chessboardTexture;
 
 		Ref<Scene> m_activeScene;
 		Entity m_quadEntity;
+		Entity m_camera;
 
 		glm::vec4 m_quadColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		float m_quadRotation = 0.0f;

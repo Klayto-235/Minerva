@@ -55,6 +55,21 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 	}
 
+	void Renderer2D::beginScene(const Camera& camera, const glm::mat4& viewMatrix)
+	{
+		MN_PROFILE_FUNCTION();
+
+		glm::mat4 viewProjectionMatrix = camera.getProjection() * viewMatrix;
+
+		m_textureShader->bind();
+		m_textureShader->setMat4("u_VP", viewProjectionMatrix);
+
+		m_quadVertexBufferPtr = m_quadVertexBufferStage.get();
+		m_quadVertexBufferStageQuadCount = 0;
+
+		m_textureSlotCount = 0;
+	}
+
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
 	{
 		MN_PROFILE_FUNCTION();
