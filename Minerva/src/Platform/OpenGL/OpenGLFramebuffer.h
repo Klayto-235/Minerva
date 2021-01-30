@@ -25,6 +25,8 @@ namespace Minerva
 		uint32_t m_renderID = 0;
 		uint32_t m_colorAttachmentTextureRenderID = 0, m_depthAttachmentTextureRenderID = 0;
 		FramebufferProperties m_properties;
+
+		static constexpr uint32_t sc_maxSize = 8192;
 	};
 
 }

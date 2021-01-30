@@ -7,7 +7,7 @@
 namespace Minerva
 {
 
-	void OrthographicCameraController::onUpdate(float timeStep, const WindowInputState& inputState)
+	void OrthographicCameraController::onUpdate(float timeStep, const InputState& inputState)
 	{
 		MN_PROFILE_FUNCTION();
 

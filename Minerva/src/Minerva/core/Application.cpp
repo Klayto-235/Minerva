@@ -112,11 +112,11 @@ namespace Minerva
 		return m_windows.back().get();
 	}
 
-	void Application::deleteWindow(Window* window)
+	void Application::destroyWindow(Window* window)
 	{
 		MN_PROFILE_FUNCTION();
 
-		MN_CORE_ASSERT(!g_lockWindows, "Cannot delete window while windows are locked.");
+		MN_CORE_ASSERT(!g_lockWindows, "Cannot destroy window while windows are locked.");
 		auto it = std::find_if(m_windows.begin(), m_windows.end(),
 			[window](const auto& other) { return window == other.get(); });
 		MN_CORE_ASSERT(it != m_windows.end(), "Could not find window.");
@@ -193,7 +193,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 
 		// Currently, only WindowCloseEvent(s) get here.
-		deleteWindow(static_cast<const WindowCloseEvent&>(event).getWindow());
+		destroyWindow(static_cast<const WindowCloseEvent&>(event).getWindow());
 		if (m_windows.size() == 0)
 			m_running = false;
 	}

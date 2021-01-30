@@ -2,14 +2,13 @@
 
 #include "Minerva/core/core.h"
 #include "Minerva/Events/EventBuffer.h"
-#include "Minerva/core/input_codes.h"
 #include "Minerva/Renderer/Renderer2D.h"
 #include "Minerva/core/LayerStack.h"
 #include "Minerva/debug/Profiler.h"
 #include "Minerva/Renderer/GraphicsContext.h"
+#include "Minerva/core/InputState.h"
 
 #include <string>
-#include <bitset>
 
 
 namespace Minerva
@@ -17,29 +16,6 @@ namespace Minerva
 #ifdef MN_ENABLE_ASSERTS
 	extern bool g_lockWindows;
 #endif
-
-	class Application;
-
-	// Can't be a nested class in Window due to a circular dependency.
-	class WindowInputState
-	{
-	public:
-		bool isKeyPressed(Key key) const { return m_keyState[(int)key]; }
-		bool isMouseButtonPressed(MouseButton button) const { return m_mouseButtonState[(int)button]; }
-		std::pair<float, float> getMousePosition() const { return m_mousePosition; }
-		float getMouseX() const { return m_mousePosition.first; }
-		float getMouseY() const { return m_mousePosition.second; }
-
-		// Should be private but GLFW callbacks are lambdas
-		void setKey(Key key, bool pressed) { m_keyState[(int)key] = pressed; }
-		void setMouseButton(MouseButton button, bool pressed) { m_mouseButtonState[(int)button] = pressed; }
-		void setMousePosition(float x, float y) { m_mousePosition = { x, y }; }
-		void onLoseFocus() { m_keyState.reset(); m_mouseButtonState.reset(); }
-	private:
-		std::bitset<(int)Key::SIZE> m_keyState;
-		std::bitset<(int)MouseButton::SIZE> m_mouseButtonState;
-		std::pair<float, float> m_mousePosition = { 0.0f, 0.0f };
-	};
 
 	struct WindowProperties
 	{
@@ -55,7 +31,7 @@ namespace Minerva
 	/** This class represents and implements an application window.
 	 * 
 	 * The implementation of this class is split into a platform-dependent and platform-independent
-	 * part. It provides access to internal @ref WindowInputState,
+	 * part. It provides access to internal @ref InputState,
 	 * @ref EventBuffer, and @ref LayerStack fields. Additionally, it allows the user to create
 	 * @ref Layer objects owned by the window. This ensures that the layers are destroyed with the
 	 * same graphics context bound as when they were created.
@@ -128,7 +104,7 @@ namespace Minerva
 			uint32_t width;
 			uint32_t height;
 			EventBuffer eventBuffer;
-			WindowInputState inputState;
+			InputState inputState;
 		};
 		WindowData m_data;
 
@@ -142,7 +118,7 @@ namespace Minerva
 	};
 
 	template<typename T, typename ...Args>
-	T* Window::newLayer(Args && ...args)
+	T* Window::newLayer(Args&&... args)
 	{
 		MN_PROFILE_FUNCTION();
 

@@ -6,6 +6,8 @@
 #include "Minerva/Renderer/Texture.h"
 #include "Minerva/Renderer/Camera.h"
 
+#include <glm/glm.hpp>
+
 
 namespace Minerva
 {
@@ -19,6 +21,13 @@ namespace Minerva
 		void beginScene(const OrthographicCamera& camera);
 		void endScene();
 		void flush();
+
+		void drawQuad(const glm::mat3& transform, const glm::vec4& color, float z = 0.0f);
+		void drawQuad(const glm::mat3& transform, const Ref<Texture2D>& texture,
+			float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f), float z = 0.0f);
+		void drawQuad(const glm::mat4& transform, const glm::vec4& color);
+		void drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture,
+			float tilingFactor = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		void drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		void drawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
@@ -62,6 +71,25 @@ namespace Minerva
 		static constexpr uint32_t sc_maxVertices = 4*sc_maxQuads;
 		static constexpr uint32_t sc_maxIndices = 6*sc_maxQuads;
 		static constexpr uint32_t sc_maxTextureSlots = 16;
+
+		static constexpr glm::vec4 sc_quadVertexPositionsVec4[4] = {
+			{ -0.5f, -0.5f, 0.0f, 1.0f },
+			{  0.5f, -0.5f, 0.0f, 1.0f },
+			{  0.5f,  0.5f, 0.0f, 1.0f },
+			{ -0.5f,  0.5f, 0.0f, 1.0f }
+		};
+		static constexpr glm::vec3 sc_quadVertexPositionsVec3[4] = {
+			{ -0.5f, -0.5f, 1.0f },
+			{  0.5f, -0.5f, 1.0f },
+			{  0.5f,  0.5f, 1.0f },
+			{ -0.5f,  0.5f, 1.0f }
+		};
+		static constexpr glm::vec2 sc_quadVertexTexCoords[4] = {
+			{ 0.0f, 0.0f },
+			{ 1.0f, 0.0f },
+			{ 1.0f, 1.0f },
+			{ 0.0f, 1.0f }
+		};
 
 		Ref<VertexArray> m_quadVertexArray;
 		Ref<VertexBuffer> m_quadVertexBuffer;

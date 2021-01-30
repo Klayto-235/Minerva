@@ -3,6 +3,7 @@
 #include "Minerva/core/core.h"
 #include "Minerva/Events/Event.h"
 #include "Minerva/Renderer/Renderer2D.h"
+#include "Minerva/core/InputState.h"
 
 #include <string>
 
@@ -12,8 +13,6 @@ namespace Minerva
 #if defined MN_ENABLE_ASSERTS
 	class Window;
 #endif
-
-	class WindowInputState;
 
 	class Layer
 	{
@@ -25,8 +24,8 @@ namespace Minerva
 		virtual void onAttach() {}
 		virtual void onDetach() {}
 		virtual bool onEvent(const Event& event) { return false; }
-		virtual void onUpdate(const float timeStep, const WindowInputState& inputState) {}
-		virtual void onRender(Minerva::Renderer2D& renderer2D) {};
+		virtual void onUpdate(const float timeStep, const InputState& inputState) {}
+		virtual void onRender(Renderer2D& renderer2D) {};
 		virtual void onImGuiRender() {}
 
 #if defined MN_ENABLE_DEBUG_CODE

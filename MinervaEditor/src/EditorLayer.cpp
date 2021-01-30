@@ -21,12 +21,24 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
-
+		// Framebuffer
 		FramebufferProperties framebufferProperties;
 		framebufferProperties.width = 1280;
 		framebufferProperties.height = 720;
 		m_framebuffer = Framebuffer::create(framebufferProperties);
+
+		// Texture
+		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
+
+		// Scene
+		m_activeScene = createRef<Scene>();
+
+		// Entity
+		auto quad = m_activeScene->newEntity();
+		quad.addComponent<TagComponent>("My quad");
+		quad.addComponent<Transform2DComponent>();
+		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		m_quadEntity = quad;
 	}
 
 	void EditorLayer::onDetach()
@@ -34,7 +46,7 @@ namespace Minerva
 		MN_PROFILE_FUNCTION();
 	}
 
-	void EditorLayer::onUpdate(const float timeStep, const WindowInputState& inputState)
+	void EditorLayer::onUpdate(const float timeStep, const InputState& inputState)
 	{
 		MN_PROFILE_FUNCTION();
 
@@ -49,7 +61,7 @@ namespace Minerva
 
 		m_cameraController.onUpdate(timeStep, inputState);
 
-		m_quadRotation += timeStep * glm::pi<float>();
+		m_activeScene->onUpdate(timeStep, inputState);
 	}
 
 	void EditorLayer::onRender(Renderer2D& renderer2D)
@@ -62,25 +74,7 @@ namespace Minerva
 		RenderCommand::clear();
 
 		renderer2D.beginScene(m_cameraController.getCamera());
-		renderer2D.drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, m_quadColor); // doesn't blend well because it's drawn first
-		renderer2D.drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		renderer2D.drawQuad({ 0.0f, 0.0f, -0.1f }, { 8.0f, 8.0f }, m_chessboardTexture, 2.0f);
-		renderer2D.drawQuad({ -1.0f, 0.5f, 0.1f }, { 1.0f, 1.0f }, m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-		renderer2D.drawRotatedQuad({ 1.0f, 0.0f, 0.1f }, { 1.0f, 1.0f }, glm::radians(30.0f),
-			m_chessboardTexture, 0.5f, { 0.9f, 0.95f, 1.0f, 1.0f });
-		renderer2D.drawRotatedQuad({ 1.0f, -0.5f }, { 0.5f, 0.75f }, glm::radians(-15.0f), { 0.5f, 0.5f, 0.5f, 1.0f });
-		renderer2D.drawRotatedQuad({ 0.5f, 1.5f, 0.1f }, { 1.0f, 1.0f }, m_quadRotation, m_chessboardTexture);
-		renderer2D.endScene();
-
-		renderer2D.beginScene(m_cameraController.getCamera());
-		for (float y = -5.0f; y <= 5.0f; y += 0.5f)
-		{
-			for (float x = -5.0f; x <= 5.0f; x += 0.5f)
-			{
-				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-				renderer2D.drawQuad({ x, y }, { 0.4f, 0.4f }, color);
-			}
-		}
+		m_activeScene->onRender(renderer2D);
 		renderer2D.endScene();
 
 		m_framebuffer->unbind();
@@ -107,6 +101,13 @@ namespace Minerva
 					Application::get().stop();
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::BeginMenu("View"))
+			{
+				ImGui::MenuItem("ImGui demo", nullptr, &m_showImGuiDemo);
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 
@@ -135,13 +136,19 @@ namespace Minerva
 			ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
 			ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
 #endif
-
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_quadColor));
+			if (m_quadEntity)
+			{
+				ImGui::Separator();
+				auto& tag = m_quadEntity.getComponent<TagComponent>().tag;
+				ImGui::Text("%s", tag.c_str());
+				auto& color = m_quadEntity.getComponent<SpriteRenderComponent>().color;
+				ImGui::ColorEdit4("Color", glm::value_ptr(color));
+			}
 		}
 		ImGui::End();
 
-		//bool showDemo = true;
-		//ImGui::ShowDemoWindow(&showDemo);
+		if (m_showImGuiDemo)
+			ImGui::ShowDemoWindow(&m_showImGuiDemo);
 	}
 
 	bool EditorLayer::onEvent(const Event& event)

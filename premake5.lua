@@ -24,6 +24,7 @@ workspace "Minerva"
 	includeDir["imgui"] = "Minerva/vendor/imgui"
 	includeDir["glm"] = "Minerva/vendor/glm"
 	includeDir["stb_image"] = "Minerva/vendor/stb_image"
+	includeDir["entt"] = "Minerva/vendor/EnTT"
 
 	group "Dependencies"
 		include "Minerva/vendor/premake_GLFW.lua"
@@ -64,7 +65,8 @@ workspace "Minerva"
 			"%{includeDir.glad}",
 			"%{includeDir.imgui}",
 			"%{includeDir.glm}",
-			"%{includeDir.stb_image}"
+			"%{includeDir.stb_image}",
+			"%{includeDir.entt}"
 		}
 	
 		links
@@ -134,6 +136,7 @@ workspace "Minerva"
 			"%{includeDir.spdlog}",
 			"%{includeDir.glm}",
 			"%{includeDir.imgui}",
+			"%{includeDir.entt}",
 			"Minerva/src"
 		}
 
@@ -200,6 +203,7 @@ workspace "Minerva"
 			"%{includeDir.spdlog}",
 			"%{includeDir.glm}",
 			"%{includeDir.imgui}",
+			"%{includeDir.entt}",
 			"Minerva/src"
 		}
 

@@ -52,6 +52,12 @@ namespace Minerva
 
 	void OpenGLFramebuffer::resize(uint32_t width, uint32_t height)
 	{
+		if (width == 0 || height == 0 || width > sc_maxSize || height > sc_maxSize)
+		{
+			MN_CORE_WARN("Attempted to rezize framebuffer to {0} x {1}.", width, height);
+			return;
+		}
+
 		m_properties.width = width;
 		m_properties.height = height;
 

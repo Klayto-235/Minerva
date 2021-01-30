@@ -101,6 +101,120 @@ namespace Minerva
 		}
 	}
 
+	void Renderer2D::drawQuad(const glm::mat3& transform, const glm::vec4& color, float z)
+	{
+		MN_PROFILE_FUNCTION();
+
+		if (m_quadVertexBufferStageQuadCount == sc_maxQuads)
+			flush();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			m_quadVertexBufferPtr->position = transform * sc_quadVertexPositionsVec3[i];
+			m_quadVertexBufferPtr->position.z = z;
+			m_quadVertexBufferPtr->color = color;
+			m_quadVertexBufferPtr->texIndex = -1.0f;
+			++m_quadVertexBufferPtr;
+		}
+
+		++m_quadVertexBufferStageQuadCount;
+	}
+
+	void Renderer2D::drawQuad(const glm::mat3& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, float z)
+	{
+		MN_PROFILE_FUNCTION();
+
+		float textureIndex = 0.0f;
+		for (uint32_t i = 0; i < m_textureSlotCount; i++)
+		{
+			if (*m_textureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (m_quadVertexBufferStageQuadCount == sc_maxQuads ||
+			(textureIndex == 0.0f && m_textureSlotCount == sc_maxTextureSlots))
+			flush();
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)m_textureSlotCount;
+			m_textureSlots[m_textureSlotCount] = texture;
+			++m_textureSlotCount;
+		}
+
+		for (int i = 0; i < 4; ++i)
+		{
+			m_quadVertexBufferPtr->position = transform * sc_quadVertexPositionsVec3[i];
+			m_quadVertexBufferPtr->position.z = z;
+			m_quadVertexBufferPtr->color = tintColor;
+			m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[i];
+			m_quadVertexBufferPtr->texIndex = textureIndex;
+			m_quadVertexBufferPtr->tilingFactor = tilingFactor;
+			++m_quadVertexBufferPtr;
+		}
+
+		++m_quadVertexBufferStageQuadCount;
+	}
+
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		MN_PROFILE_FUNCTION();
+
+		if (m_quadVertexBufferStageQuadCount == sc_maxQuads)
+			flush();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			m_quadVertexBufferPtr->position = static_cast<glm::vec3>(transform * sc_quadVertexPositionsVec4[i]);
+			m_quadVertexBufferPtr->color = color;
+			m_quadVertexBufferPtr->texIndex = -1.0f;
+			++m_quadVertexBufferPtr;
+		}
+
+		++m_quadVertexBufferStageQuadCount;
+	}
+
+	void Renderer2D::drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		MN_PROFILE_FUNCTION();
+
+		float textureIndex = 0.0f;
+		for (uint32_t i = 0; i < m_textureSlotCount; i++)
+		{
+			if (*m_textureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (m_quadVertexBufferStageQuadCount == sc_maxQuads ||
+			(textureIndex == 0.0f && m_textureSlotCount == sc_maxTextureSlots))
+			flush();
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)m_textureSlotCount;
+			m_textureSlots[m_textureSlotCount] = texture;
+			++m_textureSlotCount;
+		}
+
+		for (int i = 0; i < 4; ++i)
+		{
+			m_quadVertexBufferPtr->position = static_cast<glm::vec3>(transform * sc_quadVertexPositionsVec4[i]);
+			m_quadVertexBufferPtr->color = tintColor;
+			m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[i];
+			m_quadVertexBufferPtr->texIndex = textureIndex;
+			m_quadVertexBufferPtr->tilingFactor = tilingFactor;
+			++m_quadVertexBufferPtr;
+		}
+
+		++m_quadVertexBufferStageQuadCount;
+	}
+
 	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		MN_PROFILE_FUNCTION();
@@ -112,30 +226,22 @@ namespace Minerva
 
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
 		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 		
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
 		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
 		++m_quadVertexBufferPtr;
 
 		++m_quadVertexBufferStageQuadCount;
@@ -176,28 +282,28 @@ namespace Minerva
 
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
+		m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[0];
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y - halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
+		m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[1];
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
 		m_quadVertexBufferPtr->position = { position.x + halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
+		m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[2];
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
 
 		m_quadVertexBufferPtr->position = { position.x - halfSize.x, position.y + halfSize.y, position.z };
 		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
+		m_quadVertexBufferPtr->texCoord = sc_quadVertexTexCoords[3];
 		m_quadVertexBufferPtr->texIndex = textureIndex;
 		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
 		++m_quadVertexBufferPtr;
@@ -215,45 +321,10 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		if (m_quadVertexBufferStageQuadCount == sc_maxQuads)
-			flush();
-
 		const glm::mat3 transform = glm::scale(glm::rotate(glm::translate(glm::mat3(1.0f),
 			{ position.x, position.y }), angle), size);
 		
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ -0.5f, -0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ 0.5f, -0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ 0.5f, 0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ -0.5f, 0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = color;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = -1.0f;
-		m_quadVertexBufferPtr->tilingFactor = 1.0f;
-		++m_quadVertexBufferPtr;
-
-		++m_quadVertexBufferStageQuadCount;
+		drawQuad(transform, color, position.z);
 	}
 
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, const glm::vec4& color)
@@ -266,63 +337,10 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		float textureIndex = 0.0f;
-		for (uint32_t i = 0; i < m_textureSlotCount; i++)
-		{
-			if (*m_textureSlots[i].get() == *texture.get())
-			{
-				textureIndex = (float)i;
-				break;
-			}
-		}
-
-		if (m_quadVertexBufferStageQuadCount == sc_maxQuads ||
-			(textureIndex == 0.0f && m_textureSlotCount == sc_maxTextureSlots))
-			flush();
-
-		if (textureIndex == 0.0f)
-		{
-			textureIndex = (float)m_textureSlotCount;
-			m_textureSlots[m_textureSlotCount] = texture;
-			++m_textureSlotCount;
-		}
-
 		const glm::mat3 transform = glm::scale(glm::rotate(glm::translate(glm::mat3(1.0f),
 			{ position.x, position.y }), angle), size);
 
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ -0.5f, -0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = textureIndex;
-		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ 0.5f, -0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 0.0f };
-		m_quadVertexBufferPtr->texIndex = textureIndex;
-		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ 0.5f, 0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 1.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = textureIndex;
-		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
-		++m_quadVertexBufferPtr;
-
-		m_quadVertexBufferPtr->position = transform * glm::vec3{ -0.5f, 0.5f, 1.0f };
-		m_quadVertexBufferPtr->position.z = position.z;
-		m_quadVertexBufferPtr->color = tintColor;
-		m_quadVertexBufferPtr->texCoord = { 0.0f, 1.0f };
-		m_quadVertexBufferPtr->texIndex = textureIndex;
-		m_quadVertexBufferPtr->tilingFactor = tilingFactor;
-		++m_quadVertexBufferPtr;
-
-		++m_quadVertexBufferStageQuadCount;
+		drawQuad(transform, texture, tilingFactor, tintColor, position.z);
 	}
 
 	void Renderer2D::drawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float angle, const Ref<Texture2D>& texture,

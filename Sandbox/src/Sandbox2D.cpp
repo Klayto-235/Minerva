@@ -24,7 +24,7 @@ void Sandbox2D::onDetach()
 	MN_PROFILE_FUNCTION();
 }
 
-void Sandbox2D::onUpdate(const float timeStep, const Minerva::WindowInputState& inputState)
+void Sandbox2D::onUpdate(const float timeStep, const Minerva::InputState& inputState)
 {
 	MN_PROFILE_FUNCTION();
 

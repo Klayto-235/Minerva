@@ -32,8 +32,8 @@ namespace Minerva
 
 		/// Creates a window and returns a pointer to it.
 		Window* createWindow(const WindowProperties& properties = WindowProperties());
-		/// Deletes a window and disables ImGui if it was enabled with this window.
-		void deleteWindow(Window* window);
+		/// Destroys a window and disables ImGui if it was enabled with this window.
+		void destroyWindow(Window* window);
 
 		/// Enables or re-enables ImGui.
 		void enableImGui(Window* window);

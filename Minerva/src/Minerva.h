@@ -18,8 +18,15 @@
 #include "Minerva/Events/MouseEvent.h"
 
 ////////////////////////////////////////
+/////////////// Scene /////////////////
+#include "Minerva/Scene/Scene.h"
+#include "Minerva/Scene/Entity.h"
+#include "Minerva/Scene/Components.h"
+
+////////////////////////////////////////
 /////////////// Renderer ///////////////
 #include "Minerva/Renderer/Renderer.h"
+#include "Minerva/Renderer/Renderer2D.h"
 #include "Minerva/Renderer/RenderCommand.h"
 
 #include "Minerva/Renderer/Buffer.h"

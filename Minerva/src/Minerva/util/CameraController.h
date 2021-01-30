@@ -17,7 +17,7 @@ namespace Minerva
 			: m_camera(2.0f*aspectRatio*m_zoom, 2.0f*m_zoom), m_rotation(rotation),
 			m_aspectRatio(aspectRatio) {}
 
-		void onUpdate(float timeStep, const WindowInputState& inputState);
+		void onUpdate(float timeStep, const InputState& inputState);
 		bool onEvent(const Event& event);
 
 		OrthographicCamera& getCamera() { return m_camera; }
