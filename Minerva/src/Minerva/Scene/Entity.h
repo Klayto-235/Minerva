@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Scene.h"
+#include "Minerva/core/core.h"
+#include "Minerva/Scene/Scene.h"
 
 #include <entt.hpp>
 
 
 namespace Minerva
 {
+	class NativeScriptComponent;
 
 	class Entity
 	{
@@ -20,6 +22,12 @@ namespace Minerva
 		{
 			MN_CORE_ASSERT(!hasComponents<T>(), "Entity already has the specified component.");
 			return m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
+		}
+
+		template<typename T, typename ...Args>
+		NativeScriptComponent& addNativeScript(Args&&... args)
+		{
+			return addComponent<NativeScriptComponent>(createScope<T>(std::forward(args)...), *this);
 		}
 
 		template<typename ...T>

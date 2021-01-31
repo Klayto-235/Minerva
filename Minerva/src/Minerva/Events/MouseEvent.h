@@ -25,7 +25,7 @@ namespace Minerva
 	class MouseButtonPressEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressEvent(MouseButton button)
+		explicit MouseButtonPressEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 #if defined MN_ENABLE_DEBUG_CODE
@@ -43,7 +43,7 @@ namespace Minerva
 	class MouseButtonReleaseEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleaseEvent(MouseButton button)
+		explicit MouseButtonReleaseEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 #if defined MN_ENABLE_DEBUG_CODE

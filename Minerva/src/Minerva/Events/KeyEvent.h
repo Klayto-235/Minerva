@@ -16,7 +16,7 @@ namespace Minerva
 
 		EVENT_CLASS_CATEGORY(EventCategoryKey | EventCategoryInput)
 	protected:
-		KeyEvent(Key key)
+		explicit KeyEvent(Key key)
 			: m_key(key) {}
 
 		Key m_key;
@@ -48,7 +48,7 @@ namespace Minerva
 	class KeyReleaseEvent : public KeyEvent
 	{
 	public:
-		KeyReleaseEvent(Key key)
+		explicit KeyReleaseEvent(Key key)
 			: KeyEvent(key) {}
 
 #if defined MN_ENABLE_DEBUG_CODE
@@ -66,7 +66,7 @@ namespace Minerva
 	class TextCharEvent : public Event
 	{
 	public:
-		TextCharEvent(unsigned int codePoint)
+		explicit TextCharEvent(unsigned int codePoint)
 			: m_codePoint(codePoint) {}
 
 		unsigned int getCodePoint() const { return m_codePoint; }

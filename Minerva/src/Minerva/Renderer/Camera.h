@@ -10,7 +10,7 @@ namespace Minerva
 	{
 	public:
 		Camera() = default;
-		Camera(glm::mat4 projection)
+		explicit Camera(glm::mat4 projection)
 			: m_projection(projection) {}
 		virtual ~Camera() = default;
 

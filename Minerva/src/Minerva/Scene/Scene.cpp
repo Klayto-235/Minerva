@@ -29,7 +29,9 @@ namespace Minerva
 
 	void Scene::onUpdate(const float timeStep, const InputState& inputState)
 	{
-
+		auto view = m_registry.view<NativeScriptComponent>();
+		for (auto entity : view)
+			view.get<NativeScriptComponent>(entity).onUpdate(timeStep, inputState);
 	}
 
 	void Scene::onRender(Renderer2D& renderer2D)

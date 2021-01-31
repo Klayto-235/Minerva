@@ -102,7 +102,7 @@ namespace Minerva
 	class ProfileTimer
 	{
 	public:
-		ProfileTimer(const char* name)
+		explicit ProfileTimer(const char* name)
 			: m_name(name)
 		{
 			m_startTimePoint = std::chrono::steady_clock::now();

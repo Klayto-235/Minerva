@@ -9,7 +9,7 @@ namespace Minerva
 	class OpenGLFramebuffer: public Framebuffer
 	{
 	public:
-		OpenGLFramebuffer(const FramebufferProperties& properties);
+		explicit OpenGLFramebuffer(const FramebufferProperties& properties);
 		~OpenGLFramebuffer();
 
 		void invalidate();

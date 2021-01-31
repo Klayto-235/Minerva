@@ -11,7 +11,7 @@ namespace Minerva
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(const std::string& filePath);
+		explicit OpenGLTexture2D(const std::string& filePath);
 		OpenGLTexture2D(uint32_t width, uint32_t height);
 		~OpenGLTexture2D();
 

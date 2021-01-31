@@ -23,7 +23,7 @@ namespace Minerva
 		void add(Args&&... args)
 		{
 			static_assert(std::is_base_of<Event, T>::value,
-				MN_ASSERT_FUNC_SIG ": Invalid template argument.");
+				"Invalid template argument: event class must inherit from Event.");
 			m_buffer.push_back(new T(std::forward<Args>(args)...));
 		}
 		void clear()

@@ -8,7 +8,7 @@ namespace Minerva
     class ImGuiContext
     {
     public:
-        ImGuiContext(Window& window);
+        explicit ImGuiContext(Window& window);
         ~ImGuiContext();
 
         void beginFrame();
