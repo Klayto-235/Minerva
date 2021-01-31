@@ -24,10 +24,12 @@ namespace Minerva
 			return m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(args)...);
 		}
 
-		template<typename T, typename ...Args>
-		NativeScriptComponent& addNativeScript(Args&&... args)
+		template<typename T>
+		NativeScriptComponent& addNativeScript()
 		{
-			return addComponent<NativeScriptComponent>(createScope<T>(std::forward(args)...), *this);
+			auto& scriptComponent = addComponent<NativeScriptComponent>();
+			scriptComponent.bind<T>();
+			return scriptComponent;
 		}
 
 		template<typename ...T>

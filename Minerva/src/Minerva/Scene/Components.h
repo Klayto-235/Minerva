@@ -6,7 +6,6 @@
 #include "Minerva/core/InputState.h"
 
 #include <string>
-#include <type_traits>
 
 #include <glm/glm.hpp>
 
@@ -60,6 +59,12 @@ namespace Minerva
 	class NativeScriptBase
 	{
 	public:
+		virtual ~NativeScriptBase() = default;
+
+		virtual void onCreate() {}
+		virtual void onDestroy() {}
+		virtual void onUpdate(float timeStep, const InputState& inputState) {}
+
 		template<typename ...T>
 		decltype(auto) getComponents()
 		{
@@ -69,58 +74,22 @@ namespace Minerva
 	protected:
 		NativeScriptBase() = default;
 	private:
-		friend class NativeScriptComponent;
+		friend class Scene;
 
 		Entity m_entity;
 	};
 
-	class NativeScriptComponent
+	struct NativeScriptComponent
 	{
-	public:
+		Scope<NativeScriptBase> script;
+
+		NativeScriptBase* (*instantiateScript)();
+
 		template<typename T>
-		NativeScriptComponent(Scope<T>&& script, const Entity& entity)
-			: m_script(std::move(script))
+		void bind()
 		{
-			static_assert(std::is_base_of<NativeScriptBase, T>::value,
-				"Invalid template argument: native script class must inherit from NativeScriptBase.");
-
-			m_script->m_entity = entity;
-
-			impl_onCreate = [](NativeScriptBase* script) { static_cast<T*>(script)->onCreate(); };
-			impl_onDestroy = [](NativeScriptBase* script) { static_cast<T*>(script)->onDestroy(); };
-			impl_onUpdate = [](NativeScriptBase* script, float timeStep, const InputState& inputState)
-				{ static_cast<T*>(script)->onUpdate(timeStep, inputState); };
-			
-			impl_onCreate(m_script.get());
+			instantiateScript = []() { return static_cast<NativeScriptBase*>(new T()); };
 		}
-
-		NativeScriptComponent(const NativeScriptComponent& other) = delete;
-		NativeScriptComponent& operator=(const NativeScriptComponent& other) = delete;
-
-		NativeScriptComponent(NativeScriptComponent&& other) noexcept
-			: m_script(std::move(other.m_script)), impl_onCreate(std::move(other.impl_onCreate)),
-			impl_onDestroy(std::move(other.impl_onDestroy)), impl_onUpdate(std::move(other.impl_onUpdate)) {}
-		NativeScriptComponent& operator=(NativeScriptComponent&& other) noexcept
-		{
-			m_script = std::move(other.m_script);
-			impl_onCreate = std::move(other.impl_onCreate);
-			impl_onDestroy = std::move(other.impl_onDestroy);
-			impl_onUpdate = std::move(other.impl_onUpdate);
-			return *this;
-		}
-
-		~NativeScriptComponent() { impl_onDestroy(m_script.get()); }
-
-		void onCreate() { impl_onCreate(m_script.get()); }
-		void onDestroy() { impl_onDestroy(m_script.get()); }
-		void onUpdate(float timeStep, const InputState& inputState)
-			{ impl_onUpdate(m_script.get(), timeStep, inputState); }
-	private:
-		Scope<NativeScriptBase> m_script;
-
-		std::function<void(NativeScriptBase*)> impl_onCreate;
-		std::function<void(NativeScriptBase*)> impl_onDestroy;
-		std::function<void(NativeScriptBase*, float, const InputState&)> impl_onUpdate;
 	};
 
 }

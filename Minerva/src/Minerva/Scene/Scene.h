@@ -23,6 +23,8 @@ namespace Minerva
 
 		void setMainCamera(const Entity* camera) { m_mainCamera = camera; }
 
+		void onStart();
+		void onStop();
 		void onUpdate(const float timeStep, const InputState& inputState);
 		void onRender(Renderer2D& renderer2D);
 

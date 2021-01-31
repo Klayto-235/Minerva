@@ -27,11 +27,34 @@ namespace Minerva
 		return entity;
 	}
 
+	void Scene::onStart()
+	{
+		auto view = m_registry.view<NativeScriptComponent>();
+		for (auto entity : view)
+		{
+			auto& scriptComponent = view.get<NativeScriptComponent>(entity);
+			scriptComponent.script.reset(scriptComponent.instantiateScript());
+			scriptComponent.script->m_entity = { entity, this };
+			scriptComponent.script->onCreate();
+		}
+	}
+
+	void Scene::onStop()
+	{
+		auto view = m_registry.view<NativeScriptComponent>();
+		for (auto entity : view)
+		{
+			auto& scriptComponent = view.get<NativeScriptComponent>(entity);
+			scriptComponent.script->onDestroy();
+			scriptComponent.script.reset();
+		}
+	}
+
 	void Scene::onUpdate(const float timeStep, const InputState& inputState)
 	{
 		auto view = m_registry.view<NativeScriptComponent>();
 		for (auto entity : view)
-			view.get<NativeScriptComponent>(entity).onUpdate(timeStep, inputState);
+			view.get<NativeScriptComponent>(entity).script->onUpdate(timeStep, inputState);
 	}
 
 	void Scene::onRender(Renderer2D& renderer2D)
@@ -41,7 +64,7 @@ namespace Minerva
 			{
 				// entt::registry::get doesn't support const template parameters so we are using
 				// const_cast as a workaround.
-				auto& [cameraComponent, cameraTransformComponent] =
+				auto [cameraComponent, cameraTransformComponent] =
 					const_cast<Entity*>(m_mainCamera)->getComponents<CameraComponent, TransformComponent>();
 				renderer2D.beginScene(cameraComponent.camera, cameraTransformComponent.matrix);
 			}
@@ -49,7 +72,7 @@ namespace Minerva
 			auto group = m_registry.group<Transform2DComponent>(entt::get<SpriteRenderComponent>);
 			for (auto entity : group)
 			{
-				auto& [transformComponent, spriteRenderComponent] =
+				auto [transformComponent, spriteRenderComponent] =
 					group.get<Transform2DComponent, SpriteRenderComponent>(entity);
 
 				renderer2D.drawQuad(transformComponent.matrix, spriteRenderComponent.color, transformComponent.z);

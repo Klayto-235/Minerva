@@ -30,19 +30,13 @@ namespace Minerva
 		// Texture
 		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
 
-		// Scene & Camera
+		// Scene
+		m_activeScene = createRef<Scene>();
+
 		class CameraController : public NativeScriptBase
 		{
 		public:
-			void onCreate()
-			{
-			}
-
-			void onDestroy()
-			{
-			}
-
-			void onUpdate(float timeStep, const InputState& inputState)
+			void onUpdate(float timeStep, const InputState& inputState) override
 			{
 				auto& position = getComponents<TransformComponent>().matrix[3];
 				constexpr float speed = 1.0f;
@@ -57,8 +51,6 @@ namespace Minerva
 					position[1] += speed * timeStep;
 			}
 		};
-
-		m_activeScene = createRef<Scene>();
 		m_camera = m_activeScene->newEntity();
 		m_camera.addComponent<TransformComponent>();
 		auto& cameraComponent = m_camera.addComponent<CameraComponent>();
@@ -66,16 +58,19 @@ namespace Minerva
 		m_camera.addNativeScript<CameraController>();
 		m_activeScene->setMainCamera(&m_camera);
 
-		// My quad
 		auto quad = m_activeScene->newEntity("My quad");
 		quad.addComponent<Transform2DComponent>();
 		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 		m_quadEntity = quad;
+
+		m_activeScene->onStart();
 	}
 
 	void EditorLayer::onDetach()
 	{
 		MN_PROFILE_FUNCTION();
+
+		m_activeScene->onStop();
 	}
 
 	void EditorLayer::onUpdate(const float timeStep, const InputState& inputState)
