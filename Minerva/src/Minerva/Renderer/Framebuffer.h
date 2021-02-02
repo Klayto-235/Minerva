@@ -8,7 +8,7 @@ namespace Minerva
 
 	struct FramebufferProperties
 	{
-		uint32_t width, height;
+		uint32_t width = 0, height = 0;
 		bool swapChainTarget = false;
 	};
 

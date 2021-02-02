@@ -3,6 +3,9 @@
 **/bin-int/
 !vendor/premake/bin/
 
+# Premake
+vendor/premake/output/
+
 # Visual Studio
 .vs/
 **.sln

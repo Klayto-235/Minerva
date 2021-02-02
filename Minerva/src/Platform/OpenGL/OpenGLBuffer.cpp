@@ -176,7 +176,7 @@ namespace Minerva
 					componentType,
 					normalised,
 					stride,
-					reinterpret_cast<const void*>((uint64_t)(element.offset + 4*componentCount*i)));
+					reinterpret_cast<const void*>((uint64_t)element.offset + (uint64_t)(4*componentCount*i)));
 				++m_nAttributes;
 			}
 		}

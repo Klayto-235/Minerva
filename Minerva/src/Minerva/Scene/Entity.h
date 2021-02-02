@@ -8,7 +8,7 @@
 
 namespace Minerva
 {
-	class NativeScriptComponent;
+	struct NativeScriptComponent;
 
 	class Entity
 	{

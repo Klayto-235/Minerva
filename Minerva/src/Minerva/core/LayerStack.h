@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Minerva/core/core.h"
 #include "Minerva/core/Layer.h"
 
 #include <vector>

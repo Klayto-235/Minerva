@@ -58,7 +58,7 @@ namespace Minerva
 		int versionMinor;
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
-		MN_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5),
+		MN_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5),
 			"Minerva requires at least OpenGL version 4.5.");
 #endif
 
