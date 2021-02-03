@@ -31,6 +31,7 @@ namespace Minerva
 		void onViewportResize(uint32_t width, uint32_t height);
 	private:
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 
 		entt::registry m_registry;
 

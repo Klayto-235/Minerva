@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Panels/SceneHierarchyPanel.h"
+
 #include <Minerva/core/Layer.h>
 
 #include <imgui.h>
@@ -20,6 +22,8 @@ namespace Minerva
 		void onRender(Renderer2D& renderer2D) override;
 		void onImGuiRender() override;
 	private:
+		SceneHierarchyPanel m_sceneHierarchyPanel;
+
 		std::pair<uint32_t, uint32_t> m_viewportWindowSize = { 0, 0 };
 		bool m_overrideBlockEvents = false;
 

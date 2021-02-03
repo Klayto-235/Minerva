@@ -63,6 +63,8 @@ namespace Minerva
 		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 		m_quadEntity = quad;
 
+		m_sceneHierarchyPanel.setScene(m_activeScene);
+		
 		m_activeScene->onStart();
 	}
 
@@ -143,6 +145,8 @@ namespace Minerva
 
 		ImGui::End();
 		ImGui::PopStyleVar();
+
+		m_sceneHierarchyPanel.onImGuiRender();
 
 		if (ImGui::Begin("Settings"))
 		{

@@ -84,9 +84,7 @@ void Sandbox2D::onImGuiRender()
 		ImGui::End();
 	}
 
-	bool showImGuiDemo = false;
-	if(showImGuiDemo)
-		ImGui::ShowDemoWindow(&showImGuiDemo);
+	ImGui::ShowDemoWindow();
 }
 
 bool Sandbox2D::onEvent(const Minerva::Event& event)
