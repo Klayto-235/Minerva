@@ -17,12 +17,12 @@ namespace Minerva
 
 	Entity Scene::newEntity()
 	{
-		return { m_registry.create(), this };
+		return { m_registry.create(), &m_registry };
 	}
 
 	Entity Scene::newEntity(const std::string& name)
 	{
-		Entity entity = { m_registry.create(), this };
+		Entity entity = { m_registry.create(), &m_registry };
 		entity.addComponent<TagComponent>(name);
 		return entity;
 	}
@@ -34,7 +34,7 @@ namespace Minerva
 		{
 			auto& scriptComponent = view.get<NativeScriptComponent>(entity);
 			scriptComponent.script.reset(scriptComponent.instantiateScript());
-			scriptComponent.script->m_entity = { entity, this };
+			scriptComponent.script->m_entity = { entity, &m_registry };
 			scriptComponent.script->onCreate();
 		}
 	}
@@ -59,15 +59,11 @@ namespace Minerva
 
 	void Scene::onRender(Renderer2D& renderer2D)
 	{
-		if (m_mainCamera)
+		if (m_mainCameraEntity)
 		{
-			{
-				// entt::registry::get doesn't support const template parameters so we are using
-				// const_cast as a workaround.
-				auto [cameraComponent, cameraTransformComponent] =
-					const_cast<Entity*>(m_mainCamera)->getComponents<CameraComponent, TransformComponent>();
-				renderer2D.beginScene(cameraComponent.camera, cameraTransformComponent.matrix);
-			}
+			auto [cameraComponent, cameraTransformComponent] =
+				m_mainCameraEntity.getComponents<CameraComponent, TransformComponent>();
+			renderer2D.beginScene(cameraComponent.camera, cameraTransformComponent.matrix);
 
 			auto group = m_registry.group<Transform2DComponent>(entt::get<SpriteRenderComponent>);
 			for (auto entity : group)

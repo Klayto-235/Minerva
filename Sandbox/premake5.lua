@@ -19,7 +19,8 @@ project "Sandbox"
 		"%{includeDir.glm}",
 		"%{includeDir.imgui}",
 		"%{includeDir.entt}",
-		"%{wks.location}/Minerva/src"
+		"%{wks.location}/Minerva/src",
+		"src"
 	}
 
 	links

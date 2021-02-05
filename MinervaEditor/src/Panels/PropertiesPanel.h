@@ -7,18 +7,18 @@ namespace Minerva
 {
 	struct EditorState;
 
-	class SceneHierarchyPanel
+	class PropertiesPanel
 	{
 	public:
-		explicit SceneHierarchyPanel(EditorState* state)
+		explicit PropertiesPanel(EditorState* state)
 			: m_state(state) {}
 
 		void onImGuiRender();
 	private:
-		void drawEntityNode(Entity entity);
+		void drawSceneProperties(Scene* scene);
+		void drawEntityProperties(Entity entity);
 
 		EditorState* const m_state;
-		Entity m_selectedEntity{};
 	};
 
 }

@@ -7,20 +7,20 @@
 namespace Minerva
 {
 
-	SceneCamera::SceneCamera()
+	void SceneCamera::setPerspective(float yFOV, float zNear, float zFar, float aspectRatio)
 	{
+		m_projectionType = ProjectionType::Perspective;
+		m_perspectiveYFOV = yFOV;
+		m_perspectiveZNear = zNear;
+		m_perspectiveZFar = zFar;
+		if (aspectRatio != 0.0f)
+			m_aspectRatio = aspectRatio;
 		calculateProjection();
 	}
 
-	SceneCamera::SceneCamera(float yHalfSpan, float zNear, float zFar, float aspectRatio)
-		: m_orthographicYHalfSpan(yHalfSpan), m_aspectRatio(aspectRatio),
-		m_orthographicZNear(zNear), m_orthographicZFar(zFar)
+	void SceneCamera::setOrthographic(float yHalfSpan, float zNear, float zFar, float aspectRatio)
 	{
-		calculateProjection();
-	}
-
-	void SceneCamera::setOrthographicProjection(float yHalfSpan, float zNear, float zFar, float aspectRatio)
-	{
+		m_projectionType = ProjectionType::Orthographic;
 		m_orthographicYHalfSpan = yHalfSpan;
 		m_orthographicZNear = zNear;
 		m_orthographicZFar = zFar;
@@ -31,13 +31,20 @@ namespace Minerva
 
 	void SceneCamera::calculateProjection()
 	{
-		m_projection = glm::ortho(
-			-m_orthographicYHalfSpan * m_aspectRatio,
-			m_orthographicYHalfSpan * m_aspectRatio,
-			-m_orthographicYHalfSpan,
-			m_orthographicYHalfSpan,
-			m_orthographicZNear,
-			m_orthographicZFar);
+		if (m_projectionType == ProjectionType::Perspective)
+			m_projection = glm::perspective(
+				m_perspectiveYFOV,
+				m_aspectRatio,
+				m_perspectiveZNear,
+				m_perspectiveZFar);
+		else
+			m_projection = glm::ortho(
+				-m_orthographicYHalfSpan * m_aspectRatio,
+				m_orthographicYHalfSpan * m_aspectRatio,
+				-m_orthographicYHalfSpan,
+				m_orthographicYHalfSpan,
+				m_orthographicZNear,
+				m_orthographicZFar);
 	}
 
 }

@@ -2,6 +2,7 @@
 
 #include "Minerva/core/InputState.h"
 #include "Minerva/Renderer/Renderer2D.h"
+#include "Minerva/Scene/Entity.h"
 
 #include <string>
 
@@ -10,7 +11,6 @@
 
 namespace Minerva
 {
-	class Entity;
 
 	class Scene
 	{
@@ -21,7 +21,7 @@ namespace Minerva
 		Entity newEntity();
 		Entity newEntity(const std::string& name);
 
-		void setMainCamera(const Entity* camera) { m_mainCamera = camera; }
+		void setMainCamera(Entity camera) { m_mainCameraEntity = camera; }
 
 		void onStart();
 		void onStop();
@@ -30,12 +30,12 @@ namespace Minerva
 
 		void onViewportResize(uint32_t width, uint32_t height);
 	private:
-		friend class Entity;
 		friend class SceneHierarchyPanel;
+		friend class PropertiesPanel;
 
 		entt::registry m_registry;
 
-		const Entity* m_mainCamera = nullptr;
+		Entity m_mainCameraEntity;
 	};
 
 }

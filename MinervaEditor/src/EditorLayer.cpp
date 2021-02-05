@@ -1,5 +1,3 @@
-#include <Minerva.h>
-
 #include "EditorLayer.h"
 
 #include <imgui.h>
@@ -12,7 +10,8 @@ namespace Minerva
 {
 
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer")//, m_cameraController(1280.0f / 720.0f)
+		: Layer("EditorLayer"), m_sceneHierarchyPanel(&m_state), m_propertiesPanel(&m_state)
+		//, m_cameraController(1280.0f / 720.0f)
 	{
 		MN_PROFILE_FUNCTION();
 	}
@@ -55,16 +54,22 @@ namespace Minerva
 		m_camera.addComponent<TransformComponent>();
 		auto& cameraComponent = m_camera.addComponent<CameraComponent>();
 		cameraComponent.camera.setAspectRatio(1280.0f / 720.0f);
+		cameraComponent.camera.setProjectionType(SceneCamera::ProjectionType::Orthographic);
 		m_camera.addNativeScript<CameraController>();
-		m_activeScene->setMainCamera(&m_camera);
+		m_activeScene->setMainCamera(m_camera);
+
+		auto redSquare = m_activeScene->newEntity("Red square");
+		redSquare.addComponent<Transform2DComponent>().matrix[2][0] = 0.2f;
+		redSquare.addComponent<SpriteRenderComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 		auto quad = m_activeScene->newEntity("My quad");
 		quad.addComponent<Transform2DComponent>();
 		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 		m_quadEntity = quad;
 
-		m_sceneHierarchyPanel.setScene(m_activeScene);
-		
+		m_state.scene = { EditorContext::Type::Scene, m_activeScene.get() };
+		m_state.selection = m_state.scene;
+
 		m_activeScene->onStart();
 	}
 
@@ -147,6 +152,7 @@ namespace Minerva
 		ImGui::PopStyleVar();
 
 		m_sceneHierarchyPanel.onImGuiRender();
+		m_propertiesPanel.onImGuiRender();
 
 		if (ImGui::Begin("Settings"))
 		{

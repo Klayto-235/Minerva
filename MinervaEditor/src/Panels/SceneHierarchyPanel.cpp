@@ -1,4 +1,5 @@
-#include "SceneHierarchyPanel.h"
+#include "Panels/SceneHierarchyPanel.h"
+#include "EditorLayer.h"
 
 #include <imgui.h>
 
@@ -6,45 +7,52 @@
 namespace Minerva
 {
 
-	void SceneHierarchyPanel::setScene(const Ref<Scene>& scene)
-	{
-		m_scene = scene;
-	}
-
 	void SceneHierarchyPanel::onImGuiRender()
 	{
-		ImGui::Begin("Scene Hierarchy");
-
-		auto scene = m_scene.get();
-		m_scene->m_registry.each([&](auto entityHandle)
+		if (ImGui::Begin("Scene Hierarchy"))
 		{
-			drawEntityNode({ entityHandle , scene });
-		});
+			ImGuiTreeNodeFlags flags = ((m_state->selection == m_state->scene) ? ImGuiTreeNodeFlags_Selected : 0)
+				| ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnDoubleClick
+				| ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+			if (ImGui::TreeNodeEx(m_state->scene.ptr, flags, "Scene"))
+			{
+				if (ImGui::IsItemClicked())
+				{
+					m_selectedEntity = {};
+					m_state->selection = m_state->scene;
+				}
 
+				auto scene = static_cast<Scene*>(m_state->scene.ptr);
+				scene->m_registry.each([=](auto entityHandle)
+				{
+					drawEntityNode({ entityHandle , &scene->m_registry });
+				});
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+				m_state->selection = {};
+		}
 		ImGui::End();
 	}
 
 	void SceneHierarchyPanel::drawEntityNode(Entity entity)
 	{
+		const bool selected = m_selectedEntity == entity &&
+			(m_state->selection == EditorContext{ EditorContext::Type::Entity, &m_selectedEntity });
+		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0)
+			| ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 		auto tagComponent = entity.tryGetComponents<TagComponent>();
-		ImGuiTreeNodeFlags flags = ((m_selectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0)
-			| ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanAvailWidth;
 		
-		bool opened;
-		if (tagComponent)
-			opened = ImGui::TreeNodeEx(reinterpret_cast<void*>((uint64_t)(uint32_t)entity), flags, tagComponent->name.c_str());
-		else
-		{
-			ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.7f, 0.7f, 1.0f });
-			opened = ImGui::TreeNodeEx(reinterpret_cast<void*>((uint64_t)(uint32_t)entity), flags, "Unnamed Entity");
-			ImGui::PopStyleColor();
-		}
+		ImGui::TreeNodeEx(reinterpret_cast<void*>((uint64_t)(uint32_t)entity), flags,
+			tagComponent ? tagComponent->name.c_str() : "Unnamed Entity");
 
 		if (ImGui::IsItemClicked())
+		{
 			m_selectedEntity = entity;
-
-		if (opened)
-			ImGui::TreePop();
+			m_state->selection = { EditorContext::Type::Entity, &m_selectedEntity };
+		}
 	}
 
 }
