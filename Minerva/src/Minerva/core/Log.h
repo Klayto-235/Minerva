@@ -2,8 +2,10 @@
 
 #include "Minerva/core/core.h"
 
+#pragma warning(push, 0) // This probably isn't portable?
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#pragma warning(pop)
 
 
 namespace Minerva

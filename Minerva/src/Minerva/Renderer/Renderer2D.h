@@ -50,8 +50,8 @@ namespace Minerva
 			uint32_t nDrawCalls = 0;
 			uint32_t nQuads = 0;
 
-			uint32_t getVertexCount() { return 4*nQuads; }
-			uint32_t getIndexCount() { return 6*nQuads; }
+			uint32_t getVertexCount() const { return 4*nQuads; }
+			uint32_t getIndexCount() const { return 6*nQuads; }
 		};
 		void resetStatistics() { m_statistics = {}; }
 		const Statistics& getStatistics() const { return m_statistics; }
