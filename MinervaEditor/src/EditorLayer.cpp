@@ -11,7 +11,6 @@ namespace Minerva
 
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer"), m_sceneHierarchyPanel(&m_state), m_propertiesPanel(&m_state)
-		//, m_cameraController(1280.0f / 720.0f)
 	{
 		MN_PROFILE_FUNCTION();
 	}
@@ -26,9 +25,6 @@ namespace Minerva
 		framebufferProperties.height = 720;
 		m_framebuffer = Framebuffer::create(framebufferProperties);
 
-		// Texture
-		m_chessboardTexture = Texture2D::create("assets/textures/chess_board.png");
-
 		// Scene
 		m_activeScene = createRef<Scene>();
 
@@ -37,35 +33,40 @@ namespace Minerva
 		public:
 			void onUpdate(float timeStep, const InputState& inputState) override
 			{
-				auto& position = getComponents<TransformComponent>().matrix[3];
-				constexpr float speed = 1.0f;
+				auto& translation = getComponents<TransformComponent>().translation;
+				constexpr float speed = 2.0f;
 
 				if (inputState.isKeyPressed(Key::A))
-					position[0] += speed * timeStep;
+					translation.x -= speed * timeStep;
 				if (inputState.isKeyPressed(Key::D))
-					position[0] -= speed * timeStep;
+					translation.x += speed * timeStep;
 				if (inputState.isKeyPressed(Key::W))
-					position[1] -= speed * timeStep;
+					translation.y += speed * timeStep;
 				if (inputState.isKeyPressed(Key::S))
-					position[1] += speed * timeStep;
+					translation.y -= speed * timeStep;
 			}
 		};
-		m_camera = m_activeScene->newEntity();
-		m_camera.addComponent<TransformComponent>();
-		auto& cameraComponent = m_camera.addComponent<CameraComponent>();
+		auto camera = m_activeScene->newEntity("Camera 1");
+		camera.addComponent<TransformComponent>();
+		auto& cameraComponent = camera.addComponent<CameraComponent>();
 		cameraComponent.camera.setAspectRatio(1280.0f / 720.0f);
 		cameraComponent.camera.setProjectionType(SceneCamera::ProjectionType::Orthographic);
-		m_camera.addNativeScript<CameraController>();
-		m_activeScene->setMainCamera(m_camera);
+		camera.addNativeScript<CameraController>();
+		m_activeScene->setMainCamera(camera);
+
+		auto camera2 = m_activeScene->newEntity("Camera 2");
+		camera2.addComponent<TransformComponent>();
+		auto& cameraComponent2 = camera2.addComponent<CameraComponent>();
+		cameraComponent2.camera.setAspectRatio(1280.0f / 720.0f);
+		cameraComponent2.camera.setProjectionType(SceneCamera::ProjectionType::Orthographic);
 
 		auto redSquare = m_activeScene->newEntity("Red square");
-		redSquare.addComponent<Transform2DComponent>().matrix[2][0] = 0.2f;
+		redSquare.addComponent<TransformComponent>().translation.x = 0.2f;
 		redSquare.addComponent<SpriteRenderComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
 		auto quad = m_activeScene->newEntity("My quad");
-		quad.addComponent<Transform2DComponent>();
+		quad.addComponent<TransformComponent>();
 		quad.addComponent<SpriteRenderComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-		m_quadEntity = quad;
 
 		m_state.scene = { EditorContext::Type::Scene, m_activeScene.get() };
 		m_state.selection = m_state.scene;
@@ -154,7 +155,7 @@ namespace Minerva
 		m_sceneHierarchyPanel.onImGuiRender();
 		m_propertiesPanel.onImGuiRender();
 
-		if (ImGui::Begin("Settings"))
+		if (ImGui::Begin("Statistics"))
 		{
 #if defined MN_ENABLE_DEBUG_CODE
 			ImGui::Text("Renderer2D Stats:");
@@ -163,16 +164,6 @@ namespace Minerva
 			ImGui::Text("Vertices: %d", m_renderer2DStatistics.getVertexCount());
 			ImGui::Text("Indices: %d", m_renderer2DStatistics.getIndexCount());
 #endif
-			if (m_quadEntity)
-			{
-				ImGui::Separator();
-				auto& name = m_quadEntity.getComponents<TagComponent>().name;
-				ImGui::Text("%s", name.c_str());
-				auto& color = m_quadEntity.getComponents<SpriteRenderComponent>().color;
-				ImGui::ColorEdit4("Color", glm::value_ptr(color));
-			}
-
-			ImGui::DragFloat3("Camera position", glm::value_ptr(m_camera.getComponents<TransformComponent>().matrix[3]));
 		}
 		ImGui::End();
 	}

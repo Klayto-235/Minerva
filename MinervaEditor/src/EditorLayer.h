@@ -50,14 +50,7 @@ namespace Minerva
 
 		Ref<Framebuffer> m_framebuffer;
 
-		Ref<Texture2D> m_chessboardTexture;
-
 		Ref<Scene> m_activeScene;
-		Entity m_quadEntity{};
-		Entity m_camera{};
-
-		glm::vec4 m_quadColor = { 0.2f, 0.3f, 0.8f, 1.0f };
-		float m_quadRotation = 0.0f;
 
 #if defined MN_ENABLE_DEBUG_CODE
 		Renderer2D::Statistics m_renderer2DStatistics;

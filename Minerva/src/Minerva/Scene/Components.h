@@ -8,6 +8,7 @@
 #include <string>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 namespace Minerva
@@ -24,21 +25,31 @@ namespace Minerva
 
 	struct TransformComponent
 	{
-		glm::mat4 matrix{ 1.0f };
+		glm::vec3 translation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 rotation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 scale = { 1.0f, 1.0f, 1.0f };
 
-		TransformComponent() = default;
-		explicit TransformComponent(const glm::mat4& transform)
-			: matrix(transform) {}
-	};
+		glm::mat4 getTransform(bool inverse = false) const
+		{
+			if (inverse)
+			{
+				glm::mat4 rotationMatrix =
+					glm::rotate(glm::mat4(1.0f), -rotation.x, { 1, 0, 0 }) *
+					glm::rotate(glm::mat4(1.0f), -rotation.y, { 0, 1, 0 }) *
+					glm::rotate(glm::mat4(1.0f), -rotation.z, { 0, 0, 1 });
 
-	struct Transform2DComponent
-	{
-		glm::mat3 matrix{ 1.0f };
-		float z = 0.0f;
+				return glm::scale(glm::translate(glm::mat4(1.0f), -translation) * rotationMatrix, glm::vec3(1.0f)/scale);
+			}
+			else
+			{
+				glm::mat4 rotationMatrix =
+					glm::rotate(glm::mat4(1.0f), rotation.x, { 1, 0, 0 }) *
+					glm::rotate(glm::mat4(1.0f), rotation.y, { 0, 1, 0 }) *
+					glm::rotate(glm::mat4(1.0f), rotation.z, { 0, 0, 1 });
 
-		Transform2DComponent() = default;
-		Transform2DComponent(const glm::mat3& transform, float z = 0.0f)
-			: matrix(transform), z(z) {}
+				return glm::scale(glm::translate(glm::mat4(1.0f), translation) * rotationMatrix, scale);
+			}
+		}
 	};
 
 	struct SpriteRenderComponent

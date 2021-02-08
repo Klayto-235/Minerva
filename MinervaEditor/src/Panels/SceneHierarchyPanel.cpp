@@ -11,17 +11,17 @@ namespace Minerva
 	{
 		if (ImGui::Begin("Scene Hierarchy"))
 		{
-			ImGuiTreeNodeFlags flags = ((m_state->selection == m_state->scene) ? ImGuiTreeNodeFlags_Selected : 0)
+			const ImGuiTreeNodeFlags flags = ((m_state->selection == m_state->scene) ? ImGuiTreeNodeFlags_Selected : 0)
 				| ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnDoubleClick
 				| ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-			if (ImGui::TreeNodeEx(m_state->scene.ptr, flags, "Scene"))
+			bool opened = ImGui::TreeNodeEx(m_state->scene.ptr, flags, "Scene");
+			if (ImGui::IsItemClicked())
 			{
-				if (ImGui::IsItemClicked())
-				{
-					m_selectedEntity = {};
-					m_state->selection = m_state->scene;
-				}
+				m_selectedEntity = {};
+				m_state->selection = m_state->scene;
+			}
 
+			if (opened) {
 				auto scene = static_cast<Scene*>(m_state->scene.ptr);
 				scene->m_registry.each([=](auto entityHandle)
 				{
@@ -41,7 +41,7 @@ namespace Minerva
 	{
 		const bool selected = m_selectedEntity == entity &&
 			(m_state->selection == EditorContext{ EditorContext::Type::Entity, &m_selectedEntity });
-		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0)
+		const ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0)
 			| ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 		auto tagComponent = entity.tryGetComponents<TagComponent>();
 		

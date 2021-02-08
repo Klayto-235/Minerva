@@ -15,9 +15,6 @@ namespace Minerva
 	class Scene
 	{
 	public:
-		Scene();
-		~Scene();
-
 		Entity newEntity();
 		Entity newEntity(const std::string& name);
 

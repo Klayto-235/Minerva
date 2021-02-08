@@ -7,14 +7,6 @@
 namespace Minerva
 {
 
-	Scene::Scene()
-	{
-	}
-
-	Scene::~Scene()
-	{
-	}
-
 	Entity Scene::newEntity()
 	{
 		return { m_registry.create(), &m_registry };
@@ -63,15 +55,15 @@ namespace Minerva
 		{
 			auto [cameraComponent, cameraTransformComponent] =
 				m_mainCameraEntity.getComponents<CameraComponent, TransformComponent>();
-			renderer2D.beginScene(cameraComponent.camera, cameraTransformComponent.matrix);
+			renderer2D.beginScene(cameraComponent.camera, cameraTransformComponent.getTransform(true));
 
-			auto group = m_registry.group<Transform2DComponent>(entt::get<SpriteRenderComponent>);
+			auto group = m_registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
 			for (auto entity : group)
 			{
 				auto [transformComponent, spriteRenderComponent] =
-					group.get<Transform2DComponent, SpriteRenderComponent>(entity);
+					group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-				renderer2D.drawQuad(transformComponent.matrix, spriteRenderComponent.color, transformComponent.z);
+				renderer2D.drawQuad(transformComponent.getTransform(), spriteRenderComponent.color);
 			}
 
 			renderer2D.endScene();
