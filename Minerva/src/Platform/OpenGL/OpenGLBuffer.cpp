@@ -13,7 +13,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glCreateBuffers(1, &m_renderID);
+		glGenBuffers(1, &m_renderID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
@@ -22,7 +22,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glCreateBuffers(1, &m_renderID);
+		glGenBuffers(1, &m_renderID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 		{
 			MN_PROFILE_SCOPE("Upload data - OpenGLVertexBuffer::OpenGLVertexBuffer");
@@ -67,7 +67,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glCreateBuffers(1, &m_renderID);
+		glGenBuffers(1, &m_renderID);
 		// GL_ELEMENT_ARRAY_BUFFER requires a VA to be bound, GL_ARRAY_BUFFER allows loading data without VA.
 		glBindBuffer(GL_ARRAY_BUFFER, m_renderID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
@@ -123,7 +123,7 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glCreateVertexArrays(1, &m_renderID);
+		glGenVertexArrays(1, &m_renderID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()

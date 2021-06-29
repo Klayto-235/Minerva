@@ -38,19 +38,20 @@ namespace Minerva
 			m_dataFormat = GL_RGB;
 		}
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID);
+		glGenTextures(1, &m_renderID);
+		glBindTexture(GL_TEXTURE_2D, m_renderID);
 
-		glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height);
+		glTexImage2D(GL_TEXTURE_2D, 1, m_internalFormat, m_width, m_height, 0, m_dataFormat, GL_UNSIGNED_BYTE, nullptr);
 		{
 			MN_PROFILE_SCOPE("Upload data - OpenGLTexture2D::OpenGLTexture2D");
 
-			glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height,
+			glTextureSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height,
 				m_dataFormat, GL_UNSIGNED_BYTE, data);
 		}
 
@@ -62,15 +63,16 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_renderID);
+		glGenTextures(1, &m_renderID);
+		glBindTexture(GL_TEXTURE_2D, m_renderID);
 
-		glTextureParameteri(m_renderID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_renderID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(m_renderID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTextureStorage2D(m_renderID, 1, m_internalFormat, m_width, m_height);
+		glTexImage2D(GL_TEXTURE_2D, 1, m_internalFormat, m_width, m_height, 0, m_dataFormat, GL_UNSIGNED_BYTE, nullptr);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -86,7 +88,8 @@ namespace Minerva
 
 		MN_CORE_ASSERT(size == m_width * m_height * (m_dataFormat == GL_RGBA ? 4 : 3),
 			"Parameter size must be equal to texture size.");
-		glTextureSubImage2D(m_renderID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
+		glBindTexture(GL_TEXTURE_2D, m_renderID);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::bind(uint32_t slot) const

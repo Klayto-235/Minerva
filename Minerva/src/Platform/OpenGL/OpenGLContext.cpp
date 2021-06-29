@@ -58,16 +58,12 @@ namespace Minerva
 		int versionMinor;
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
-		MN_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5),
-			"Minerva requires at least OpenGL version 4.5.");
+		MN_CORE_ASSERT(GLVersion.major > 3 || (GLVersion.major == 3 && GLVersion.minor >= 3),
+			"Minerva requires at least OpenGL version 3.3.");
 #endif
 
 #ifdef MN_ENABLE_OPENGL_ERRORS
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(OpenGLDebugMessageCallback, static_cast<void*>(this));
-
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+	#pragma message ("MN_ENABLE_OPENGL_ERRORS has no effect with OpenGL 3.3")
 #endif
 	}
 

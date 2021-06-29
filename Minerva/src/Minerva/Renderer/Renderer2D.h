@@ -71,7 +71,7 @@ namespace Minerva
 		static constexpr uint32_t sc_maxQuads = 10000;
 		static constexpr uint32_t sc_maxVertices = 4*sc_maxQuads;
 		static constexpr uint32_t sc_maxIndices = 6*sc_maxQuads;
-		static constexpr uint32_t sc_maxTextureSlots = 16;
+		static constexpr uint32_t sc_maxTextureSlots = 8;
 
 		static constexpr glm::vec4 sc_quadVertexPositionsVec4[4] = {
 			{ -0.5f, -0.5f, 0.0f, 1.0f },

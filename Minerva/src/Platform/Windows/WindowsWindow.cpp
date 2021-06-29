@@ -19,8 +19,8 @@ namespace Minerva
 	{
 		MN_PROFILE_FUNCTION();
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #if defined(MN_ENABLE_OPENGL_ERRORS)
 		// Yes, the if statement should be here. This code should be RenderAPI agnostic.
