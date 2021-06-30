@@ -55,7 +55,11 @@ namespace Minerva
 
 #if defined MN_ENABLE_ASSERTS
 		int versionMajor;
-		int versionMinor;
+		int versionMinor;glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(OpenGLDebugMessageCallback, static_cast<void*>(this));
+
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 		MN_CORE_ASSERT(GLVersion.major > 3 || (GLVersion.major == 3 && GLVersion.minor >= 3),
@@ -63,7 +67,18 @@ namespace Minerva
 #endif
 
 #ifdef MN_ENABLE_OPENGL_ERRORS
-	#pragma message ("MN_ENABLE_OPENGL_ERRORS has no effect with OpenGL 3.3")
+		if (GLAD_GL_KHR_debug)
+		{
+			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			glDebugMessageCallback(OpenGLDebugMessageCallback, static_cast<void*>(this));
+			
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+		}
+		else
+		{
+			MN_CORE_WARN("OpenGL error callback not supported (OpenGL debug messages will not be logged).");
+		}
 #endif
 	}
 
