@@ -15,7 +15,7 @@ namespace Minerva
 		ImVec2 buttonSize = { frameHeight + 3.0f, frameHeight };
 
 		ImGui::PushID(&vector);
-		uint32_t width = (uint32_t)(ImGui::CalcItemWidth() / 0.65f - 3 * buttonSize.x);
+		uint32_t width = (uint32_t)(ImGui::GetContentRegionAvail().x - 3 * buttonSize.x);
 		ImGui::PushItemWidth((float)(width / 3 + width % 3));
 		ImGui::PushItemWidth((float)(width / 3));
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
@@ -81,26 +81,60 @@ namespace Minerva
 
 	void PropertiesPanel::drawSceneProperties(Scene* scene)
 	{
-		auto tagComponent = scene->m_mainCameraEntity.tryGetComponents<TagComponent>();
-		if (ImGui::BeginCombo("Main Camera", tagComponent ? tagComponent->name.c_str() : "Unnamed Entity"))
+		if (ImGui::BeginTable("##table", 2, ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit))
 		{
-			auto view = scene->m_registry.view<CameraComponent>();
-			for (auto entityHandle : view)
+			ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None, 80.0f);
+			ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthStretch);
+
+			nextControl("Main Camera");
+			ImGui::PushItemWidth(-FLT_MIN);
+			auto tagComponent = scene->m_mainCameraEntity.tryGetComponents<TagComponent>();
+			bool beginCombo;
+			if (tagComponent)
 			{
-				Entity entity{ entityHandle, &scene->m_registry };
-				tagComponent = entity.tryGetComponents<TagComponent>();
-
-				ImGui::PushID((uint32_t)entity);
-				bool selected = (entity == scene->m_mainCameraEntity);
-				if (ImGui::Selectable(tagComponent ? tagComponent->name.c_str() : "Unnamed Entity", selected))
-					scene->m_mainCameraEntity = entity;
-
-				if (selected)
-					ImGui::SetItemDefaultFocus();
-				ImGui::PopID();
+				beginCombo = ImGui::BeginCombo("", tagComponent->name.c_str());
 			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+				beginCombo = ImGui::BeginCombo("", "Unnamed Entity");
+				ImGui::PopStyleColor();
+			}
+			if (beginCombo)
+			{
+				auto view = scene->m_registry.view<CameraComponent>();
+				for (auto entityHandle : view)
+				{
+					Entity entity{ entityHandle, scene };
+					tagComponent = entity.tryGetComponents<TagComponent>();
 
-			ImGui::EndCombo();
+					ImGui::PushID((uint32_t)entity);
+					bool selected = (entity == scene->m_mainCameraEntity);
+					bool newlySelected;
+					if (tagComponent)
+					{
+						newlySelected = ImGui::Selectable(tagComponent->name.c_str(), selected);
+					}
+					else
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+						newlySelected = ImGui::Selectable("Unnamed Entity", selected);
+						ImGui::PopStyleColor();
+					}
+					if (newlySelected)
+						scene->m_mainCameraEntity = entity;
+
+					if (selected)
+						ImGui::SetItemDefaultFocus();
+					
+					ImGui::PopID();
+				}
+
+				ImGui::EndCombo();
+			}
+			ImGui::PopItemWidth();
+
+			ImGui::EndTable();
 		}
 	}
 
@@ -111,7 +145,9 @@ namespace Minerva
 			ImGuiTreeNodeFlags_DefaultOpen;
 		ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2{ 5.0f, 0.0f });
 
-		auto tagComponent = entity.tryGetComponents<TagComponent>();
+		auto [tagComponent, transformComponent, cameraComponent, spriteRenderComponent]
+			= entity.tryGetComponents<TagComponent, TransformComponent, CameraComponent, SpriteRenderComponent>();
+
 		if (tagComponent)
 		{
 			if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(TagComponent).hash_code()), treeNodeFlags, "Tag"))
@@ -124,7 +160,7 @@ namespace Minerva
 					nextControl("Name");
 					char buffer[256] = { 0 };
 					strcpy_s(buffer, sizeof(buffer), tagComponent->name.c_str());
-					ImGui::PushItemWidth(ImGui::CalcItemWidth() / 0.65f);
+					ImGui::PushItemWidth(-FLT_MIN);
 					if (ImGui::InputText("", buffer, sizeof(buffer)))
 						tagComponent->name = std::string(buffer);
 					ImGui::PopItemWidth();
@@ -136,7 +172,6 @@ namespace Minerva
 			}
 		}
 
-		auto transformComponent = entity.tryGetComponents<TransformComponent>();
 		if (transformComponent)
 		{
 			if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(TransformComponent).hash_code()), treeNodeFlags, "Transform"))
@@ -164,7 +199,6 @@ namespace Minerva
 			}
 		}
 
-		auto cameraComponent = entity.tryGetComponents<CameraComponent>();
 		if (cameraComponent)
 		{
 			if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(CameraComponent).hash_code()), treeNodeFlags, "Camera"))
@@ -177,7 +211,7 @@ namespace Minerva
 					auto& camera = cameraComponent->camera;
 
 					nextControl("Projection");
-					ImGui::PushItemWidth(ImGui::CalcItemWidth() / 0.65f);
+					ImGui::PushItemWidth(-FLT_MIN);
 					const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 					const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.getProjectionType()];
 					if (ImGui::BeginCombo("##a", currentProjectionTypeString))
@@ -249,7 +283,6 @@ namespace Minerva
 			}
 		}
 		
-		auto spriteRenderComponent = entity.tryGetComponents<SpriteRenderComponent>();
 		if (spriteRenderComponent)
 		{
 			if (ImGui::TreeNodeEx(reinterpret_cast<void*>(typeid(SpriteRenderComponent).hash_code()), treeNodeFlags, "Sprite Render"))
@@ -263,7 +296,7 @@ namespace Minerva
 					ImGui::TableSetColumnIndex(0);
 					ImGui::Text("Color");
 					ImGui::TableSetColumnIndex(1);
-					ImGui::PushItemWidth(ImGui::CalcItemWidth() / 0.65f);
+					ImGui::PushItemWidth(-FLT_MIN);
 					ImGui::ColorEdit4("", glm::value_ptr(spriteRenderComponent->color));
 					ImGui::PopItemWidth();
 

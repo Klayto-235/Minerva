@@ -91,7 +91,7 @@ namespace Minerva
 			&& m_viewportWindowSize.first != 0 && m_viewportWindowSize.second != 0)
 		{
 			m_framebuffer->resize(m_viewportWindowSize.first, m_viewportWindowSize.second);
-			m_activeScene->onViewportResize(m_viewportWindowSize.first, m_viewportWindowSize.second);
+			m_activeScene->setViewportSize(m_viewportWindowSize.first, m_viewportWindowSize.second);
 		}
 
 		m_activeScene->onUpdate(timeStep, inputState);

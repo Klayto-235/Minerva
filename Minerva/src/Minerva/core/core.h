@@ -8,7 +8,7 @@
 #endif
 
 #define MN_ASSERT_FUNC_SIG __FUNCTION__
-#define MN_DEBUG_BREAK() __debugbreak() // make portable
+#define MN_DEBUG_BREAK() __debugbreak() // TODO: make portable
 
 #ifdef MN_ENABLE_ASSERTS
 	#define VA_ARGS(...) , ##__VA_ARGS__
