@@ -54,6 +54,8 @@ namespace Minerva
 
 #if defined MN_ENABLE_DEBUG_CODE
 		Renderer2D::Statistics m_renderer2DStatistics;
+
+		bool m_showImGuiDemoWindow = false;
 #endif
 	};
 

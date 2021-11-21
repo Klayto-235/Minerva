@@ -126,12 +126,18 @@ namespace Minerva
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				bool exitSelected = false;
-				ImGui::MenuItem("Exit", nullptr, &exitSelected);
-				if (exitSelected)
+				if (ImGui::MenuItem("Exit", nullptr, nullptr))
 					Application::get().stop();
 				ImGui::EndMenu();
 			}
+
+#if defined MN_ENABLE_DEBUG_CODE
+			if (ImGui::BeginMenu("Debug"))
+			{
+				ImGui::MenuItem("Show ImGui Demo Window", nullptr, &m_showImGuiDemoWindow);
+				ImGui::EndMenu();
+			}
+#endif
 
 			ImGui::EndMainMenuBar();
 		}
@@ -166,6 +172,11 @@ namespace Minerva
 #endif
 		}
 		ImGui::End();
+
+#if defined MN_ENABLE_DEBUG_CODE
+		if (m_showImGuiDemoWindow)
+			ImGui::ShowDemoWindow(&m_showImGuiDemoWindow);
+#endif
 	}
 
 	bool EditorLayer::onEvent(const Event& event)

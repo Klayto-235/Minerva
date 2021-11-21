@@ -18,6 +18,10 @@ namespace Minerva
 			enableImGui(m_window);
 
 			m_window->pushLayer(m_window->newLayer<EditorLayer>());
+
+			ImGuiIO& io = ImGui::GetIO();
+			io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/roboto/Roboto-Regular.ttf", 15.0);
+			io.Fonts->AddFontFromFileTTF("assets/fonts/roboto/Roboto-Bold.ttf", 15.0);
 		}
 
 		~MinervaEditor()
