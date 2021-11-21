@@ -35,7 +35,7 @@ namespace Minerva
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##X", &vector.x, speed, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##X", &vector.x, speed, 0.0f, 0.0f, "%.3f");
 
 		ImGui::SameLine();
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
@@ -48,7 +48,7 @@ namespace Minerva
 		ImGui::PopStyleColor(3);
 
 		ImGui::SameLine();
-		ImGui::DragFloat("##Y", &vector.y, speed, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Y", &vector.y, speed, 0.0f, 0.0f, "%.3f");
 
 		ImGui::SameLine();
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
@@ -62,7 +62,7 @@ namespace Minerva
 
 		ImGui::SameLine();
 		ImGui::PopItemWidth();
-		ImGui::DragFloat("##Z", &vector.z, speed, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("##Z", &vector.z, speed, 0.0f, 0.0f, "%.3f");
 
 		ImGui::PopItemWidth();
 		ImGui::PopStyleVar();
