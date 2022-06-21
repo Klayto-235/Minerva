@@ -51,7 +51,7 @@ namespace Minerva
 		{
 			MN_PROFILE_SCOPE("Upload data - OpenGLTexture2D::OpenGLTexture2D");
 
-			glTextureSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height,
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height,
 				m_dataFormat, GL_UNSIGNED_BYTE, data);
 		}
 

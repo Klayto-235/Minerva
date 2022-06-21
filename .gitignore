@@ -13,6 +13,10 @@ vendor/premake/output/
 **.vcxproj.filters
 **.vcxproj.user
 
+# Makefile
+Makefile
+**.make
+
 # ImGui ini
 imgui.ini
 

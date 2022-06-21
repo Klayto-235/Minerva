@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef MN_PLATFORM_WINDOWS
-
 int main(int argc, char** argv)
 {
 	Minerva::Log::init();
@@ -18,5 +16,3 @@ int main(int argc, char** argv)
 	delete app;
 	MN_PROFILE_END_SESSION();
 }
-
-#endif

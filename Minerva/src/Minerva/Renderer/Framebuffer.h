@@ -29,7 +29,7 @@ namespace Minerva
 
 		virtual const FramebufferProperties& getProperties() const = 0;
 
-		static Ref<Framebuffer> Framebuffer::create(const FramebufferProperties& properties);
+		static Ref<Framebuffer> create(const FramebufferProperties& properties);
 	};
 
 }

@@ -63,7 +63,7 @@ namespace Minerva
 
 		// Events
 		template <typename T = Event, typename ...Args>
-		void postEvent(Args&&... args) { m_data.eventBuffer.add<T, Args>(std::forward<Args>(args)...); }
+		void postEvent(Args&&... args) { m_data.eventBuffer.add<T, Args...>(std::forward<Args>(args)...); }
 
 		// Owned Layer(s)
 		/// Creates an owned layer and returns a pointer to it.

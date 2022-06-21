@@ -37,7 +37,7 @@ namespace Minerva
 
 			if (opened) {
 				auto scene = static_cast<Scene*>(m_state->scene.ptr);
-				scene->m_registry.each([=](auto entityHandle)
+				scene->m_registry.each([=, this](auto entityHandle)
 				{
 					drawEntityNode({ entityHandle , scene });
 				});

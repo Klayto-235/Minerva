@@ -1,8 +1,9 @@
 project "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 	staticruntime "On"
+	systemversion "latest"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -29,11 +30,22 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		systemversion "latest"
-
 		defines
 		{
 			"MN_PLATFORM_WINDOWS"
+		}
+	
+	filter "system:linux"
+		defines
+		{
+			"MN_PLATFORM_LINUX"
+		}
+
+		links
+		{
+			"imgui",
+			"GLFW",
+			"glad"
 		}
 	
 	filter "configurations:Debug"

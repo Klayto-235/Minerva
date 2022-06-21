@@ -44,7 +44,7 @@ namespace Minerva
 	Ref<Shader> ShaderLibrary::load(const std::string& filePath, const std::string& name)
 	{
 		auto shader = Shader::create(filePath);
-		add(Shader::create(filePath), name);
+		add(shader, name);
 		return shader;
 	}
 

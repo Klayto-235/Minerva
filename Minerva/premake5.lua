@@ -1,8 +1,9 @@
 project "Minerva"
 	kind "StaticLib"
 	language "C++"
-	cppdialect "C++17"
+	cppdialect "C++20"
 	staticruntime "On"
+	systemversion "latest"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -22,7 +23,8 @@ project "Minerva"
 	
 	defines
 	{
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
 	}
 
 	includedirs
@@ -41,17 +43,29 @@ project "Minerva"
 	{
 		"GLFW",
 		"glad",
-		"opengl32.lib",
 		"imgui"
 	}
 
 	filter "system:windows"
-		systemversion "latest"
-
 		defines
 		{
-			"MN_PLATFORM_WINDOWS",
-			"GLFW_INCLUDE_NONE"
+			"MN_PLATFORM_WINDOWS"
+		}
+
+		links
+		{
+			"opengl32.lib"
+		}
+
+	filter "system:linux"
+		defines
+		{
+			"MN_PLATFORM_LINUX"
+		}
+
+		links
+		{
+			
 		}
 	
 	filter "configurations:Debug"

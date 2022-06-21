@@ -1,6 +1,5 @@
 #include "mnpch.h"
 #include "Minerva/Scene/Scene.h"
-#include "Minerva/Scene/Entity.h"
 #include "Minerva/Scene/Components.h"
 
 

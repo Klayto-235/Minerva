@@ -3,6 +3,7 @@ project "imgui"
 	language "C++"
 	cppdialect "C++17"
 	staticruntime "on"
+	systemversion "latest"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -12,9 +13,6 @@ project "imgui"
 		"%{prj.name}/*.cpp",
 		"%{prj.name}/*.h"
 	}
-
-	filter "system:windows"
-		systemversion "latest"
 
 	filter "configurations:Debug"
 		runtime "Debug"

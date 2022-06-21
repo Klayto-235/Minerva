@@ -30,7 +30,7 @@ namespace Minerva
 			const uint16_t head = m_head.load(std::memory_order_relaxed);
 			if (head == m_tail.load(std::memory_order_relaxed))
 			{
-				MN_CORE_ERROR(MN_ASSERT_FUNC_SIG ": Buffer overflow.");
+				MN_CORE_ERROR("{}: Buffer overflow.", MN_ASSERT_FUNC_SIG);
 				MN_CORE_ASSERT(false, "Error.");
 			}
 

@@ -2,8 +2,6 @@
 
 #include "Minerva/core/core.h"
 #include "Minerva/Scene/SceneCamera.h"
-#include "Minerva/Scene/Entity.h"
-#include "Minerva/core/InputState.h"
 
 #include <string>
 
@@ -13,6 +11,7 @@
 
 namespace Minerva
 {
+	class NativeScriptBase;
 
 	struct TagComponent
 	{
@@ -65,29 +64,6 @@ namespace Minerva
 	{
 		SceneCamera camera;
 		bool fixedAspectRatio = false;
-	};
-
-	class NativeScriptBase
-	{
-	public:
-		virtual ~NativeScriptBase() = default;
-
-		virtual void onCreate() {}
-		virtual void onDestroy() {}
-		virtual void onUpdate(float timeStep, const InputState& inputState) {}
-
-		template<typename ...T>
-		decltype(auto) getComponents()
-		{
-			MN_CORE_ASSERT(m_entity, "Native script used with invalid Entity.")
-			return m_entity.getComponents<T...>();
-		}
-	protected:
-		NativeScriptBase() = default;
-	private:
-		friend class Scene;
-
-		Entity m_entity;
 	};
 
 	struct NativeScriptComponent
