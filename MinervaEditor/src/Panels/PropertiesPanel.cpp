@@ -194,7 +194,7 @@ namespace Minerva
 
 	void PropertiesPanel::drawEntityProperties(Entity entity)
 	{
-		if (ImGui::BeginPopupContextWindow(nullptr))
+		if (ImGui::BeginPopupContextWindow(nullptr, ImGuiPopupFlags_NoOpenOverItems | ImGuiPopupFlags_MouseButtonRight))
 		{
 			if (ImGui::BeginMenu("Add Component"))
 			{
