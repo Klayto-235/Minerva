@@ -10,6 +10,8 @@ project "Minerva"
 
 	pchheader "mnpch.h"
 	pchsource "src/mnpch.cpp"
+  
+  buildoptions { "/Zc:preprocessor" }
 
 	files
 	{
