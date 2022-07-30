@@ -10,8 +10,9 @@ project "Minerva"
 
 	pchheader "mnpch.h"
 	pchsource "src/mnpch.cpp"
-  
-  buildoptions { "/Zc:preprocessor" }
+	
+	filter "action:vs*"
+		buildoptions { "/Zc:preprocessor" }
 
 	files
 	{

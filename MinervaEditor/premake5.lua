@@ -7,8 +7,9 @@ project "MinervaEditor"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-  
-  buildoptions { "/Zc:preprocessor" }
+	
+	filter "action:vs*"
+		buildoptions { "/Zc:preprocessor" }
 
 	files
 	{
